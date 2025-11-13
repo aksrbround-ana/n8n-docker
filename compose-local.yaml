@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    ports:
+      # n8n будет доступен на порту 5678 вашего хоста
+      - "5678:5678"
+    environment:
+      # Указываем, что n8n будет доступен по HTTP на порту 5678
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+      - WEBHOOK_URL=http://localhost:5678/
+      # Устанавливаем часовой пояс
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - TZ=${GENERIC_TIMEZONE}
+      # Включаем принудительную проверку разрешений для файла настроек
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+    volumes:
+      # Сохраняем данные n8n (SQLite DB, ключи) в постоянный том
+      - n8n_data:/home/node/.n8n
+      # Монтируем локальную директорию для узла Read/Write Files from Disk
+      - ./local-files:/files
+
+volumes:
+  n8n_data:
