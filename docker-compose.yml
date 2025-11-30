@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: 'traefik:v3.1'
+    image: 'traefik:latest'
     container_name: traefik
     restart: unless-stopped
     command:
@@ -114,7 +114,9 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.site.rule=Host(`${SITE_SUBDOMAIN}.${DOMAIN_NAME}`)
-      - traefik.http.routers.site.entrypoints=web
+      - traefik.http.routers.site.entrypoints=websecure
+      - traefik.http.routers.site.tls=true
+      - traefik.http.routers.site.tls.certresolver=mytlschallenge
       - traefik.http.services.site.loadbalancer.server.port=80
     depends_on:
       postgres:
@@ -140,7 +142,9 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.pgadmin.rule=Host(`${PGA_SUBDOMAIN}.${DOMAIN_NAME}`)
-      - traefik.http.routers.pgadmin.entrypoints=web
+      - traefik.http.routers.pgadmin.entrypoints=websecure
+      - traefik.http.routers.pgadmin.tls=true
+      - traefik.http.routers.pgadmin.tls.certresolver=mytlschallenge
       - traefik.http.services.pgadmin.loadbalancer.server.port=80
 
 networks:
