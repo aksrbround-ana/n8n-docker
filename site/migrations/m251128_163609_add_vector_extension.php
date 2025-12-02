@@ -12,7 +12,7 @@ class m251128_163609_add_vector_extension extends Migration
         $this->execute('CREATE EXTENSION IF NOT EXISTS vector;');
 
         $this->createTable('{{%documents}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'content' => $this->text(),
             'metadata' => 'JSONB',
             'embedding' => 'vector(1536)',

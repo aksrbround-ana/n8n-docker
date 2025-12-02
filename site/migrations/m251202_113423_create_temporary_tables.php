@@ -10,7 +10,7 @@ class m251202_113423_create_temporary_tables extends Migration
     public function safeUp()
     {
         $this->createTable('client_questions', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'tg_id' => $this->integer()->notNull(),
             'question' => $this->string(512)->notNull(),
             'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
@@ -19,7 +19,7 @@ class m251202_113423_create_temporary_tables extends Migration
         $this->createIndex('client_questions_tg_id_index', 'client_questions', 'tg_id');
 
         $this->createTable('steps', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'tg_id' => $this->integer()->notNull(),
             'step' => $this->string(32)->notNull(),
             'type' => $this->string(32)->notNull(),
@@ -29,7 +29,7 @@ class m251202_113423_create_temporary_tables extends Migration
         $this->createIndex('steps_tg_id_index', 'steps', 'tg_id');
 
         $this->createTable('log', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'tg_id' => $this->integer()->notNull(),
             'message' => $this->text()->notNull(),
             'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),

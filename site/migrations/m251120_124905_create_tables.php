@@ -10,7 +10,7 @@ class m251120_124905_create_tables extends Migration
     public function safeUp()
     {
         $this->createTable('{{%company_type}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(512),
         ]);
         $this->insert('{{%company_type}}', ['name' => 'DOO']);
@@ -18,7 +18,7 @@ class m251120_124905_create_tables extends Migration
         $this->insert('{{%company_type}}', ['name' => 'Paušal']);
 
         $this->createTable('{{%company_activities}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(32),
         ]);
         $this->insert('{{%company_activities}}', ['name' => 'trgovina']);
@@ -33,7 +33,7 @@ class m251120_124905_create_tables extends Migration
         $this->insert('{{%company_activities}}', ['name' => 'turizam']);
 
         $this->createTable('{{%company}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(512),
             'name_tg' => $this->string(512),
             'type_id' => $this->bigInteger(),
@@ -74,7 +74,7 @@ class m251120_124905_create_tables extends Migration
         );
 
         $this->createTable('{{%customer}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'tg_id' => $this->bigInteger(),
             'company_id' => $this->bigInteger(),
             'firstname' => $this->string(32),
@@ -99,7 +99,7 @@ class m251120_124905_create_tables extends Migration
         );
 
         $this->createTable('{{%accountant_activity}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(64),
             'due_date' => $this->integer(),
         ]);
@@ -113,7 +113,7 @@ class m251120_124905_create_tables extends Migration
         $this->insert('{{%accountant_activity}}', ['name' => 'rad na terenu', 'due_date' => 5]);
 
         $this->createTable('{{%accountant}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'firstname' => $this->string(32),
             'lastname' => $this->string(32),
             'username' => $this->string(32),
@@ -121,7 +121,7 @@ class m251120_124905_create_tables extends Migration
         ]);
 
         $this->createTable('{{%company_accountant}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'accountant_id' => $this->bigInteger(),
         ]);
@@ -149,7 +149,7 @@ class m251120_124905_create_tables extends Migration
         );
 
         $this->createTable('{{%accountant_accountant_activity}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'accountant_id' => $this->bigInteger(),
             'accountant_activity_id' => $this->bigInteger(),
         ]);
@@ -177,14 +177,14 @@ class m251120_124905_create_tables extends Migration
         );
 
         $this->createTable('{{%reminder_template}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'description' => $this->string(128),
             'text_ru' => $this->text(),
             'text_rs' => $this->text(),
         ]);
 
         $this->createTable('{{%reminder}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'template_id' => $this->bigInteger(),
             'send_date' => $this->integer(),
@@ -194,7 +194,7 @@ class m251120_124905_create_tables extends Migration
         ]);
 
         $this->createTable('{{%event}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'topic' => $this->string(128),
             'details' => $this->string(128),
@@ -202,7 +202,7 @@ class m251120_124905_create_tables extends Migration
         ]);
 
         $this->createTable('{{%task}}', [
-            'id' => $this->primaryKey(),
+            'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'category' => $this->string(64),
             'request' => $this->string(256),
