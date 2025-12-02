@@ -3,10 +3,10 @@
 ### 1. Создайте .env файл и укажите свои пароли
 cp .env.example .env
 
-### 2. Создайте папку для PHP сайта
+### 2. Установите зависимости для Yii
 ```bash
-mkdir site
-echo "<?php phpinfo(); ?>" > site/index.php
+cd site
+composer install
 ```
 
 ### 3. Замените domain.com на ваш реальный домен в docker-compose.yml
@@ -26,10 +26,10 @@ docker compose up -d
 cp .env.example .env
 ```
 
-### 2. Создайте папку для PHP сайта
+### 2. Установите зависимости для Yii
 ```bash
-mkdir site
-echo "<?php phpinfo(); ?>" > site/index.php
+cd site
+composer install
 ```
 
 ### 3. Запустите
