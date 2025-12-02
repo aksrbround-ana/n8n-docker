@@ -13,9 +13,5 @@ $ret = [
     'password' => $dbPassword,
     'charset' => 'utf8',
 ];
-// echo 'Database configuration:' . "\n";
-// print_r($ret);
-// echo "\nEnvironment variables:" . "\n";
-// print_r(getenv());
 
 return $ret;

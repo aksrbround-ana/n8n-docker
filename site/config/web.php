@@ -50,6 +50,11 @@ $config = [
         // --- Настройка RBAC для ролей ---
         'authManager' => [
             'class' => 'yii\rbac\DbManager', // Используем базу данных (PostgreSQL)
+            'db' => 'db', // По умолчанию использует компонент 'db'
+            'itemTable' => 'auth_item', // Имя таблицы для элементов (ролей/разрешений)
+            'itemChildTable' => 'auth_item_child', // Имя таблицы для иерархии
+            'assignmentTable' => 'auth_assignment', // Имя таблицы для назначений
+            'ruleTable' => 'auth_rule', // Имя таблицы для правил
         ],
 
         // --- Настройка Мультиязычности (i18n) ---
@@ -71,8 +76,7 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+            'rules' => [],
         ],
     ],
     'params' => $params,
