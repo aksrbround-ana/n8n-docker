@@ -5,14 +5,22 @@ FROM postgres:15
 # Включая git, make, gcc и заголовочные файлы PostgreSQL.
 # Примечание: Для более новых версий PostgreSQL (15+) pgvector может быть в contrib или отдельном пакете.
 # В этом примере мы его компилируем, так как это наиболее универсальный способ.
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     postgresql-server-dev-15 \
     git \
+    postgresql-server-dev-all \
     && rm -rf /var/lib/apt/lists/*
 
 # Клонируем репозиторий pgvector
-RUN git clone --branch v0.6.0 https://github.com/pgvector/pgvector.git /usr/src/pgvector
+RUN cd /tmp \
+  && git clone https://github.com/pgvector/pgvector.git \
+  && cd pgvector \
+  && make \
+  && make install \
+  && rm -rf /tmp/pgvector
+# Альтернативный способ клонирования конкретной версии pgvector
+#RUN git clone --branch v0.6.0 https://github.com/pgvector/pgvector.git /usr/src/pgvector
 
 # Собираем и устанавливаем расширение
 RUN cd /usr/src/pgvector && make && make install
