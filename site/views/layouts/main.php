@@ -35,12 +35,13 @@ $userName = Yii::$app->user->isGuest ? 'Гость' : 'Анна Петрова';
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+     <link type="text/css" rel="stylesheet" href="/assets/index.css"/>
     <!-- В реальном проекте здесь будет подключение Tailwind/Bootstrap или вашего CSS -->
     <style>
         /* Базовые стили для имитации дизайна со скриншотов */
         body { font-family: 'Inter', sans-serif; background-color: #f7f7f7; }
         .wrapper { display: flex; min-height: 100vh; }
-        .sidebar { width: 200px; background-color: #212529; color: #fff; padding-top: 20px; flex-shrink: 0; }
+        .sidebar { width: 220px; background-color: #212529; color: #fff; padding-top: 20px; flex-shrink: 0; }
         .logo { color: #f8f9fa; font-size: 1.5rem; padding: 0 15px 20px; font-weight: bold; }
         .menu-item { padding: 10px 15px; margin-bottom: 5px; cursor: pointer; display: flex; align-items: center; }
         .menu-item.active, .menu-item:hover { background-color: #e84c3d; color: #fff; border-radius: 4px; }
