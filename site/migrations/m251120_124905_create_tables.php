@@ -13,6 +13,12 @@ class m251120_124905_create_tables extends Migration
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(512),
         ]);
+        $this->createIndex(
+            'idx_company_type_name',
+            '{{%company_type}}',
+            'name',
+            true
+        );
         $this->insert('{{%company_type}}', ['name' => 'DOO']);
         $this->insert('{{%company_type}}', ['name' => 'Knigaš']);
         $this->insert('{{%company_type}}', ['name' => 'Paušal']);
@@ -21,6 +27,12 @@ class m251120_124905_create_tables extends Migration
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(32),
         ]);
+        $this->createIndex(
+            'idx_company_activities_name',
+            '{{%company_activities}}',
+            'name',
+            true
+        );
         $this->insert('{{%company_activities}}', ['name' => 'trgovina']);
         $this->insert('{{%company_activities}}', ['name' => 'programiranje']);
         $this->insert('{{%company_activities}}', ['name' => 'reklama']);
@@ -48,7 +60,8 @@ class m251120_124905_create_tables extends Migration
         $this->createIndex(
             'idx_company_name',
             '{{%company}}',
-            'name'
+            'name',
+            true
         );
         $this->createIndex(
             'idx_company_pib',
@@ -90,12 +103,14 @@ class m251120_124905_create_tables extends Migration
         $this->createIndex(
             'idx_customer_tg_id',
             '{{%customer}}',
-            'tg_id'
+            'tg_id',
+            true
         );
         $this->createIndex(
             'idx_customer_username',
             '{{%customer}}',
-            'username'
+            'username',
+            true
         );
 
         $this->createTable('{{%accountant_activity}}', [
@@ -103,6 +118,12 @@ class m251120_124905_create_tables extends Migration
             'name' => $this->string(64),
             'due_date' => $this->integer(),
         ]);
+        $this->createIndex(
+            'idx_accountant_activity_name',
+            '{{%accountant_activity}}',
+            'name',
+            true
+        );
         $this->insert('{{%accountant_activity}}', ['name' => 'knjiženje', 'due_date' => 5]);
         $this->insert('{{%accountant_activity}}', ['name' => 'obračun zarada', 'due_date' => 2]);
         $this->insert('{{%accountant_activity}}', ['name' => 'odgovor na pitanja vezanih za poslovanje firmi', 'due_date' => 5]);
@@ -192,6 +213,11 @@ class m251120_124905_create_tables extends Migration
             'message' => $this->string(512),
             'status' => $this->string(32)->defaultValue('new'),
         ]);
+        $this->createIndex(
+            'idx_reminder_company_id',
+            '{{%reminder}}',
+            'company_id'
+        );
 
         $this->createTable('{{%event}}', [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
@@ -200,6 +226,11 @@ class m251120_124905_create_tables extends Migration
             'details' => $this->string(128),
             'status' => $this->string(32)->defaultValue('new'),
         ]);
+        $this->createIndex(
+            'idx_event_company_id',
+            '{{%event}}',
+            'company_id'
+        );
 
         $this->createTable('{{%task}}', [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
@@ -209,6 +240,11 @@ class m251120_124905_create_tables extends Migration
             'due_date' => $this->integer(),
             'status' => $this->string(32)->defaultValue('new'),
         ]);
+        $this->createIndex(
+            'idx_task_company_id',
+            '{{%task}}',
+            'company_id'
+        );
     }
 
     /**
@@ -216,6 +252,12 @@ class m251120_124905_create_tables extends Migration
      */
     public function safeDown()
     {
+        $this->dropIndex('idx_task_company_id', '{{%task}}');
+        $this->dropIndex('idx_event_company_id', '{{%event}}');
+        $this->dropIndex('idx_reminder_company_id', '{{%reminder}}');
+        $this->dropIndex('idx_accountant_activity_name', '{{%accountant_activity}}');
+        $this->dropIndex('idx_company_activities_name', '{{%company_activities}}');
+        $this->dropIndex('idx_company_type_name', '{{%company_type}}');
         $this->dropTable('{{%task}}');
         $this->dropTable('{{%event}}');
         $this->dropTable('{{%reminder}}');
