@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\services\AuthService;
 
 /**
  * This is the model class for table "accountant".
@@ -10,15 +11,20 @@ use Yii;
  * @property int $id
  * @property string|null $firstname
  * @property string|null $lastname
- * @property string|null $username
- * @property string|null $status
+ * @property string|null $rule
+ * @property string|null $lang
+ * @property string|null $email
+ * @property string|null $password
+ * @property string|null $token
+ * @property string|null $create_at
+ * @property string|null $update_at
  *
  * @property AccountantAccountantActivity[] $accountantAccountantActivities
  * @property AccountantActivity[] $accountantActivities
  * @property Company[] $companies
  * @property CompanyAccountant[] $companyAccountants
  */
-class Accountant extends \yii\db\ActiveRecord
+class Accountant extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
 
 
@@ -36,9 +42,9 @@ class Accountant extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['firstname', 'lastname', 'username'], 'default', 'value' => null],
-            [['status'], 'default', 'value' => 'new'],
-            [['firstname', 'lastname', 'username', 'status'], 'string', 'max' => 32],
+            [['firstname', 'lastname',], 'default', 'value' => null],
+            [['rule'], 'default', 'value' => 'accountant'],
+            [['firstname', 'lastname', 'rule'], 'string', 'max' => 32],
         ];
     }
 
@@ -51,8 +57,8 @@ class Accountant extends \yii\db\ActiveRecord
             'id' => 'ID',
             'firstname' => 'Firstname',
             'lastname' => 'Lastname',
-            'username' => 'Username',
-            'status' => 'Status',
+            // 'username' => 'Username',
+            'rule' => 'Rule',
         ];
     }
 
@@ -96,4 +102,43 @@ class Accountant extends \yii\db\ActiveRecord
         return $this->hasMany(CompanyAccountant::class, ['accountant_id' => 'id']);
     }
 
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = AuthService::encodePassword($password);
+    }
+
+    public function generateAccessToken()
+    {
+        $this->token = AuthService::generateAccessToken();
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['token' => $token]);
+    }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->token;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $authKey === $this->token;
+    }
 }

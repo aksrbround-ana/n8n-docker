@@ -4,9 +4,10 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
+    // "traceLevel" => 3,
     'id' => 'buhgalterija-backoffice',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log', 'i18n'], // Добавляем languagepicker, если используется (или i18n)
+    'bootstrap' => ['log', 'i18n',],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -17,15 +18,19 @@ $config = [
 
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'SYG9qVAABzWxN4X_TTyCFCcQlfPj9cEx',
+            'cookieValidationKey' => '567893-946589-985497-927359',
+            'enableCsrfValidation' => false,
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
+            // 'enableSession' => false,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -76,8 +81,13 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [],
-        ],
+            'rules' => [
+                'POST login' => 'auth/login',
+                'GET auth' => 'site/login',
+                'POST api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'GET <controller:\w+>/<action:\w+>' => 'site/index',
+            ],
+        ]
     ],
     'params' => $params,
 ];
