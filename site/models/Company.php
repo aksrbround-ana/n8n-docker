@@ -44,7 +44,7 @@ class Company extends \yii\db\ActiveRecord
         return [
             [['name', 'name_tg', 'type_id', 'activity_id', 'specific_reports', 'report_date', 'reminder', 'pib'], 'default', 'value' => null],
             [['is_pdv'], 'default', 'value' => 0],
-            [['status'], 'default', 'value' => 'new'],
+            [['status'], 'default', 'value' => 'onboarding'],
             [['type_id', 'activity_id', 'report_date', 'pib'], 'default', 'value' => null],
             [['type_id', 'activity_id', 'report_date', 'pib'], 'integer'],
             [['is_pdv'], 'boolean'],

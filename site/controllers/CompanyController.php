@@ -24,6 +24,7 @@ class CompanyController extends BaseController
                 'c.id AS company_id',
                 'c.name AS company_name',
                 'ct.name AS company_type',
+                'ca.name AS company_activity',
                 'c.is_pdv',
                 'c.pib',
                 'c.status AS company_status',
@@ -38,6 +39,24 @@ class CompanyController extends BaseController
             ->leftJoin(['t' => 'task'], 't.company_id = c.id')
             ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id');
         $companies = $companiesQuery->all();
+        foreach ($companies as &$company) {
+            $id = $company['company_id'];
+            $openTasks = (new Query())
+                ->select('count(*) as tasks')
+                ->from('task')
+                ->where('id = ' . $id)
+                ->andWhere('status = \'inProgress\'')
+                ->one()['tasks'];
+            $company['openTasks'] = $openTasks;
+            $overdueTasks = (new Query())
+                ->select('count(*) as tasks')
+                ->from('task')
+                ->where('id = ' . $id)
+                ->andWhere('status != \'done\'')
+                ->andWhere('due_date < :now', [':now' => date('Y-m-d')])
+                ->one()['tasks'];
+            $company['overdueTasks'] = $overdueTasks;
+        }
         $data = [
             'user' => $accountant,
             'companies' => $companies,

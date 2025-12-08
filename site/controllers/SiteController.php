@@ -106,7 +106,7 @@ class SiteController extends BaseController
 
         // $customers = Customer::find()->count();
         $companies = Company::find()->count();
-        $activeTasksQuery = Task::find()->where(['status' => 'active']);
+        $activeTasksQuery = Task::find()->where(['status' => 'inProgress']);
         if ($accountant->rule !== 'ceo') {
             $activeTasksQuery->andWhere('accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
