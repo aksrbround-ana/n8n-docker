@@ -57,4 +57,8 @@ class Task extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getAccountant()
+    {
+        return Accountant::findOne(['id' => $this->accountant_id]);
+    }
 }

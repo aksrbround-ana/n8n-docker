@@ -69,15 +69,17 @@ function loadContent() {
   })
 }
 
-function loadPage(url) {
+function loadPage(url, data = {}) {
   let user = getUser();
   let token = user ? user?.token : '';
+  if (!data) {
+    data = {};
+  }
+  data.token = token;
   $.ajax({
     url: url,
     type: 'POST',
-    data: {
-      token: token
-    },
+    data: data,
     success: function (response) {
       $('main').html(response.data);
       userMenuResize();
@@ -123,18 +125,15 @@ $(document).on('click', '#login-button', function (e) {
 
 $(document).on('click', 'a.menuitem', function (e) {
   e.preventDefault();
-  // if (!$(this).hasClass('active')) {
-    $('a.menuitem').removeClass('active');
-    $('a.menuitem').removeClass('bg-sidebar-primary');
-    $('a.menuitem').removeClass('text-sidebar-primary-foreground');
-    $('a.menuitem').addClass('text-sidebar-foreground');
-    $(this).addClass('active');
-    $(this).addClass('bg-sidebar-primary');
-    $(this).addClass('text-sidebar-primary-foreground');
-    let url = $(this).attr('href');
-    loadPage(url);
-    // $('main').load(url);
-  // }
+  $('a.menuitem').removeClass('active');
+  $('a.menuitem').removeClass('bg-sidebar-primary');
+  $('a.menuitem').removeClass('text-sidebar-primary-foreground');
+  $('a.menuitem').addClass('text-sidebar-foreground');
+  $(this).addClass('active');
+  $(this).addClass('bg-sidebar-primary');
+  $(this).addClass('text-sidebar-primary-foreground');
+  let url = $(this).attr('href');
+  loadPage(url);
   return false;
 });
 
@@ -169,6 +168,54 @@ $(document).on('click', '#lang-card-mini', function () {
   $('#lang-menu').toggle();
   userMenuResize();
 })
+
+$(document).on('click', '.company_open_profile', function (e) {
+  e.preventDefault();
+  let id = $(this).find('input.company').val();
+  let data = {
+    id: id
+  }
+  loadPage('/company/profile', data);
+  return false;
+});
+
+$(document).on('click', '.company_open_tasks', function (e) {
+  e.preventDefault();
+  let id = $(this).find('input.company').val();
+  let data = {
+    id: id
+  }
+  loadPage('/company/tasks', data);
+  return false;
+});
+
+$(document).on('click', '.company_open_docs', function (e) {
+  e.preventDefault();
+  let id = $(this).find('input.company').val();
+  let data = {
+    id: id
+  }
+  loadPage('/company/docs', data);
+  return false;
+});
+
+$(document).on('click', '#back-to-company', function (e) {
+  loadPage('/company/page');
+});
+
+$(document).on('click', 'div[role=tablist] button[role=tab]', function (e) {
+  let tabId = $(this).attr('id');
+  let tablist = $(this).closest('div[role=tablist]');
+  tablist.find('button[role=tab]').attr('data-state','inactive');
+  $(this).attr('data-state','active');
+  let parentTablist = tablist.parent();
+  let selector = "div[role='tabpanel'][aria-labelledby='" + tabId + "']";
+  let targetTab = parentTablist.find(selector);
+  if (targetTab.length) {
+    parentTablist.find('div[role=tabpanel]').attr('data-state', 'inactive').attr('hidden', '');
+    targetTab.attr('data-state', 'active').removeAttr('hidden');
+  }
+});
 
 // Функция Debounce
 function debounce(func, delay = 250) {

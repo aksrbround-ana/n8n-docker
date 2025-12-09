@@ -5,6 +5,10 @@ namespace app\controllers;
 use Yii;
 use app\controllers\BaseController;
 use app\models\Company;
+use app\models\Accountant;
+use app\models\CompanyActivities;
+use app\models\Customer;
+use app\models\Task;
 use \yii\db\Query;
 
 class CompanyController extends BaseController
@@ -18,7 +22,7 @@ class CompanyController extends BaseController
 
     protected function getDataForPage($token)
     {
-        $accountant = \app\models\Accountant::findOne(['token' => $token]);
+        $accountant = Accountant::findIdentityByAccessToken($token);
         $companiesQuery = (new Query())
             ->select([
                 'c.id AS company_id',
@@ -64,6 +68,27 @@ class CompanyController extends BaseController
         return $data;
     }
 
+    protected function getDataForProfile($token, $id)
+    {
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        $company = Company::findOne(['id' => $id]);
+        $customers = Customer::findAll(['company_id' => $id]);
+        $activity = CompanyActivities::findOne(['id' => $company->activity_id]);
+        $taskCount = Task::find(['company_id' => $company->id])->count();
+        $tasks = Task::find(['company_id' => $company->id])->all();
+        $tasksOverdue = Task::find(['company_id' => $company->id, ['<', 'due_date', date('Y-m-d')]])->count();
+        $data = [
+            'user' => $accountant,
+            'company' => $company,
+            'activity' => $activity,
+            'customers' => $customers,
+            'taskCount' => $taskCount,
+            'tasks' => $tasks,
+            'tasksOverdue' => $tasksOverdue,
+        ];
+        return $data;
+    }
+
     public function actionPage()
     {
         $this->layout = false;
@@ -71,6 +96,16 @@ class CompanyController extends BaseController
         $token = $request->post('token');
         $data = $this->getDataForPage($token);
         return $this->renderPage($data);
+    }
+
+    public function actionProfile()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $companyId = $request->post('id');
+        $data = $this->getDataForProfile($token, $companyId);
+        return $this->renderPage($data, 'profile');
     }
 
     public function actionIndex()

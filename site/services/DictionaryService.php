@@ -83,6 +83,7 @@ class DictionaryService
             'phone' =>  'Телефон',
             'notes' =>  'Заметки',
             'contacts' =>  'Контакты',
+            'chat'=> 'Чат',
             'addCompany' =>  'Добавить компанию',
 
             // Company statuses
@@ -254,6 +255,7 @@ class DictionaryService
             'phone' =>  'Telefon',
             'notes' =>  'Beleške',
             'contacts' =>  'Kontakti',
+            'chat'=> 'Chat',
             'addCompany' =>  'Dodaj kompaniju',
 
             // Company statuses
