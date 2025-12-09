@@ -185,7 +185,7 @@ use app\components\CompanyChatWidget;
             <div data-state="inactive" data-orientation="horizontal" role="tabpanel" aria-labelledby="company-docs" id="company-content-documents" tabindex="0" class="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" hidden="">
                 <div class="border rounded-lg overflow-hidden">
                     <div class="relative w-full overflow-auto">
-                            <?= DocListWidget::widget(['user' => $user, 'company' => $company]); ?>
+                        <?= DocListWidget::widget(['user' => $user, 'company' => $company]); ?>
                     </div>
                 </div>
             </div>

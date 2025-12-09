@@ -29,7 +29,7 @@ use Codeception\Lib\Di;
         <?php
         foreach ($docs as $doc) {
         ?>
-            <tr class="border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
+            <tr class="doc-row border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
                 <!-- <td>
                     <pre>
                     <?php

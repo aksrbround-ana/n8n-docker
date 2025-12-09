@@ -12,7 +12,11 @@ class DocListWidget extends Widget
 
     public function run()
     {
-        $docs = Document::find(['company_id' => $this->company->id])->all();
+        if ($this->company) {
+            $docs = Document::find(['company_id' => $this->company->id])->all();
+        } else {
+            $docs = Document::find()->all();
+        }
         return $this->render('doclist', [
             'user' => $this->user,
             'docs' => $docs,

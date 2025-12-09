@@ -12,7 +12,17 @@ class TaskListWidget extends Widget
 
     public function run()
     {
-        $tasks = Task::find(['company_id' => $this->company->id])->all();
+        if ($this->company) {
+            $tasksQuery = Task::find(['company_id' => $this->company->id]);
+        } else {
+            $tasksQuery = Task::find();
+        }
+        if ($this->user) {
+            if ($this->user->rule != 'ceo') {
+                $tasksQuery->andWhere(['accountant_id' => $this->user->id]);
+            }
+        }
+        $tasks = $tasksQuery->all();
 
         return $this->render('tasklist', [
             'user' => $this->user,

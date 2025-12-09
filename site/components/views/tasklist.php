@@ -22,10 +22,15 @@ use app\services\DictionaryService;
 
         <?php
         foreach ($tasks as $task) {
+            $company = $task->getCompany();
         ?>
-            <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors<?php if ($task->status == 'done') echo ' bg-destructive/5'; ?>">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs"><?= $company->id ?></td>
+            <tr class="task-row border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors<?php if ($task->status == 'done') echo ' bg-destructive/5'; ?>">
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                    <button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <input type="hidden" class="task-id" value="<?= $task->id ?>" />
+                    </button>
+                </td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs"><?= $task->id ?></td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                     <div>
                         <p class="font-medium text-sm"><?= $company->name ?></p>
@@ -40,8 +45,9 @@ use app\services\DictionaryService;
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20"><?= DictionaryService::getWord($statusWord, $user->lang) ?></span></td>
                 <?php
                 $priorityWord = 'priority' . ucfirst($task->priority);
+                $prioritySign = DictionaryService::$prioritySign[$task->priority];
                 ?>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span><?= DictionaryService::getWord($priorityWord, $user->lang) ?></span></td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span><?= $prioritySign ?></span><?= DictionaryService::getWord($priorityWord, $user->lang) ?></span></td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                     <?php
                     if ($task->due_date > date('Y-m-d')) {

@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int|null $company_id
+ * @property int|null $accountant_id
  * @property string|null $category
  * @property string|null $request
  * @property int|null $due_date
@@ -35,7 +36,7 @@ class Task extends \yii\db\ActiveRecord
             [['company_id', 'category', 'request', 'due_date'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'new'],
             [['company_id', 'due_date'], 'default', 'value' => null],
-            [['company_id', 'due_date'], 'integer'],
+            [['company_id', 'due_date', 'accountant_id'], 'integer'],
             [['category'], 'string', 'max' => 64],
             [['request'], 'string', 'max' => 256],
             [['status'], 'string', 'max' => 32],
@@ -61,4 +62,10 @@ class Task extends \yii\db\ActiveRecord
     {
         return Accountant::findOne(['id' => $this->accountant_id]);
     }
+
+    public function getCompany()
+    {
+        return Company::findOne(['id' => $this->company_id]);
+    }
+
 }

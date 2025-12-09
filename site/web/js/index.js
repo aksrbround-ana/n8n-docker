@@ -244,6 +244,30 @@ $(document).on('click', '#add_note_button', function (e) {
   });
 });
 
+$(document).on('click', 'tr.task-row', function (e) {
+  let taskId = $(this).find('input.task-id').val();
+  let data = {
+    id: taskId
+  }
+  loadPage('/task/view', data);
+});
+
+$(document).on('click', 'button.back-to-tasklist', function (e) {
+  loadPage('/task/page');
+});
+
+$(document).on('click', 'tr.doc-row', function (e) {
+  let docId = $(this).find('input.doc-id').val();
+  let data = {
+    id: docId
+  }
+  loadPage('/document/view', data);
+});
+
+$(document).on('click', 'button.back-to-doclist', function (e) {
+  loadPage('/document/page');
+});
+
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------
