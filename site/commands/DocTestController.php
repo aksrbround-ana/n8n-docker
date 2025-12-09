@@ -12,24 +12,33 @@ class DocTestController extends Controller
 {
     public function actionIndex()
     {
-        $testFileName = 'test.pdf';
-        $filePath = dirname(__DIR__) . '/test/' . $testFileName;
-        echo $filePath . "\n";
-        echo realpath($filePath) . "\n";
-        $docTest = [
-            'company_id' => 86,
-            'tg_id' => 280362924,
-            'metadata' => '{}',
-            'create_at' => date('Y-m-d H:i:s'),
-            'update_at' => date('Y-m-d H:i:s'),
-            'status' => 'uploaded',
-            'filename' => $testFileName,
-            'mimetype' => 'application/pdf',
-            'content' => file_get_contents($filePath),
+        $testFileNames = [
+            '265201031000971028 Izvod br. 43-Realizovani.pdf' => 'uploaded',
+            'LSB7V7E4-LSB7V7E4-23101.pdf' => 'needsRevision',
+            'photo_2025-12-09_16-27-53.jpg' => 'checked',
         ];
-        $docs = (new Document($docTest));
-        $docs->save();
-        echo "Document with ID {$docs->id} has been inserted\n\n";
+        foreach ($testFileNames as $testFileName => $status) {
+            $filePath = dirname(__DIR__) . '/test/' . $testFileName;
+            $docTest = [
+                'company_id' => 86,
+                'tg_id' => 280362924,
+                'metadata' => '{}',
+                'status' => $status,
+                'filename' => $testFileName,
+                'mimetype' => 'application/pdf',
+                'content' => file_get_contents($filePath),
+            ];
+            $docs = (new Document($docTest));
+            $docs->save();
+            echo "Document with ID {$docs->id} has been inserted\n\n";
+        }
+        return ExitCode::OK;
+    }
+
+    public function actionClear()
+    {
+        Document::deleteAll(['company_id' => 86, 'tg_id' => 280362924]);
+        echo "Test documents cleared\n\n";
         return ExitCode::OK;
     }
 }

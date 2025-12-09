@@ -7,7 +7,7 @@ use yii\console\Controller;
 use yii\console\ExitCode;
 use app\services\AuthService;
 
-class TestController extends Controller
+class UserTestController extends Controller
 {
     private $testUsers = [
         [
@@ -41,6 +41,7 @@ class TestController extends Controller
             'token' => '',
         ],
     ];
+
     public function actionIndex()
     {
         $nextIdQuery = 'SELECT nextval(\'accountant_id_seq\'::regclass)';
@@ -54,6 +55,15 @@ class TestController extends Controller
             Yii::$app->db->createCommand($insertQuery, $accountant)->execute();
         }
         echo count($this->testUsers).' have been inserted'."\n\n";
+        return ExitCode::OK;
+    }
+
+    public function actionClear()
+    {
+        $emails = array_map(fn($user) => $user['email'], $this->testUsers);
+        $deleteQuery = 'DELETE FROM "accountant" WHERE email IN (:emails)';
+        Yii::$app->db->createCommand($deleteQuery, [':emails' => $emails])->execute();
+        echo "Test users cleared\n\n";
         return ExitCode::OK;
     }
 }
