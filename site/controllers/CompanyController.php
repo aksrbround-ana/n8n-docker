@@ -3,13 +3,15 @@
 namespace app\controllers;
 
 use Yii;
+use \yii\db\Query;
+use yii\web\Response;
 use app\controllers\BaseController;
 use app\models\Company;
 use app\models\Accountant;
 use app\models\CompanyActivities;
 use app\models\Customer;
+use app\components\CompanyNotesWidget;
 use app\models\Task;
-use \yii\db\Query;
 
 class CompanyController extends BaseController
 {
@@ -106,6 +108,53 @@ class CompanyController extends BaseController
         $companyId = $request->post('id');
         $data = $this->getDataForProfile($token, $companyId);
         return $this->renderPage($data, 'profile');
+    }
+
+    public function actionAddNote()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $companyId = $request->post('company_id');
+        $company = Company::findOne(['id' => $companyId]);
+        $noteText = $request->post('note_text');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant && $companyId && $noteText) {
+            $note = new \app\models\CompanyNotes();
+            $note->company_id = $companyId;
+            $note->accountant_id = $accountant->id;
+            $note->note = $noteText;
+            $note->status = 'active';
+            if ($note->save()) {
+                $out = [
+                    'status' => 'success',
+                    'code' => 200,
+                    'data' => CompanyNotesWidget::widget(['user' => $accountant, 'company' => $company]),
+                ];
+            } else {
+                $errors = $note->getErrors();
+                $out = [
+                    'success' => 'error',
+                    'message' => 'Failed to save note: ' . implode('; ', array_map(function ($v) {
+                        return implode(', ', $v);
+                    }, $errors)),
+                ];
+            }
+        } else {
+            $out = [
+                'success' => 'error',
+                'message' => 'Invalid input data.',
+                'input' => [
+                    'token' => $token,
+                    'companyId' => $companyId,
+                    'noteText' => $noteText,
+                ],
+            ];
+        }
+        $response = \Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+        $response->data = $out;
+        return $response;
     }
 
     public function actionIndex()

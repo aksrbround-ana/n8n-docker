@@ -2,6 +2,8 @@
 
 namespace app\components;
 
+use app\models\Company;
+use app\models\CompanyNotes;
 use app\models\Document;
 use yii\base\Widget;
 
@@ -12,10 +14,11 @@ class CompanyNotesWidget extends Widget
 
     public function run()
     {
-        $docs = Document::find(['company_id' => $this->company->id])->all();
+        $notes = CompanyNotes::find(['company_id' => $this->company->id, 'status' => 'active'])->limit(10)->orderBy('id DESC')->all();
         return $this->render('companynotes', [
             'user' => $this->user,
-            'docs' => $docs,
+            'notes' => $notes,
+            'company' => $this->company,
         ]);
     }
 }

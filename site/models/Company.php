@@ -117,4 +117,13 @@ class Company extends \yii\db\ActiveRecord
         return $this->hasOne(CompanyType::class, ['id' => 'type_id']);
     }
 
+    public function getDocumentsNumber()
+    {
+        return Document::find()->where(['company_id' => $this->id])->count();
+    }
+
+    public function getNotesNumber()
+    {
+        return CompanyNotes::find()->where(['company_id' => $this->id, 'status' => 'active'])->count();
+    }
 }

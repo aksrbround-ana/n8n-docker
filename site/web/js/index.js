@@ -206,8 +206,8 @@ $(document).on('click', '#back-to-company', function (e) {
 $(document).on('click', 'div[role=tablist] button[role=tab]', function (e) {
   let tabId = $(this).attr('id');
   let tablist = $(this).closest('div[role=tablist]');
-  tablist.find('button[role=tab]').attr('data-state','inactive');
-  $(this).attr('data-state','active');
+  tablist.find('button[role=tab]').attr('data-state', 'inactive');
+  $(this).attr('data-state', 'active');
   let parentTablist = tablist.parent();
   let selector = "div[role='tabpanel'][aria-labelledby='" + tabId + "']";
   let targetTab = parentTablist.find(selector);
@@ -217,7 +217,37 @@ $(document).on('click', 'div[role=tablist] button[role=tab]', function (e) {
   }
 });
 
-// Функция Debounce
+$(document).on('click', '#add_note_button', function (e) {
+  let companyId = $(this).data('company-id');
+  let noteText = $('#note_textarea').val();
+  let user = getUser();
+  let token = user ? user?.token : '';
+  $.ajax({
+    url: '/company/add-note',
+    type: 'POST',
+    data: {
+      token: token,
+      company_id: companyId,
+      note_text: noteText
+    },
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#company-content-notes').html(response.data);
+        $('#note_textarea').val('');
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function () {
+      alert('Произошла ошибка при добавлении заметки.');
+    }
+  });
+});
+
+// ----------------------------------------------------
+//                Resize Debounce
+//----------------------------------------------------
+
 function debounce(func, delay = 250) {
   let timeoutId;
   return function () {
@@ -234,8 +264,6 @@ function debounce(func, delay = 250) {
   };
 }
 
-// ----------------------------------------------------
-// Ваша логика, которую нужно выполнить после изменения размера
 function userMenuResize() {
   if ($('#user-menu').length) {
     let docWidth = document.documentElement.clientWidth;
@@ -247,16 +275,14 @@ function userMenuResize() {
   }
 }
 
-// Прикрепляем оптимизированный обработчик к событию resize
-// window.addEventListener('resize', debounce(userMenuResize, 100)); // Задержка 300 мс
-
 document.addEventListener('DOMContentLoaded', () => {
-  // Привязываем Debounce-обрабочик события resize
   window.addEventListener('resize', debounce(userMenuResize, 50));
-
-  // Также можно вызвать функцию один раз при загрузке страницы
   userMenuResize();
 });
+
+// ----------------------------------------------------
+//                Document Ready
+//----------------------------------------------------
 
 $(document).ready(function () {
 });

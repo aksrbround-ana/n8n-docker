@@ -36,6 +36,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
 <body>
     <div id="root"></div>
+    <div id="error-tab" role="region" aria-label="Notifications (F8)" tabindex="-1" style="pointer-events: none;">
+        <ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"></ol>
+    </div>
 </body>
 
 </html>

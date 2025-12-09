@@ -155,6 +155,9 @@ class DictionaryService
             'docStatusChecked' =>  'Проверен',
             'docStatusNeedsRevision' =>  'Требует правки',
 
+            // Notes
+            'addNote' => 'Добавить заметку',
+
             // User management
             'userManagement' =>  'Управление пользователями',
             'createUser' =>  'Создать пользователя',
@@ -326,6 +329,9 @@ class DictionaryService
             'docStatusUploaded' =>  'Otpremljen',
             'docStatusChecked' =>  'Proveren',
             'docStatusNeedsRevision' =>  'Potrebna ispravka',
+
+            // Notes
+            'addNote' => 'Dodaj belešku',
 
             // User management
             'userManagement' =>  'Upravljanje korisnicima',
