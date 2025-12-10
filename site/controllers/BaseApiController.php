@@ -20,7 +20,7 @@ class BaseApiController extends BaseController
         if ($token !== null) {
             $accountant = \app\models\Accountant::findOne(['token' => $token]);
             if ($accountant) {
-                Yii::$app->user->login($accountant);
+                // Yii::$app->user->login($accountant);
             }
         }
         if (Yii::$app->user->isGuest) {

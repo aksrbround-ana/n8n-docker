@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\services\AuthService;
+use \yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "accountant".
@@ -24,8 +25,11 @@ use app\services\AuthService;
  * @property Company[] $companies
  * @property CompanyAccountant[] $companyAccountants
  */
-class Accountant extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+class Accountant extends ActiveRecord //implements \yii\web\IdentityInterface
 {
+
+    const TOKEN_EXPIRATION_INTERVAL = 3600; // 1 hour
+    const TOKEN_EXPIRATION_INTERVAL_LONG = 86400;
 
 
     /**
@@ -115,16 +119,31 @@ class Accountant extends \yii\db\ActiveRecord implements \yii\web\IdentityInterf
     public function generateAccessToken()
     {
         $this->token = AuthService::generateAccessToken();
+        return $this->token;
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['token' => $token]);
+        $accountant = static::findOne(['token' => $token]);
+        if (!$accountant) {
+            $accountant = new self();
+        } else {
+            if ($accountant->isValid()) {
+                $accountant->update_at = date('Y-m-d H:i:s');
+                $accountant->save();
+            }
+        }
+        return $accountant;
     }
 
     public static function findIdentity($id)
     {
         return static::findOne($id);
+    }
+
+    public function isValid()
+    {
+        return $this->token && $this->update_at && (strtotime($this->update_at) + Accountant::TOKEN_EXPIRATION_INTERVAL > time());
     }
 
     public function getId()

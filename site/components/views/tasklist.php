@@ -39,12 +39,9 @@ use app\services\DictionaryService;
                 </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $task->category ?></td>
                 <!-- <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">2024</td> -->
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $task->getStatusStyle() ?>"><?= $task->getStatusText($user->lang) ?></span></td>
                 <?php
-                $statusWord = 'taskStatus' . ucfirst($task->status);
-                ?>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20"><?= DictionaryService::getWord($statusWord, $user->lang) ?></span></td>
-                <?php
-                $priorityWord = 'priority' . ucfirst($task->priority);
+                $priorityWord = $task->getPriorityWord();
                 $prioritySign = DictionaryService::$prioritySign[$task->priority];
                 ?>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span><?= $prioritySign ?></span><?= DictionaryService::getWord($priorityWord, $user->lang) ?></span></td>

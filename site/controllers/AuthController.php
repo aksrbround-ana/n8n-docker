@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Response;
+use yii\db\ActiveRecord;
 use \app\models\Accountant;
 use yii\web\Controller;
 use app\services\AuthService;
@@ -21,13 +22,16 @@ class AuthController extends Controller
         $response->format = Response::FORMAT_JSON;
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
         if ($accountant) {
-            $accountant->generateAccessToken();
+            if (!$accountant->token || (strtotime($accountant->update_at) + Accountant::TOKEN_EXPIRATION_INTERVAL < time())) {
+                $accountant->token = $token = $accountant->generateAccessToken();
+            } else {
+                $token = $accountant->token;
+            }
             $accountant->update_at = date('Y-m-d H:i:s');
             $accountant->save();
-            $token = $accountant->token;
             $session = Yii::$app->getSession();
             $session->set($token, $token);
-            Yii::$app->user->login($accountant);
+            // Yii::$app->user->login($accountant);
             $response->data =
                 [
                     'status' => 'success',
@@ -40,6 +44,7 @@ class AuthController extends Controller
                 'value' => $token,
                 'httpOnly' => true,
             ]));
+            return $response;
         } else {
             $response->data = [
                 'status' => 'error',
@@ -62,7 +67,7 @@ class AuthController extends Controller
         $token = $request->post('token');
         $accountant = null;
         if ($token !== null) {
-            $accountant = \app\models\Accountant::findOne(['token' => $token]);
+            $accountant = \app\models\Accountant::findIdentityByAccessToken(['token' => $token]);
             // $session = Yii::$app->getSession();
             // $sToken = $session->get($token, null);
         }
@@ -94,15 +99,13 @@ class AuthController extends Controller
         return $response;
     }
 
-    public function actionLogout()
+    public static function logout($token = null)
     {
-        $request = \Yii::$app->request;
-        $token = $request->post('token');
-        $accountant = Accountant::findOne(['token' => $token]);
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         $response = \Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
-        if ($accountant) {
+        if ($accountant && ($accountant instanceof ActiveRecord)) {
             $accountant->token = '';
             $accountant->update_at = date('Y-m-d H:i:s');
             $accountant->save();
@@ -124,5 +127,12 @@ class AuthController extends Controller
             ];
         }
         return $response;
+    }
+
+    public function actionLogout()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        return self::logout($token);
     }
 }

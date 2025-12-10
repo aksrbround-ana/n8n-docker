@@ -22,9 +22,8 @@ class CompanyController extends BaseController
         'statusInactive',
     ];
 
-    protected function getDataForPage($token)
+    protected function getDataForPage($accountant)
     {
-        $accountant = Accountant::findIdentityByAccessToken($token);
         $companiesQuery = (new Query())
             ->select([
                 'c.id AS company_id',
@@ -70,34 +69,18 @@ class CompanyController extends BaseController
         return $data;
     }
 
-    protected function getDataForProfile($token, $id)
-    {
-        $accountant = Accountant::findIdentityByAccessToken($token);
-        $company = Company::findOne(['id' => $id]);
-        $customers = Customer::findAll(['company_id' => $id]);
-        $activity = CompanyActivities::findOne(['id' => $company->activity_id]);
-        $taskCount = Task::find(['company_id' => $company->id])->count();
-        $tasks = Task::find(['company_id' => $company->id])->all();
-        $tasksOverdue = Task::find(['company_id' => $company->id, ['<', 'due_date', date('Y-m-d')]])->count();
-        $data = [
-            'user' => $accountant,
-            'company' => $company,
-            'activity' => $activity,
-            'customers' => $customers,
-            'taskCount' => $taskCount,
-            'tasks' => $tasks,
-            'tasksOverdue' => $tasksOverdue,
-        ];
-        return $data;
-    }
-
     public function actionPage()
     {
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
-        $data = $this->getDataForPage($token);
-        return $this->renderPage($data);
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $data = $this->getDataForPage($accountant);
+            return $this->renderPage($data);
+        } else {
+            return $this->renderLogout();
+        }
     }
 
     public function actionProfile()
@@ -105,9 +88,29 @@ class CompanyController extends BaseController
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
-        $companyId = $request->post('id');
-        $data = $this->getDataForProfile($token, $companyId);
-        return $this->renderPage($data, 'profile');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $company = Company::findOne(['id' => $id]);
+            $customers = Customer::findAll(['company_id' => $id]);
+            $activity = CompanyActivities::findOne(['id' => $company->activity_id]);
+            $taskCount = Task::find(['company_id' => $company->id])->count();
+            $tasks = Task::find(['company_id' => $company->id])->all();
+            $tasksOverdue = Task::find(['company_id' => $company->id, ['<', 'due_date', date('Y-m-d')]])->count();
+            $data = [
+                'user' => $accountant,
+                'company' => $company,
+                'activity' => $activity,
+                'customers' => $customers,
+                'taskCount' => $taskCount,
+                'tasks' => $tasks,
+                'tasksOverdue' => $tasksOverdue,
+            ];
+
+            return $this->renderPage($data, 'profile');
+        } else {
+            return $this->renderLogout();
+        }
     }
 
     public function actionAddNote()
@@ -117,44 +120,49 @@ class CompanyController extends BaseController
         $companyId = $request->post('company_id');
         $company = Company::findOne(['id' => $companyId]);
         $noteText = $request->post('note_text');
-        $accountant = Accountant::findIdentityByAccessToken($token);
-        if ($accountant && $companyId && $noteText) {
-            $note = new \app\models\CompanyNotes();
-            $note->company_id = $companyId;
-            $note->accountant_id = $accountant->id;
-            $note->note = $noteText;
-            $note->status = 'active';
-            if ($note->save()) {
-                $out = [
-                    'status' => 'success',
-                    'code' => 200,
-                    'data' => CompanyNotesWidget::widget(['user' => $accountant, 'company' => $company]),
-                ];
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $accountant = $accountant;
+            if ($companyId && $noteText) {
+                $note = new \app\models\CompanyNotes();
+                $note->company_id = $companyId;
+                $note->accountant_id = $accountant->id;
+                $note->note = $noteText;
+                $note->status = 'active';
+                if ($note->save()) {
+                    $out = [
+                        'status' => 'success',
+                        'code' => 200,
+                        'data' => CompanyNotesWidget::widget(['user' => $accountant, 'company' => $company]),
+                    ];
+                } else {
+                    $errors = $note->getErrors();
+                    $out = [
+                        'success' => 'error',
+                        'message' => 'Failed to save note: ' . implode('; ', array_map(function ($v) {
+                            return implode(', ', $v);
+                        }, $errors)),
+                    ];
+                }
             } else {
-                $errors = $note->getErrors();
                 $out = [
                     'success' => 'error',
-                    'message' => 'Failed to save note: ' . implode('; ', array_map(function ($v) {
-                        return implode(', ', $v);
-                    }, $errors)),
+                    'message' => 'Invalid input data.',
+                    'input' => [
+                        'token' => $token,
+                        'companyId' => $companyId,
+                        'noteText' => $noteText,
+                    ],
                 ];
             }
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = $out;
+            return $response;
         } else {
-            $out = [
-                'success' => 'error',
-                'message' => 'Invalid input data.',
-                'input' => [
-                    'token' => $token,
-                    'companyId' => $companyId,
-                    'noteText' => $noteText,
-                ],
-            ];
+            $this->renderLogout();
         }
-        $response = \Yii::$app->response;
-        $response->format = Response::FORMAT_JSON;
-        $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
-        $response->data = $out;
-        return $response;
     }
 
     public function actionIndex()
@@ -165,45 +173,5 @@ class CompanyController extends BaseController
         $response->data = ['method' => __METHOD__];
         return $response;
         // return $this->render('index');
-    }
-
-    public function actionView()
-    {
-        $json = $this->getJson();
-        $id = $json['id'] ?? null;
-        $response = \Yii::$app->response;
-        $response->format = \yii\web\Response::FORMAT_JSON;
-        $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
-        $response->data = ['method' => __METHOD__, 'id' => $id];
-        return $response;
-    }
-
-    public function actionList()
-    {
-        $json = $this->getJson();
-        // $responsibleId = $json['responsibleId'] ?? null;
-        $status = $json['status'] ?? null;
-        $sort = $json['sort'] ?? null;
-        $query = new Query();
-        $query->select('*')->from('company');
-        // if ($responsibleId !== null) {
-        //     $query->andWhere(['responsible_id' => $responsibleId]);
-        // }
-        if ($status !== null) {
-            $query->andWhere(['status' => $status]);
-        }
-        if ($sort !== null) {
-            $query->orderBy($sort);
-        }
-        $companies = $query->all();
-        $response = \Yii::$app->response;
-        $response->format = \yii\web\Response::FORMAT_JSON;
-        $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
-        $response->data = $companies;
-        // $response->data = [
-        //     'method' => __METHOD__,
-        //     'companies' => $companies,
-        // ];
-        return $response;
     }
 }

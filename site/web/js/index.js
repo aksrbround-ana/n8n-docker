@@ -81,11 +81,21 @@ function loadPage(url, data = {}) {
     type: 'POST',
     data: data,
     success: function (response) {
-      $('main').html(response.data);
-      userMenuResize();
+      if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        $('main').html(response.data);
+        userMenuResize();
+      }
     },
     error: function (e) {
-      showError('Load error', e);
+      if (e.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Load error', e.message);
+      }
     },
     type: 'json'
   })

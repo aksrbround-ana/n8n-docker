@@ -1,10 +1,12 @@
 <?php
 
+use app\models\Accountant;
 use app\services\AuthService;
 use app\services\DictionaryService;
 
 /** @var $user app\models\Accountant */
 /** @var $data array */
+
 ?>
 <div class="p-6">
     <div class="space-y-6">

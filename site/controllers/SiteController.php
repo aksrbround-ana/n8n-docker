@@ -5,14 +5,13 @@ namespace app\controllers;
 use Yii;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
+use yii\db\Query;
 use yii\web\ErrorAction;
 use app\services\AuthService;
 use app\models\Accountant;
 use app\models\Company;
-use app\models\Customer;
 use app\models\Task;
 use app\models\Document;
-use yii\db\Query;
 
 class SiteController extends BaseController
 {
@@ -48,10 +47,8 @@ class SiteController extends BaseController
         return $this->render('empty');
     }
 
-    protected function getDataForPage($token)
+    protected function getDataForPage($accountant)
     {
-        $accountant = \app\models\Accountant::findOne(['token' => $token]);
-
         $accountantQuery = (new Query())
             ->select(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email', 'COUNT(t.id) AS tasks'])
             ->from(['c' => Accountant::tableName()])
@@ -135,21 +132,18 @@ class SiteController extends BaseController
     public function actionLoad()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
-        $token = $request->post('token');
-        $accountant = null;
-        if ($token !== null) {
-            $accountant = \app\models\Accountant::findOne(['token' => $token]);
-        }
-        if (!$token || !$accountant) {
-            $data = $this->render('login');
-        } else {
-            $dataForRendering = $this->getDataForPage($token);
-            $data = $this->render('index', $dataForRendering);
-        }
         $response = \Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if (!$accountant->isValid()) {
+            $data = $this->render('login');
+        } else {
+            $dataForRendering = $this->getDataForPage($accountant);
+            $data = $this->render('index', $dataForRendering);
+        }
         $response->data = [
             'status' => 'success',
             'code' => 200,
@@ -163,8 +157,13 @@ class SiteController extends BaseController
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
-        $data = $this->getDataForPage($token);
-        return $this->renderPage($data);
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $data = $this->getDataForPage($accountant);
+            return $this->renderPage($data);
+        } else {
+            return $this->renderLogout();
+        }
     }
 
     public function actionError()

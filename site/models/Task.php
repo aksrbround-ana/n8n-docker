@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\services\DictionaryService;
 
 /**
  * This is the model class for table "task".
@@ -17,6 +18,14 @@ use Yii;
  */
 class Task extends \yii\db\ActiveRecord
 {
+
+    public $taskStatusStyles = [
+        'overdue' =>   'bg-destructive/10 text-destructive border-destructive/20',
+        'done' =>      'bg-success/10 text-success border-success/20',
+        'waiting' =>   'bg-purple-100 text-purple-700 border-purple-200',
+        'inProgress' => 'bg-warning/10 text-warning border-warning/20',
+        'new' =>       'bg-info/10 text-info border-info/20',
+    ];
 
 
     /**
@@ -68,4 +77,23 @@ class Task extends \yii\db\ActiveRecord
         return Company::findOne(['id' => $this->company_id]);
     }
 
+    public function getStatusStyle()
+    {
+        return $this->taskStatusStyles[$this->status] ?? '';
+    }
+
+    public function getPriorityWord()
+    {
+        return 'priority' . ucfirst($this->priority);
+    }
+
+    public function getStatusText($lang = 'ru')
+    {
+        return DictionaryService::getWord('taskStatus' . ucfirst($this->status), $lang);
+    }
+
+    public function getDocuments()
+    {
+        return TaskDocument::findAll(['task_id' => $this->id]);
+    }
 }

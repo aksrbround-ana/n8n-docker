@@ -1,19 +1,19 @@
 <?php
 
 namespace app\controllers;
+
 use app\models\Accountant;
 use app\models\Document;
 
 class DocumentController extends BaseController
 {
 
-    public function getDataForPage($token)
+    public function getDataForPage($accountant)
     {
-        $accountant = Accountant::findIdentityByAccessToken($token);
         $docs = Document::find()->all();
         $data = [
             'user' => $accountant,
-            'documents' => $docs, 
+            'documents' => $docs,
         ];
         return $data;
     }
@@ -23,8 +23,13 @@ class DocumentController extends BaseController
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
-        $data = $this->getDataForPage($token);
-        return $this->renderPage($data);
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $data = $this->getDataForPage($accountant);
+            return $this->renderPage($data);
+        } else {
+            return $this->renderLogout();
+        }
     }
 
     public function actionView()
@@ -32,13 +37,17 @@ class DocumentController extends BaseController
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
-        $docId = $request->post('id');
-        $doc = Document::findOne(['id' => $docId]);
-        $data = [
-            'user' => Accountant::findIdentityByAccessToken($token),
-            'documents' => $doc, 
-        ];
-        return $this->renderPage($data, 'view');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $docId = $request->post('id');
+            $doc = Document::findOne(['id' => $docId]);
+            $data = [
+                'user' => $accountant,
+                'documents' => $doc,
+            ];
+            return $this->renderPage($data, 'view');
+        } else {
+            return $this->renderLogout();
+        }
     }
-
 }

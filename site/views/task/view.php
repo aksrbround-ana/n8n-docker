@@ -1,3 +1,7 @@
+<?php
+
+use app\services\DictionaryService;
+?>
 <div class="p-6">
     <div class="space-y-6">
         <div class="flex items-center justify-between">
@@ -10,9 +14,19 @@
                 </button>
                 <div>
                     <div class="flex items-center gap-3">
-                        <h1 class="text-2xl font-bold">T-007</h1><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-destructive/10 text-destructive border-destructive/20">Просрочена</span><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span>
+                        <h1 class="text-2xl font-bold"><?= $task->category ?></h1>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-destructive/10 text-destructive border-destructive/20"><?= $task->getStatusText($user->lang) ?></span>
+                        <?php
+                        $priorityWord = $task->getPriorityWord();
+                        $prioritySign = DictionaryService::$prioritySign[$task->priority];
+                        ?>
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-destructive">
+                            <span>
+                                <?= $prioritySign ?>
+                            </span><?= DictionaryService::getWord($priorityWord, $user->lang) ?>
+                        </span>
                     </div>
-                    <p class="text-muted-foreground">НДС декларация</p>
+                    <p class="text-muted-foreground"><?= $task->request ?></p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -21,14 +35,14 @@
                         <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                         <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"></path>
                     </svg>
-                    Редактировать
+                    <?= DictionaryService::getWord('edit', $user->lang) ?>
                 </button>
                 <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-big h-4 w-4 mr-2">
                         <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
                         <path d="m9 11 3 3L22 4"></path>
                     </svg>
-                    Завершить
+                    <?= DictionaryService::getWord('finish', $user->lang) ?>
                 </button>
             </div>
         </div>
@@ -36,16 +50,16 @@
             <div class="col-span-2 space-y-6">
                 <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
                     <div class="flex flex-col space-y-1.5 p-6">
-                        <h3 class="font-semibold tracking-tight text-lg">Детали задачи</h3>
+                        <h3 class="font-semibold tracking-tight text-lg"><?= DictionaryService::getWord('taskDetails', $user->lang) ?></h3>
                     </div>
                     <div class="p-6 pt-0 space-y-4">
                         <div>
-                            <h4 class="text-sm font-medium text-muted-foreground mb-1">Описание</h4>
-                            <p class="text-sm">Просроченная декларация - требуется срочное внимание</p>
+                            <h4 class="text-sm font-medium text-muted-foreground mb-1"><?= DictionaryService::getWord('description', $user->lang) ?></h4>
+                            <p class="text-sm"><?= $task->request ?></p>
                         </div>
                         <div data-orientation="horizontal" role="none" class="shrink-0 bg-border h-[1px] w-full"></div>
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="flex items-center gap-3">
+                            <!-- <div class="flex items-center gap-3">
                                 <div class="p-2 bg-secondary rounded-lg">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar h-4 w-4 text-muted-foreground">
                                         <path d="M8 2v4"></path>
@@ -58,7 +72,10 @@
                                     <p class="text-xs text-muted-foreground">Период</p>
                                     <p class="text-sm font-medium">Октябрь 2024</p>
                                 </div>
-                            </div>
+                            </div> -->
+                            <?php
+                            if ($task->due_date < date('Y-m-d')) {
+                            ?>
                             <div class="flex items-center gap-3">
                                 <div class="p-2 rounded-lg bg-destructive/10">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock h-4 w-4 text-destructive">
@@ -67,10 +84,28 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Срок</p>
-                                    <p class="text-sm font-medium text-destructive">15 ноября 2024 г.<span class="ml-2 text-xs">(Просрочено)</span></p>
+                                    <p class="text-xs text-muted-foreground"><?= DictionaryService::getWord('dueDate', $user->lang) ?></p>
+                                    <p class="text-sm font-medium text-destructive"><?= $task->due_date ?><span class="ml-2 text-xs">(<?= DictionaryService::getWord('overdue', $user->lang) ?>)</span></p>
                                 </div>
                             </div>
+                            <?php
+                            } else {
+                            ?>
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 rounded-lg bg-secondary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock h-4 w-4 text-muted-foreground">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-muted-foreground"><?= DictionaryService::getWord('dueDate', $user->lang) ?></p>
+                                    <p class="text-sm font-medium "><?= $task->due_date ?></p>
+                                </div>
+                            </div>
+                            <?php
+                            }
+                            ?>
                             <div class="flex items-center gap-3">
                                 <div class="p-2 bg-secondary rounded-lg">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user h-4 w-4 text-muted-foreground">
@@ -79,8 +114,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Исполнитель</p>
-                                    <p class="text-sm font-medium">Марина Иванова</p>
+                                    <p class="text-xs text-muted-foreground"><?= DictionaryService::getWord('assignedTo', $user->lang) ?></p>
+                                    <p class="text-sm font-medium"><?php $accountant = $task->getAccountant(); echo $accountant->firstname . ' ' . $accountant->lastname ?></p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
@@ -91,8 +126,8 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-muted-foreground">Обновлено</p>
-                                    <p class="text-sm font-medium">20 ноября 2024 г. в 16:30</p>
+                                    <p class="text-xs text-muted-foreground"><?= DictionaryService::getWord('lastUpdate', $user->lang) ?></p>
+                                    <p class="text-sm font-medium"><?= $task->update_at ?></p>
                                 </div>
                             </div>
                         </div>
@@ -100,8 +135,8 @@
                 </div>
                 <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
                     <div class="space-y-1.5 p-6 flex flex-row items-center justify-between">
-                        <h3 class="font-semibold tracking-tight text-lg">Связанные документы</h3>
-                        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+                        <h3 class="font-semibold tracking-tight text-lg"><?= DictionaryService::getWord('linkedDocuments', $user->lang) ?></h3>
+                        <!-- <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 mr-2">
                                 <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                 <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -110,7 +145,7 @@
                                 <path d="M16 17H8"></path>
                             </svg>
                             Добавить документ
-                        </button>
+                        </button> -->
                     </div>
                     <div class="p-6 pt-0">
                         <div class="space-y-2">
