@@ -100,7 +100,7 @@ use app\services\DictionaryService;
                             $statusName = 'taskStatusNew';
                         } elseif ($deadline['status'] === 'done') {
                             $statusName = 'taskStatusDone';
-                        } elseif ($deadline['status'] === 'wait') {
+                        } elseif ($deadline['status'] === 'waiting') {
                             $statusName = 'taskStatusWaiting';
                         } elseif ($deadline['status'] === 'progress') {
                             $statusName = 'taskStatusInProgress';
