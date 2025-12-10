@@ -116,7 +116,12 @@ class AuthController extends Controller
             ];
             Yii::$app->response->cookies->remove(AuthService::ACCESS_TOKEN_NAME);
         } else {
-            $response->data = ['status' => 'error', 'message' => 'Invalid token', 'code' => 401];
+            // $response->data = ['status' => 'error', 'message' => 'Invalid token', 'code' => 401];
+            $response->data = [
+                'status' => 'success',
+                'message' => 'Logged out successfully',
+                'code' => 401,
+            ];
         }
         return $response;
     }
