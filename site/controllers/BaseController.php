@@ -5,8 +5,6 @@ namespace app\controllers;
 use Yii;
 use \yii\web\Controller;
 use yii\web\Response;
-use app\models\Accountant;
-use app\exceptions\TokenException;
 
 class BaseController extends Controller
 {

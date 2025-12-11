@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 use app\services\DictionaryService;
 
 /**
@@ -94,6 +95,13 @@ class Task extends \yii\db\ActiveRecord
 
     public function getDocuments()
     {
-        return TaskDocument::findAll(['task_id' => $this->id]);
+        $query = (new Query)
+            ->select('d.*')
+            // ->from(['t' => Task::tableName()])
+            // ->join(['td' => TaskDocument::tableName()], 'td.task_id = t.id')
+            ->from(['td' => TaskDocument::tableName()])
+            ->join(['d' => Document::tableName()], 'td.document_id = d.id')
+            ->where(['td.id' => $this->id]);
+        return Document::find(['id' => 'td.task_id'])->leftJoin(['td' => TaskDocument::tableName()], 'td.document_id = documents.id')->where(['td.task_id' => $this->id])->all();
     }
 }
