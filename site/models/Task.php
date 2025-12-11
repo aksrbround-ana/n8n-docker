@@ -16,6 +16,9 @@ use app\services\DictionaryService;
  * @property string|null $request
  * @property int|null $due_date
  * @property string|null $status
+ * @property string|null $priority
+ * @property string|null $created_at
+ * @property string|null $updated_at
  */
 class Task extends \yii\db\ActiveRecord
 {
@@ -68,6 +71,51 @@ class Task extends \yii\db\ActiveRecord
         ];
     }
 
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $taskActivity = new TaskActivity();
+        $taskActivity->task_id = $this->id;
+        $taskActivity->accountant_id = $this->accountant_id;
+        if (!$this->isNewRecord) {
+            $oldTask = Task::findOne(['id' => $this->id]);
+            if ($oldTask && $oldTask->status !== $this->status) {
+                $stepName = TaskStep::$steps[$this->status] ?? null;
+                if ($stepName) {
+                    $step = TaskStep::findOne(['name' => $stepName]);
+                    if ($step) {
+                        $taskActivity->step_id = $step->id;
+                        $taskActivity->save();
+                    }
+                }
+            } elseif ($oldTask && $oldTask->accountant_id !== $this->accountant_id) {
+                $taskActivity->step_id = TaskStep::findOne(['name' => 'assigned'])->id;
+                $taskActivity->save();
+            } elseif ($oldTask && $oldTask->priority !== $this->priority) {
+                $step = TaskStep::findOne(['name' => 'priority_changed']);
+                if ($step) {
+                    $taskActivity->step_id = $step->id;
+                    $taskActivity->save();
+                }
+            } elseif ($oldTask && $oldTask->due_date !== $this->due_date) {
+                $step = TaskStep::findOne(['name' => 'due_date_changed']);
+                if ($step) {
+                    $taskActivity->step_id = $step->id;
+                    $taskActivity->save();
+                }
+            }
+        }
+        $ret = parent::save($runValidation, $attributeNames);
+        if ($taskActivity->task_id === null) {
+            $taskActivity->task_id = $this->id;
+            $step = TaskStep::findOne(['name' => 'created']);
+            if ($step) {
+                $taskActivity->step_id = $step->id;
+                $taskActivity->save();
+            }
+        }
+        return $ret;
+    }
+
     public function getAccountant()
     {
         return Accountant::findOne(['id' => $this->accountant_id]);
@@ -97,8 +145,6 @@ class Task extends \yii\db\ActiveRecord
     {
         $query = (new Query)
             ->select('d.*')
-            // ->from(['t' => Task::tableName()])
-            // ->join(['td' => TaskDocument::tableName()], 'td.task_id = t.id')
             ->from(['td' => TaskDocument::tableName()])
             ->join(['d' => Document::tableName()], 'td.document_id = d.id')
             ->where(['td.id' => $this->id]);

@@ -118,6 +118,20 @@ class DictionaryService
             'taskStatusWaiting' =>  'Ожидание документов',
             'taskStatusDone' =>  'Выполнена',
             'taskStatusOverdue' =>  'Просрочена',
+            'taskStatusClosed' =>  'Закрыта',
+            'taskStatusArchived' =>  'Архивирована',
+
+            // Task activity steps
+            'taskStepCreated' =>  'создана',
+            'taskStepAssigned' =>  'назначена',
+            'taskStepInProgress' =>  'в работе',
+            'taskStepWaiting' =>  'ожидает документы',
+            'taskStepOverdue' =>  'просрочена',
+            'taskStepDone' =>  'выполнена',
+            'taskStepClosed' =>  'закрыта',
+            'taskStepArchived' =>  'архивирована',  
+            'taskStepPriorityChanged' =>  'приоритет изменён',
+            'taskStepDueDateChanged' =>  'срок изменён',
 
             // Task types
             'taskTypeVat' =>  'НДС декларация',
@@ -294,6 +308,20 @@ class DictionaryService
             'taskStatusWaiting' =>  'Čeka dokumente',
             'taskStatusDone' =>  'Završen',
             'taskStatusOverdue' =>  'Zakasnelo',
+            'taskStatusClosed' =>  'Zatvoren',
+            'taskStatusArchived' =>  'Arhiviran',
+
+            // Task activity steps
+            'taskStepCreated' =>  'kreirana',
+            'taskStepAssigned' =>  'dodeljena',
+            'taskStepInProgress' =>  'u radu',
+            'taskStepWaiting' =>  'čeka dokumente',
+            'taskStepOverdue' =>  'zakasnela',
+            'taskStepDone' =>  'završena',
+            'taskStepClosed' =>  'zatvorena',
+            'taskStepArchived' =>  'arhivirana',
+            'taskStepPriorityChanged' =>  'prioritet izmenjen',
+            'taskStepDueDateChanged' =>  'rok izmenjen',
 
             // Task types
             'taskTypeVat' =>  'PDV prijava',
