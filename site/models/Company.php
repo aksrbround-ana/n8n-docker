@@ -92,9 +92,19 @@ class Company extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getActivity()
+    public function getActivityQuery()
     {
         return $this->hasOne(CompanyActivities::class, ['id' => 'activity_id']);
+    }
+
+    /**
+     * Gets [[Activity]].
+     *
+     * @return CompanyActivities
+     */
+    public function getActivity()
+    {
+        return CompanyActivities::findOne($this->activity_id);
     }
 
     /**
@@ -126,4 +136,10 @@ class Company extends \yii\db\ActiveRecord
     {
         return CompanyNotes::find()->where(['company_id' => $this->id, 'status' => 'active'])->count();
     }
+
+    public function getCustomer()
+    {
+        return Customer::find()->where(['company_id' => $this->id, 'status' => 'active'])->one();
+    }
+
 }

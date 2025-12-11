@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\Accountant;
 use \app\models\Task;
+use \app\models\TaskComment;
+use app\controllers\BaseController;
 
 class TaskController extends BaseController
 {
@@ -50,6 +52,30 @@ class TaskController extends BaseController
                 'task' => Task::findOne(['id' => $id]),
             ];
             return $this->renderPage($data, 'view');
+        } else {
+            return $this->renderLogout($accountant);
+        }
+    }
+
+    public function actionComment()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $commentText = $request->post('comment_text');
+            $comment = new TaskComment();
+            $comment->task_id = $id;
+            $comment->accountant_id = $accountant->id;
+            $comment->text = $commentText;
+            $comment->save();
+            $data = [
+                'user' => $accountant,
+                'task' => Task::findOne(['id' => $id]),
+            ];
+            return $this->renderPage($data, 'addComment');
         } else {
             return $this->renderLogout($accountant);
         }

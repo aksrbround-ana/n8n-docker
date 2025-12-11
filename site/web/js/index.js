@@ -274,6 +274,49 @@ $(document).on('click', 'tr.doc-row', function (e) {
   loadPage('/document/view', data);
 });
 
+$(document).on('click', 'tr.doc-row', function (e) {
+  let docId = $(this).find('input.doc-id').val();
+  let data = {
+    id: docId
+  }
+  loadPage('/document/view', data);
+});
+
+$(document).on('click', 'a.document-view', function (e) {
+  const id = $(this).data('document-id');
+  const data = { id: id };
+  loadPage('/document/view', data);
+  return false;
+});
+
+$(document).on('click', '#sendComment', function (e) {
+  const taskId = $(this).data('task-id');
+  const commentText = $('#commentInput').val();
+  const user = getUser();
+  const data = { 
+    token: user.token,
+    id: taskId,
+    comment_text: commentText
+  };
+  $.ajax({
+    url: '/task/comment',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#commentInput').val('');
+        $('#task-comment-list').html(response.data);
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function () {
+      alert('Произошла ошибка при добавлении комментария.');
+    }
+  });
+  return false;
+});
+
 $(document).on('click', 'button.back-to-doclist', function (e) {
   loadPage('/document/page');
 });

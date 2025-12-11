@@ -5,6 +5,7 @@ use app\components\TaskListWidget;
 use app\components\DocListWidget;
 use app\components\CompanyNotesWidget;
 use app\components\CompanyChatWidget;
+use app\components\MakeTelegramLinkWidget
 
 /**
  * @var $company app\models\Company
@@ -86,7 +87,9 @@ use app\components\CompanyChatWidget;
                     <?php
                     foreach ($customers as $customer) {
                     ?>
-                        <span class="text-sm"><a href="https://t.me/<?= trim($customer['username'], '@') ?>" target="_blank"><?= $customer['username'] ?></a></span>
+                        <span class="text-sm">
+                            <?= MakeTelegramLinkWidget::widget(['username' => $customer['username']]) ?>
+                        </span>
                     <?php
                     }
                     ?>

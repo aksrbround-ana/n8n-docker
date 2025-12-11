@@ -140,6 +140,11 @@ class DictionaryService
             'taskTypeReconciliation' =>  'Сверка',
             'taskTypeOther' =>  'Другое',
 
+            // Other
+            'addComment'=> 'Добавить комментарий',
+            'companyInformation' => 'Информация о компании',
+            'activity' => 'Активность',
+
             // Priorities
             'priorityLow' =>  'Низкий',
             'priorityNormal' =>  'Обычный',
@@ -329,6 +334,11 @@ class DictionaryService
             'taskTypeAnnualReport' =>  'Godišnji izveštaj',
             'taskTypeReconciliation' =>  'Usaglašavanje',
             'taskTypeOther' =>  'Ostalo',
+
+            // Other
+            'addComment'=> 'Dodaj komentar',
+            'companyInformation'=> 'Informacije o kompaniji',
+            'activity' => 'Aktivnost',
 
             // Priorities
             'priorityLow' =>  'Nizak',

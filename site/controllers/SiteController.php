@@ -136,7 +136,7 @@ class SiteController extends BaseController
                 'overdueTasks' => $overdueTasks,
                 'upcomingDeadlines' => $upcomingDeadlines,
                 'docsToCheck' => $docsToCheck,
-                'recentActivity' => $recentActivity,
+                'activities' => $recentActivity,
                 'viewAccountants' => $viewAccountants,
             ]
         ];

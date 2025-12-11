@@ -13,7 +13,7 @@ use app\services\DictionaryService;
     </h3>
     <div class="space-y-3">
         <?php
-        foreach ($data['recentActivity'] as $activity) {
+        foreach ($data['activities'] as $activity) {
             $stepName = $activity->getStep()->getName($user->lang);
             $task = $activity->getTask();
             $timeAgo = Yii::$app->formatter->asRelativeTime($activity->created_at);

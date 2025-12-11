@@ -143,11 +143,31 @@ class Task extends \yii\db\ActiveRecord
 
     public function getDocuments()
     {
-        $query = (new Query)
-            ->select('d.*')
-            ->from(['td' => TaskDocument::tableName()])
-            ->join(['d' => Document::tableName()], 'td.document_id = d.id')
-            ->where(['td.id' => $this->id]);
-        return Document::find(['id' => 'td.task_id'])->leftJoin(['td' => TaskDocument::tableName()], 'td.document_id = documents.id')->where(['td.task_id' => $this->id])->all();
+        // $query = (new Query)
+        //     ->select('d.*')
+        //     ->from(['td' => TaskDocument::tableName()])
+        //     ->join(['d' => Document::tableName()], 'td.document_id = d.id')
+        //     ->where(['td.id' => $this->id]);
+        return Document::find()
+            ->leftJoin(['td' => TaskDocument::tableName()], 'td.document_id = documents.id')
+            // ->where(['id' => 'td.task_id'])
+            ->andWhere(['td.task_id' => $this->id])
+            ->all();
+    }
+
+    public function getComments()
+    {
+        return TaskComment::find()
+            ->where(['task_id' => $this->id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
+    }
+
+    public function getActivities()
+    {
+        return TaskActivity::find()
+            ->where(['task_id' => $this->id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->all();
     }
 }
