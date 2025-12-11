@@ -11,8 +11,8 @@ use Yii;
  * @property int $task_id
  * @property int $accountant_id
  * @property int $step_id
- * @property string|null $created_up
- * @property string|null $updated_up
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property Accountant $accountant
  * @property TaskStep $step
@@ -39,7 +39,7 @@ class TaskActivity extends \yii\db\ActiveRecord
             [['task_id', 'accountant_id', 'step_id'], 'required'],
             [['task_id', 'accountant_id', 'step_id'], 'default', 'value' => null],
             [['task_id', 'accountant_id', 'step_id'], 'integer'],
-            [['created_up', 'updated_up'], 'safe'],
+            [['created_at', 'updated_at'], 'safe'],
             [['accountant_id'], 'exist', 'skipOnError' => true, 'targetClass' => Accountant::class, 'targetAttribute' => ['accountant_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::class, 'targetAttribute' => ['task_id' => 'id']],
             [['step_id'], 'exist', 'skipOnError' => true, 'targetClass' => TaskStep::class, 'targetAttribute' => ['step_id' => 'id']],
@@ -56,8 +56,8 @@ class TaskActivity extends \yii\db\ActiveRecord
             'task_id' => 'Task ID',
             'accountant_id' => 'Accountant ID',
             'step_id' => 'Step ID',
-            'created_up' => 'Created Up',
-            'updated_up' => 'Updated Up',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 
@@ -76,9 +76,19 @@ class TaskActivity extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getStep()
+    public function getStepQuery()
     {
         return $this->hasOne(TaskStep::class, ['id' => 'step_id']);
+    }
+
+    /**
+     * Gets [[Step]].
+     *
+     * @return TaskStep
+     */
+    public function getStep()
+    {
+        return TaskStep::findOne(['id' => $this->step_id]);
     }
 
     /**
@@ -86,9 +96,19 @@ class TaskActivity extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTask()
+    public function getTaskQuery()
     {
         return $this->hasOne(Task::class, ['id' => 'task_id']);
+    }
+
+    /**
+     * Gets [[Task]].
+     *
+     * @return Task
+     */
+    public function getTask()
+    {
+        return Task::findOne(['id' => $this->task_id]);
     }
 
 }

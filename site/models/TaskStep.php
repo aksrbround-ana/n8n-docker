@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\services\DictionaryService;
 use Yii;
 
 /**
@@ -9,8 +10,8 @@ use Yii;
  *
  * @property int $id
  * @property string $name
- * @property string|null $created_up
- * @property string|null $updated_up
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property TaskActivity[] $taskActivities
  */
@@ -43,7 +44,7 @@ class TaskStep extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['created_up', 'updated_up'], 'safe'],
+            [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 255],
         ];
     }
@@ -56,8 +57,8 @@ class TaskStep extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'created_up' => 'Created Up',
-            'updated_up' => 'Updated Up',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
         ];
     }
 
@@ -69,5 +70,15 @@ class TaskStep extends \yii\db\ActiveRecord
     public function getTaskActivities()
     {
         return $this->hasMany(TaskActivity::class, ['step_id' => 'id']);
+    }
+
+    public function getName($lang)
+    {
+        $nameArr = explode('_', $this->name);
+        foreach ($nameArr as &$part) {
+            $part = ucfirst($part);
+        }
+        $nameKey = implode('', $nameArr);
+        return DictionaryService::getWord('taskStep' . $nameKey, $lang);
     }
 }

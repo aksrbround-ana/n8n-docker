@@ -12,6 +12,7 @@ use app\models\Accountant;
 use app\models\Company;
 use app\models\Task;
 use app\models\Document;
+use app\models\TaskActivity;
 
 class SiteController extends BaseController
 {
@@ -49,32 +50,43 @@ class SiteController extends BaseController
 
     protected function getDataForPage($accountant)
     {
-        $accountantQuery = (new Query())
-            ->select(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email', 'COUNT(t.id) AS tasks'])
-            ->from(['c' => Accountant::tableName()])
-            ->leftJoin(['t' => Task::tableName()], 't.accountant_id = c.id')
-            ->groupBy(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email'])
-            ->orderBy(['tasks' => SORT_DESC, 'c.lastname' => SORT_ASC, 'c.firstname' => SORT_ASC]);
-        $accountantsRaw = $accountantQuery->all();
-        $accountants = [];
-        foreach ($accountantsRaw as $accountantOne) {
-            $accountants[$accountantOne['id']] = $accountantOne;
-        }
+        $permissions = AuthService::getPermissions($accountant);
+        $viewAccountants = array_key_exists('viewAccountants', $permissions);
+        if ($viewAccountants) {
+            $accountantQuery = (new Query())
+                ->select(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email', 'COUNT(t.id) AS tasks'])
+                ->from(['c' => Accountant::tableName()])
+                ->leftJoin(['t' => Task::tableName()], 't.accountant_id = c.id')
+                ->groupBy(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email'])
+                ->orderBy(['tasks' => SORT_DESC, 'c.lastname' => SORT_ASC, 'c.firstname' => SORT_ASC]);
+            $accountantsRaw = $accountantQuery->all();
+            $accountants = [];
+            foreach ($accountantsRaw as $accountantOne) {
+                $accountants[$accountantOne['id']] = $accountantOne;
+            }
 
-        $overdueTasksQuery = (new Query())
-            ->select(['a.id', 'COUNT(t.id) AS "overdue_tasks"'])
-            ->from(['a' => 'accountant'])
-            ->leftJoin(['t' => Task::tableName()], 't.accountant_id = a.id AND t.status != \'done\' AND t.due_date < CURRENT_DATE')
-            ->groupBy('a.id')
-            ->orderBy(['a.id' => SORT_ASC]);
-        if ($accountant->rule !== 'ceo') {
-            $overdueTasksQuery->andWhere('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+            $overdueTasksQuery = (new Query())
+                ->select(['a.id', 'COUNT(t.id) AS "overdue_tasks"'])
+                ->from(['a' => 'accountant'])
+                ->leftJoin(['t' => Task::tableName()], 't.accountant_id = a.id AND t.status != \'done\' AND t.due_date < CURRENT_DATE')
+                ->groupBy('a.id')
+                ->orderBy(['a.id' => SORT_ASC]);
+            if ($accountant->rule !== 'ceo') {
+                $overdueTasksQuery->andWhere('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+            }
+            $overdueTasks = $overdueTasksQuery->all();
+            foreach ($overdueTasks as $overdueTask) {
+                $accountants[$overdueTask['id']]['overdueTasks'] = $overdueTask['overdue_tasks'];
+            }
+            $recentActivity = [];
+        } else {
+            $accountants = [];
+            $recentActivity = TaskActivity::find()
+                ->where('accountant_id = :accountant_id', ['accountant_id' => $accountant->id])
+                ->orderBy(['created_at' => SORT_DESC])
+                ->limit(10)
+                ->all();
         }
-        $overdueTasks = $overdueTasksQuery->all();
-        foreach ($overdueTasks as $overdueTask) {
-            $accountants[$overdueTask['id']]['overdueTasks'] = $overdueTask['overdue_tasks'];
-        }
-
         $upcomingDeadlinesQuery = (new Query())
             ->select([
                 't.id as task_id',
@@ -124,6 +136,8 @@ class SiteController extends BaseController
                 'overdueTasks' => $overdueTasks,
                 'upcomingDeadlines' => $upcomingDeadlines,
                 'docsToCheck' => $docsToCheck,
+                'recentActivity' => $recentActivity,
+                'viewAccountants' => $viewAccountants,
             ]
         ];
         return $data;

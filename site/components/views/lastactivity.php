@@ -12,29 +12,21 @@ use app\services\DictionaryService;
         <?= DictionaryService::getWord('recentActivity', $user->lang) ?>
     </h3>
     <div class="space-y-3">
-        <div class="flex items-center justify-between py-2 border-b last:border-0">
-            <div>
-                <p class="text-sm font-medium">Задача выполнена</p>
-                <p class="text-xs text-muted-foreground">НДС декларация - Global Trade SRB</p>
-            </div><span class="text-xs text-muted-foreground">2ч назад</span>
-        </div>
-        <div class="flex items-center justify-between py-2 border-b last:border-0">
-            <div>
-                <p class="text-sm font-medium">Документ загружен</p>
-                <p class="text-xs text-muted-foreground">Банковская выписка - TechStart DOO</p>
-            </div><span class="text-xs text-muted-foreground">4ч назад</span>
-        </div>
-        <div class="flex items-center justify-between py-2 border-b last:border-0">
-            <div>
-                <p class="text-sm font-medium">Комментарий добавлен</p>
-                <p class="text-xs text-muted-foreground">T-003 - Restoran Balkan</p>
-            </div><span class="text-xs text-muted-foreground">5ч назад</span>
-        </div>
-        <div class="flex items-center justify-between py-2 border-b last:border-0">
-            <div>
-                <p class="text-sm font-medium">Статус изменён</p>
-                <p class="text-xs text-muted-foreground">T-005 - BuildPro</p>
-            </div><span class="text-xs text-muted-foreground">Вчера</span>
-        </div>
+        <?php
+        foreach ($data['recentActivity'] as $activity) {
+            $stepName = $activity->getStep()->getName($user->lang);
+            $task = $activity->getTask();
+            $timeAgo = Yii::$app->formatter->asRelativeTime($activity->created_at);
+        ?>
+            <div class="flex items-center justify-between py-2 border-b last:border-0">
+                <div>
+                    <p class="text-sm font-medium"><?= $stepName ?></p>
+                    <p class="text-xs text-muted-foreground"><?= $task->category ?> — <?= $task->getCompany()->name ?></p>
+                </div>
+                <span class="text-xs text-muted-foreground"><?= $timeAgo ?></span>
+            </div>
+        <?php
+        }
+        ?>
     </div>
 </div>

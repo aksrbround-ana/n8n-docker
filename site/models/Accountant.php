@@ -133,6 +133,16 @@ class Accountant extends ActiveRecord //implements \yii\web\IdentityInterface
                 $accountant->save();
             }
         }
+        switch ($accountant->lang) {
+            case 'ru':
+                Yii::$app->language = 'ru-RU';
+                break;
+            case 'rs':
+                Yii::$app->language = 'sr-RS';
+                break;
+            default:
+                Yii::$app->language = 'en-US';
+        }
         return $accountant;
     }
 

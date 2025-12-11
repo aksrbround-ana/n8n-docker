@@ -18,8 +18,8 @@ class m251211_113649_create_task_activity_table extends Migration
         $this->createTable("{{%task_step}}", [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
-            'created_up' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
-            'updated_up' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
+            'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
+            'updated_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
         $this->insert('{{%task_step}}', ['name' => 'created']);
         $this->insert('{{%task_step}}', ['name' => 'assigned']);
@@ -37,8 +37,8 @@ class m251211_113649_create_task_activity_table extends Migration
             'task_id' => $this->bigInteger()->notNull(),
             'accountant_id' => $this->bigInteger()->notNull(),
             'step_id' => $this->bigInteger()->notNull(),
-            'created_up' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
-            'updated_up' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
+            'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
+            'updated_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
         $this->createIndex('idx_task_activity_task_id', '{{%task_activity}}', 'task_id');
         $this->createIndex('idx_task_activity_accountant_id', '{{%task_activity}}', 'accountant_id');

@@ -23,18 +23,16 @@ use app\components\OverviewTopPanelWidget;
             'data' => $data,
             'user' => $user,
         ]);
-        $permissions = AuthService::getPermissions($user);
-        $viewAccountants = array_key_exists('viewAccountants', $permissions);
         ?>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <?php
             echo DeadLinesWidget::widget([
-                'viewAccountants' => $viewAccountants,
+                'viewAccountants' => $data['viewAccountants'],
                 'data' => $data,
                 'user' => $user,
             ]);
 
-            if ($viewAccountants) {
+            if ($data['viewAccountants']) {
                 echo ViewAccountantsWidget::widget([
                     'data' => $data,
                     'user' => $user,
