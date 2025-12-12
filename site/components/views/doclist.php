@@ -29,16 +29,7 @@ use Codeception\Lib\Di;
         <?php
         foreach ($docs as $doc) {
         ?>
-            <tr class="doc-row border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
-                <!-- <td>
-                    <pre>
-                    <?php
-                    // print_r($doc->getCompany());
-                    // var_dump($doc->type_id);
-                    // var_dump($doc->getType());
-                    ?></pre>
-
-                </td> -->
+            <tr data-doc-id="<?= $doc->id ?>" class="doc-row border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                     <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 text-destructive">
                             <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
@@ -49,7 +40,7 @@ use Codeception\Lib\Di;
                         </svg>
                         <div>
                             <p class="font-medium text-sm truncate max-w-[200px]"><?= $doc->filename ?></p>
-                            <p class="text-xs text-muted-foreground"><?= Document::getLength($doc->id) ?></p>
+                            <p class="text-xs text-muted-foreground"><?= Document::getStaticLength($doc->id) ?></p>
                         </div>
                     </div>
                 </td>

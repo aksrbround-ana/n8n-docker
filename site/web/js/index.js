@@ -69,6 +69,24 @@ function loadContent() {
   })
 }
 
+function showTiff() {
+  if ($('#tiffCanvas').length) {
+    let docId = $('#tiffCanvas').data('doc-id');
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'arraybuffer';
+    xhr.open('GET', "/document/file/" + docId, true);
+    xhr.onload = function (e) {
+      var tiff = new Tiff({
+        buffer: xhr.response
+      });
+      var canvas = tiff.toCanvas();
+      document.getElementById('tiffCanvas').appendChild(canvas);
+    };
+    xhr.send();
+  }
+
+}
+
 function loadPage(url, data = {}) {
   let user = getUser();
   let token = user ? user?.token : '';
@@ -87,6 +105,7 @@ function loadPage(url, data = {}) {
       } else {
         $('main').html(response.data);
         userMenuResize();
+        showTiff();
       }
     },
     error: function (e) {
@@ -267,15 +286,7 @@ $(document).on('click', 'button.back-to-tasklist', function (e) {
 });
 
 $(document).on('click', 'tr.doc-row', function (e) {
-  let docId = $(this).find('input.doc-id').val();
-  let data = {
-    id: docId
-  }
-  loadPage('/document/view', data);
-});
-
-$(document).on('click', 'tr.doc-row', function (e) {
-  let docId = $(this).find('input.doc-id').val();
+  let docId = $(this).data('doc-id');
   let data = {
     id: docId
   }
@@ -283,9 +294,34 @@ $(document).on('click', 'tr.doc-row', function (e) {
 });
 
 $(document).on('click', 'a.document-view', function (e) {
-  const id = $(this).data('document-id');
+  const id = $(this).data('doc-id');
   const data = { id: id };
   loadPage('/document/view', data);
+  return false;
+});
+
+$(document).on('click', '#finish-task', function (e) {
+  const taskId = $(this).data('task-id');
+  const user = getUser();
+  const data = {
+    token: user.token,
+    id: taskId
+  };
+  $.ajax({
+    url: '/task/finish',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        loadPage('/task/view', { id: taskId });
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function () {
+      alert('Произошла ошибка при завершении задачи.');
+    }
+  });
   return false;
 });
 
@@ -293,7 +329,7 @@ $(document).on('click', '#sendComment', function (e) {
   const taskId = $(this).data('task-id');
   const commentText = $('#commentInput').val();
   const user = getUser();
-  const data = { 
+  const data = {
     token: user.token,
     id: taskId,
     comment_text: commentText

@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use app\models\Company;
 use app\models\DocumentType;
+use app\services\DictionaryService;
 
 /**
  * This is the model class for table "documents".
@@ -25,6 +26,9 @@ use app\models\DocumentType;
 class Document extends \yii\db\ActiveRecord
 {
 
+    const STATUS_UPLOADED = 'uploaded';
+    const STATUS_CHECKED = 'checked';
+    const STATUS_NEEDS_REVISION = 'needsRevision';
 
     /**
      * {@inheritdoc}
@@ -45,7 +49,7 @@ class Document extends \yii\db\ActiveRecord
             [['content', 'embedding'], 'string'],
             [['metadata', 'create_at', 'update_at'], 'safe'],
             [['tg_id', 'company_id'], 'default', 'value' => null],
-            [['tg_id', 'company_id'], 'integer'],
+            [['tg_id', 'company_id', 'type_id'], 'integer'],
             [['filename'], 'string', 'max' => 512],
             [['mimetype'], 'string', 'max' => 64],
             [['status'], 'string', 'max' => 16],
@@ -64,6 +68,7 @@ class Document extends \yii\db\ActiveRecord
             'embedding' => 'Embedding',
             'tg_id' => 'Tg ID',
             'company_id' => 'Company ID',
+            'type_id' => 'Type ID',
             'filename' => 'Filename',
             'mimetype' => 'Mimetype',
             'create_at' => 'Create At',
@@ -82,7 +87,32 @@ class Document extends \yii\db\ActiveRecord
         return DocumentType::find()->where(['id' => $this->type_id])->one();
     }
 
-    public static function getLength($id, $format = true)
+    public function getTypeName($lang = 'ru')
+    {
+        $type = $this->getType();
+        if ($type) {
+            return DictionaryService::getWord('docType' . ucfirst($type->name), $lang);
+        } else {
+            return null;
+        }
+    }
+
+    public function getStatusName($lang = 'ru')
+    {
+        return DictionaryService::getWord('docStatus' . ucfirst($this->status), $lang);
+    }
+
+    public function getLength($format = true)
+    {
+        $length =  $this->content ? strlen($this->content) : 0;
+        if ($format) {
+            return Yii::$app->formatter->asShortSize($length);
+        } else {
+            return $length;
+        }
+    }
+
+    public static function getStaticLength($id, $format = true)
     {
         $query = 'SELECT OCTET_LENGTH(content) FROM ' . self::tableName() . ' WHERE id = :id';
         $command = Yii::$app->db->createCommand($query);

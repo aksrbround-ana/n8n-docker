@@ -23,6 +23,14 @@ use app\services\DictionaryService;
 class Task extends \yii\db\ActiveRecord
 {
 
+    const STATUS_NEW = 'new';
+    const STATUS_IN_PROGRESS = 'inProgress';
+    const STATUS_WAITING = 'waiting';
+    const STATUS_DONE = 'done';
+    const STATUS_OVERDUE = 'overdue';
+    const STATUS_CLOSED = 'closed';
+    const STATUS_ARCHIVED  = 'archived';
+
     public $taskStatusStyles = [
         'overdue' =>   'bg-destructive/10 text-destructive border-destructive/20',
         'done' =>      'bg-success/10 text-success border-success/20',
@@ -49,7 +57,7 @@ class Task extends \yii\db\ActiveRecord
             [['company_id', 'category', 'request', 'due_date'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'new'],
             [['company_id', 'due_date'], 'default', 'value' => null],
-            [['company_id', 'due_date', 'accountant_id'], 'integer'],
+            [['company_id', 'accountant_id'], 'integer'],
             [['category'], 'string', 'max' => 64],
             [['request'], 'string', 'max' => 256],
             [['status'], 'string', 'max' => 32],

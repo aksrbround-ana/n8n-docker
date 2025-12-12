@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use yii\web\Response;
 use app\models\Accountant;
 use app\models\Document;
 
@@ -43,11 +44,27 @@ class DocumentController extends BaseController
             $doc = Document::findOne(['id' => $docId]);
             $data = [
                 'user' => $accountant,
-                'documents' => $doc,
+                'document' => $doc,
             ];
             return $this->renderPage($data, 'view');
         } else {
             return $this->renderLogout();
+        }
+    }
+
+    public function actionFile($id)
+    {
+        $this->layout = false;
+        $response = \Yii::$app->response;
+        $document = Document::findOne(['id' => $id]);
+        if ($document) {
+            $response->format = Response::FORMAT_RAW;
+            $response->headers->add('Content-Type', $document->mimetype);
+            $response->headers->add('Content-Disposition', "inline; filename=\"{$document->filename}\"");
+            $response->content = stream_get_contents($document->content);
+            return $response;
+        } else {
+            throw new \yii\web\NotFoundHttpException('Document not found');
         }
     }
 }

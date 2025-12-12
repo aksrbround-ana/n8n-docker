@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use yii\web\Response;
 use app\models\Accountant;
 use \app\models\Task;
 use \app\models\TaskComment;
@@ -76,6 +77,38 @@ class TaskController extends BaseController
                 'task' => Task::findOne(['id' => $id]),
             ];
             return $this->renderPage($data, 'addComment');
+        } else {
+            return $this->renderLogout($accountant);
+        }
+    }
+
+    public function actionFinish()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $task = Task::findOne(['id' => $id]);
+            $task->status = Task::STATUS_DONE;
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            if ($task->save()) {
+                $response->data = [
+                    'status' => 'success',
+                    'task' => Task::findOne(['id' => $id]),
+                ];
+            } else {
+                $response->data = [
+                    'status' => 'error',
+                    // 'message' => implode("\n", $task->getErrors()),
+                    'message' => $task->getErrors(),
+                    'task' => $task,
+                ];
+            }
+            return $response;
         } else {
             return $this->renderLogout($accountant);
         }

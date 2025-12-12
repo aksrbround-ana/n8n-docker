@@ -82,6 +82,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'GET document/file/<id:\d+>' => 'document/file',
                 'POST login' => 'auth/login',
                 'GET auth' => 'site/login',
                 'POST api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',

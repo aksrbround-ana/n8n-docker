@@ -31,6 +31,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;📊&lt;/text&gt;&lt;/svg&gt;">
     <script src="/js/jquery.js"></script>
     <script src="/js/index.js"></script>
+    <script src="/js/tiff.min.js"></script>
     <link rel="stylesheet" href="/css/index.css">
 </head>
 

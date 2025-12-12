@@ -26,7 +26,7 @@ class m251211_113649_create_task_activity_table extends Migration
         $this->insert('{{%task_step}}', ['name' => 'in_progress']);
         $this->insert('{{%task_step}}', ['name' => 'waiting']);
         $this->insert('{{%task_step}}', ['name' => 'overdue']);
-        $this->insert('{{%task_step}}', ['name' => 'completed']);
+        $this->insert('{{%task_step}}', ['name' => 'done']);
         $this->insert('{{%task_step}}', ['name' => 'closed']);
         $this->insert('{{%task_step}}', ['name' => 'archived']);
         $this->insert('{{%task_step}}', ['name' => 'priority_changed']);

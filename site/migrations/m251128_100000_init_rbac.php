@@ -56,7 +56,6 @@ class m251128_100000_init_rbac extends Migration
         $auth->add($accountant);
         $auth->addChild($accountant, $viewDashboard);
         $auth->addChild($accountant, $viewTasks);
-        $auth->addChild($accountant, $manageTasks);
         $auth->addChild($accountant, $viewDocuments);
 
         // 2. Администратор (Admin)
@@ -65,6 +64,7 @@ class m251128_100000_init_rbac extends Migration
         $auth->add($admin);
         $auth->addChild($admin, $accountant); // Наследует все права Бухгалтера
         $auth->addChild($admin, $manageCompanies);
+        $auth->addChild($admin, $manageTasks);
         $auth->addChild($admin, $viewReports);
         $auth->addChild($admin, $systemSettings);
 

@@ -144,6 +144,11 @@ class DictionaryService
             'addComment'=> 'Добавить комментарий',
             'companyInformation' => 'Информация о компании',
             'activity' => 'Активность',
+            'viewDocument' => 'Просмотр документа',
+            'open' => 'Открыть',
+            'documentInformation' => 'Информация о документе',
+            'fileSize' => 'Размер файла',
+            'company' => 'Компания',
 
             // Priorities
             'priorityLow' =>  'Низкий',
@@ -339,6 +344,11 @@ class DictionaryService
             'addComment'=> 'Dodaj komentar',
             'companyInformation'=> 'Informacije o kompaniji',
             'activity' => 'Aktivnost',
+            'viewDocument' => 'Pregled dokumenta',
+            'open' => 'Otvori',
+            'documentInformation' => 'Informacije o dokumentu',
+            'fileSize' => 'Veličina fajla',
+            'company' => 'Kompanija',
 
             // Priorities
             'priorityLow' =>  'Nizak',

@@ -19,13 +19,13 @@ class TaskStep extends \yii\db\ActiveRecord
 {
 
     public static $steps = [
-        'taskStatusNew' =>  'taskStepCreated',
-        'taskStatusInProgress' =>  'taskStepInProgress',
-        'taskStatusWaiting' =>  'taskStepWaiting',
-        'taskStatusDone' =>  'taskStepDone',
-        'taskStatusOverdue' =>  'taskStepOverdue',
-        'taskStatusClosed' =>  'taskStepClosed',
-        'taskStatusArchived' =>  'taskStepArchived',
+        'new' =>  'created',
+        'inProgress' =>  'in_progress',
+        'waiting' =>  'waiting',
+        'done' =>  'done',
+        'overdue' =>  'overdue',
+        'closed' =>  'closed',
+        'archived' =>  'archived',
 
     ];
 

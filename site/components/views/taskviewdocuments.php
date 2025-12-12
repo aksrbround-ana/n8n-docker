@@ -24,7 +24,7 @@ use app\models\Document;
             foreach ($documents as $document) {
         ?>
                 <div class="space-y-2">
-                    <a class="document-view flex items-center justify-between p-3 rounded-lg border hover:bg-secondary/50 transition-colors" href="/document/view" data-document-id="<?= $document->id ?>">
+                    <a class="document-view flex items-center justify-between p-3 rounded-lg border hover:bg-secondary/50 transition-colors" href="/document/view" data-doc-id="<?= $document->id ?>">
                         <input type="hidden" class="document" value="<?= $document->id ?>" />
                         <div class="flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-5 w-5 text-muted-foreground">
@@ -36,7 +36,7 @@ use app\models\Document;
                             </svg>
                             <div>
                                 <p class="text-sm font-medium"><?= $document->filename ?></p>
-                                <p class="text-xs text-muted-foreground"><?= Document::getLength($document->id) ?></p>
+                                <p class="text-xs text-muted-foreground"><?= Document::getStaticLength($document->id, $user->lang) ?></p>
                             </div>
                         </div>
                         <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border"></span>
