@@ -149,6 +149,7 @@ class DictionaryService
             'documentInformation' => 'Информация о документе',
             'fileSize' => 'Размер файла',
             'company' => 'Компания',
+            'currentStatus' => 'Текущий статус',
 
             // Priorities
             'priorityLow' =>  'Низкий',
@@ -349,6 +350,7 @@ class DictionaryService
             'documentInformation' => 'Informacije o dokumentu',
             'fileSize' => 'Veličina fajla',
             'company' => 'Kompanija',
+            'currentStatus' => 'Trenutni status',
 
             // Priorities
             'priorityLow' =>  'Nizak',

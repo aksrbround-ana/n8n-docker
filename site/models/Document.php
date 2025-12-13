@@ -5,6 +5,8 @@ namespace app\models;
 use Yii;
 use app\models\Company;
 use app\models\DocumentType;
+use app\models\DocumentActivity;
+use app\models\DocumentStep;
 use app\services\DictionaryService;
 
 /**
@@ -28,7 +30,13 @@ class Document extends \yii\db\ActiveRecord
 
     const STATUS_UPLOADED = 'uploaded';
     const STATUS_CHECKED = 'checked';
-    const STATUS_NEEDS_REVISION = 'needsRevision';
+    const STATUS_NEEDS_REVISION = 'needs_revision';
+
+    public $statuses = [
+        'uploaded' =>  self::STATUS_UPLOADED,
+        'checked' =>  self::STATUS_CHECKED,
+        'needsRevision' =>  self::STATUS_NEEDS_REVISION,
+    ];
 
     /**
      * {@inheritdoc}
@@ -77,6 +85,48 @@ class Document extends \yii\db\ActiveRecord
         ];
     }
 
+    public function save($runValidation = true, $attributeNames = null)
+    {
+        $docActivity = new DocumentActivity();
+        $docActivity->document_id = $this->id;
+        $docActivity->accountant_id = $this->accountant_id;
+        if (!$this->isNewRecord) {
+            $oldDocument = Document::findOne(['id' => $this->id]);
+            if ($oldDocument && $oldDocument->status !== $this->status) {
+                $stepName = DocumentStep::$steps[$this->status] ?? null;
+                if ($stepName) {
+                    $step = DocumentStep::findOne(['name' => $stepName]);
+                    if ($step) {
+                        $docActivity->step_id = $step->id;
+                        $docActivity->save();
+                    }
+                }
+            }
+        }
+        $ret = parent::save($runValidation, $attributeNames);
+        if ($docActivity->document_id === null) {
+            $docActivity->document_id = $this->id;
+            $step = DocumentStep::findOne(['name' => DocumentStep::STEP_UPLOADED]);
+            if ($step) {
+                $docActivity->step_id = $step->id;
+                $docActivity->save();
+            }
+        }
+        return $ret;
+    }
+
+    public function addActivity($accountantId, $stepName)
+    {
+        $docActivity = new DocumentActivity();
+        $docActivity->document_id = $this->id;
+        $docActivity->accountant_id = $accountantId;
+        $step = DocumentStep::findOne(['name' => $stepName]);
+        if ($step) {
+            $docActivity->step_id = $step->id;
+            $docActivity->save();
+        }
+    }
+
     public function getCompany()
     {
         return Company::find()->where(['id' => $this->company_id])->one();
@@ -97,9 +147,13 @@ class Document extends \yii\db\ActiveRecord
         }
     }
 
-    public function getStatusName($lang = 'ru')
+    public function getStatusName($lang = 'ru', $status = null)
     {
-        return DictionaryService::getWord('docStatus' . ucfirst($this->status), $lang);
+        if ($status === null) {
+            $status = $this->status;
+        }
+        $status = str_replace(' ', '', ucwords(str_replace('_', ' ', $status)));
+        return DictionaryService::getWord('docStatus' . ucfirst($status), $lang);
     }
 
     public function getLength($format = true)
@@ -123,5 +177,15 @@ class Document extends \yii\db\ActiveRecord
         } else {
             return $length;
         }
+    }
+
+    public function getActivities()
+    {
+        return $this->hasMany(DocumentActivity::class, ['document_id' => 'id']);
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(DocumentComment::class, ['document_id' => 'id'])->orderBy(['created_at' => SORT_DESC]);
     }
 }

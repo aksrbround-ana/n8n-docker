@@ -170,4 +170,9 @@ class Accountant extends ActiveRecord //implements \yii\web\IdentityInterface
     {
         return $authKey === $this->token;
     }
+
+    public function getFullName()
+    {
+        return trim($this->firstname . ' ' . $this->lastname);
+    }
 }

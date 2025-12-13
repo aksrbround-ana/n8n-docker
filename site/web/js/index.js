@@ -357,6 +357,68 @@ $(document).on('click', 'button.back-to-doclist', function (e) {
   loadPage('/document/page');
 });
 
+$(document).on('click', '#doc-change-status', function (e) {
+  $('#doc-change-status').hide();
+  $('#doc-status-select').removeClass('hidden');
+});
+
+$(document).on('change', '#doc-status-select', function (e) {
+  $('#doc-change-status').show();
+  $('#doc-status-select').addClass('hidden');
+  let user = getUser();
+  let token = user ? user?.token : '';
+  let docId = $(this).data('doc-id');
+  let newStatus = $(this).val();
+  $.ajax({
+    url: '/document/change-status',
+    type: 'POST',
+    data: {
+      token: token,
+      id: docId,
+      status: newStatus
+    },
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#doc-status-block').html(response.data);
+        $('#doc-activity-block').replaceWith(response.activity);
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function () {
+      alert('Произошла ошибка при изменении статуса документа.');
+    }
+  });
+});
+
+$(document).on('click', '#doc-send-comment', function (e) {
+  const docId = $(this).data('document-id');
+  const commentText = $('#doc-comment-input').val();
+  const user = getUser();
+  const data = {
+    token: user.token,
+    id: docId,
+    comment_text: commentText
+  };
+  $.ajax({
+    url: '/document/comment',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#commentInput').val('');
+        $('#doc-comment-block').replaceWith(response.data);
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function () {
+      alert('Произошла ошибка при добавлении комментария.');
+    }
+  });
+  return false;
+});
+
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------

@@ -5,6 +5,8 @@ namespace app\models;
 use app\services\DictionaryService;
 use Yii;
 
+use function Symfony\Component\String\s;
+
 /**
  * This is the model class for table "task_step".
  *
@@ -18,14 +20,22 @@ use Yii;
 class TaskStep extends \yii\db\ActiveRecord
 {
 
+    const STEP_NEW = 'created';
+    const STEP_IN_PROGRESS = 'in_progress';
+    const STEP_WAITING = 'waiting';
+    const STEP_DONE = 'done';
+    const STEP_OVERDUE = 'overdue';
+    const STEP_CLOSED = 'closed';
+    const STEP_ARCHIVED = 'archived';
+
     public static $steps = [
-        'new' =>  'created',
-        'inProgress' =>  'in_progress',
-        'waiting' =>  'waiting',
-        'done' =>  'done',
-        'overdue' =>  'overdue',
-        'closed' =>  'closed',
-        'archived' =>  'archived',
+        'new' =>  self::STEP_NEW,
+        'inProgress' =>  self::STEP_IN_PROGRESS,
+        'waiting' =>  self::STEP_WAITING,
+        'done' =>  self::STEP_DONE,
+        'overdue' =>  self::STEP_OVERDUE,
+        'closed' =>  self::STEP_CLOSED,
+        'archived' =>  self::STEP_ARCHIVED,
 
     ];
 

@@ -1,6 +1,8 @@
 <?php
 
-use app\components\DocViewActionsWidget;
+use app\components\DocViewActivityWidget;
+use app\components\DocViewCommentsWidget;
+use app\components\DocViewStatusWidget;
 use app\components\DocViewTopWidget;
 use app\components\DocViewInfoWidget;
 use app\components\DocViewCompanyWidget;
@@ -23,7 +25,17 @@ use app\components\DocViewCompanyWidget;
                     'document' => $document,
                 ])
                 ?>
-                <?= DocViewActionsWidget::widget([
+                <?= DocViewStatusWidget::widget([
+                    'user' => $user,
+                    'document' => $document,
+                ])
+                ?>
+                <?= DocViewActivityWidget::widget([
+                    'user' => $user,
+                    'document' => $document,
+                ])
+                ?>
+                <?= DocViewCommentsWidget::widget([
                     'user' => $user,
                     'document' => $document,
                 ])
