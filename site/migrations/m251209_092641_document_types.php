@@ -32,7 +32,7 @@ class m251209_092641_document_types extends Migration
             ]);
         }
 
-        $this->addColumn('documents', 'type_id', $this->integer()->defaultValue(null));
+        $this->addColumn('documents', 'type_id', $this->integer()->defaultValue(1)->after('status'));
         $this->addForeignKey(
             'fk_documents_type_id',
             'documents',
