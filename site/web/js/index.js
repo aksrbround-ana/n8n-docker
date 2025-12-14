@@ -87,13 +87,23 @@ function showTiff() {
 
 }
 
-function loadPage(url, data = {}) {
+function loadPage(url, data = {}, saveHistory = false) {
   let user = getUser();
   let token = user ? user?.token : '';
   if (!data) {
     data = {};
   }
   data.token = token;
+  let itemHistory = { url: url, data: data };
+  if (saveHistory) {
+    let pageHistory = localStorage.getItem('pageHistory');
+    pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+    pageHistory.push(itemHistory);
+    localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+  } else {
+    let pageHistory = [itemHistory];
+    localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+  }
   $.ajax({
     url: url,
     type: 'POST',
@@ -118,6 +128,40 @@ function loadPage(url, data = {}) {
     },
     type: 'json'
   })
+}
+
+function goBack() {
+  let pageHistory = localStorage.getItem('pageHistory');
+  pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+  if (pageHistory.length > 1) {
+    pageHistory.pop();
+    let lastPage = pageHistory[pageHistory.length - 1];
+    localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+    $.ajax({
+      url: lastPage.url,
+      type: 'POST',
+      data: lastPage.data,
+      success: function (response) {
+        if (response.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          $('main').html(response.data);
+          userMenuResize();
+          showTiff();
+        }
+      },
+      error: function (e) {
+        if (e.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          showError('Load error', e.message);
+        }
+      },
+      type: 'json'
+    })
+  }
 }
 
 //------------------------------------------------------------------
@@ -204,7 +248,7 @@ $(document).on('click', '.company_open_profile', function (e) {
   let data = {
     id: id
   }
-  loadPage('/company/profile', data);
+  loadPage('/company/profile', data, true);
   return false;
 });
 
@@ -226,10 +270,6 @@ $(document).on('click', '.company_open_docs', function (e) {
   }
   loadPage('/company/docs', data);
   return false;
-});
-
-$(document).on('click', '#back-to-company', function (e) {
-  loadPage('/company/page');
 });
 
 $(document).on('click', 'div[role=tablist] button[role=tab]', function (e) {
@@ -278,11 +318,11 @@ $(document).on('click', 'tr.task-row', function (e) {
   let data = {
     id: taskId
   }
-  loadPage('/task/view', data);
+  loadPage('/task/view', data, true);
 });
 
-$(document).on('click', 'button.back-to-tasklist', function (e) {
-  loadPage('/task/page');
+$(document).on('click', 'button.back', function (e) {
+  goBack();
 });
 
 $(document).on('click', 'tr.doc-row', function (e) {
@@ -290,13 +330,13 @@ $(document).on('click', 'tr.doc-row', function (e) {
   let data = {
     id: docId
   }
-  loadPage('/document/view', data);
+  loadPage('/document/view', data, true);
 });
 
 $(document).on('click', 'a.document-view', function (e) {
   const id = $(this).data('doc-id');
   const data = { id: id };
-  loadPage('/document/view', data);
+  loadPage('/document/view', data, true);
   return false;
 });
 
@@ -351,10 +391,6 @@ $(document).on('click', '#sendComment', function (e) {
     }
   });
   return false;
-});
-
-$(document).on('click', 'button.back-to-doclist', function (e) {
-  loadPage('/document/page');
 });
 
 $(document).on('click', '#doc-change-status', function (e) {
