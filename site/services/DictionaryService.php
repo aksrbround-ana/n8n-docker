@@ -169,6 +169,7 @@ class DictionaryService
             'selectDocType' =>  'Выберите тип документа',
 
             // Document types
+            'docTypeUnknown' =>  'Неизвестно',
             'docTypeInvoice' =>  'Счёт-фактура',
             'docTypeBankStatement' =>  'Банковская выписка',
             'docTypePayroll' =>  'Зарплатная ведомость',
@@ -370,6 +371,7 @@ class DictionaryService
             'selectDocType' =>  'Izaberite tip dokumenta',
 
             // Document types
+            'docTypeUnknown' =>  'Nepoznato',
             'docTypeInvoice' =>  'Faktura',
             'docTypeBankStatement' =>  'Izvod iz banke',
             'docTypePayroll' =>  'Platni spisak',

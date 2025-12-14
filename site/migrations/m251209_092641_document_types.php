@@ -6,6 +6,7 @@ class m251209_092641_document_types extends Migration
 {
     const TABLE_NAME = 'document_types';
     private $types = [
+        'unknown',
         'invoice',
         'bankStatement',
         'payroll',
