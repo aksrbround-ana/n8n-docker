@@ -19,7 +19,10 @@ $company = $task->getCompany();
             </svg><?= DictionaryService::getWord('companyInformation', $user->lang) ?>
         </h3>
     </div>
-    <div class="p-6 pt-0 space-y-3"><a class="text-lg font-semibold text-primary hover:underline" href="/companies/3"><?= $company->name ?></a>
+    <div class="p-6 pt-0 space-y-3">
+        <button data-id="<?= $company->id ?>" class="company_open_profile text-left hover:underline">
+            <p class="font-medium text-primary"><strong><?= $company->name ?></strong></p>
+        </button>
         <div class="space-y-2 text-sm">
             <div class="flex justify-between"><span class="text-muted-foreground">ПИБ:</span><span class="font-mono"><?= $company->pib ?></span></div>
             <div class="flex justify-between"><span class="text-muted-foreground">Город:</span><span>Белград</span></div>

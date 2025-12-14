@@ -13,7 +13,7 @@ class TaskListWidget extends Widget
     public function run()
     {
         if ($this->company) {
-            $tasksQuery = Task::find(['company_id' => $this->company->id]);
+            $tasksQuery = Task::find()->where(['company_id' => $this->company->id]);
         } else {
             $tasksQuery = Task::find();
         }

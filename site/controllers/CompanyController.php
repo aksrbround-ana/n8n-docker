@@ -32,34 +32,28 @@ class CompanyController extends BaseController
                 'ca.name AS company_activity',
                 'c.is_pdv',
                 'c.pib',
-                'c.status AS company_status',
-                'a.id AS accountant_id',
-                'a.firstname',
-                'a.lastname'
+                'c.status AS company_status'
             ])
             ->distinct()
             ->from(['c' => 'company'])
             ->leftJoin(['ct' => 'company_type'], 'ct.id = c.type_id')
             ->leftJoin(['ca' => 'company_activities'], 'ca.id = c.activity_id')
-            ->leftJoin(['t' => 'task'], 't.company_id = c.id')
-            ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id');
+            // ->leftJoin(['t' => 'task'], 't.company_id = c.id')
+            // ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id')
+            ;
         $companies = $companiesQuery->all();
         foreach ($companies as &$company) {
-            $id = $company['company_id'];
-            $openTasks = (new Query())
-                ->select('count(*) as tasks')
-                ->from('task')
-                ->where('id = ' . $id)
-                ->andWhere('status = \'inProgress\'')
-                ->one()['tasks'];
+            $openTasks = Task::find()
+                ->where(['company_id'=> $company['company_id']])
+                ->andWhere(['!=', 'status', '\'done\''])
+                ->count();
             $company['openTasks'] = $openTasks;
-            $overdueTasks = (new Query())
-                ->select('count(*) as tasks')
-                ->from('task')
-                ->where('id = ' . $id)
-                ->andWhere('status != \'done\'')
-                ->andWhere('due_date < :now', [':now' => date('Y-m-d')])
-                ->one()['tasks'];
+            $overdueTasks = Task::find()
+                ->where(['company_id'=> $company['company_id']])
+                ->andWhere(['!=', 'status', 'done'])
+                ->andWhere(['<', 'due_date', date('Y-m-d')])
+                ->count();
+
             $company['overdueTasks'] = $overdueTasks;
         }
         $data = [
@@ -94,9 +88,16 @@ class CompanyController extends BaseController
             $company = Company::findOne(['id' => $id]);
             $customers = Customer::findAll(['company_id' => $id]);
             $activity = CompanyActivities::findOne(['id' => $company->activity_id]);
-            $taskCount = Task::find(['company_id' => $company->id])->count();
-            $tasks = Task::find(['company_id' => $company->id])->all();
-            $tasksOverdue = Task::find(['company_id' => $company->id, ['<', 'due_date', date('Y-m-d')]])->count();
+            $taskQuery = Task::find()
+                ->where(['company_id' => $company->id]);
+            $taskCount = $taskQuery->count();
+            $tasks = $taskQuery
+                ->orderBy('due_date ASC')
+                ->all();
+            $tasksOverdue = $taskQuery
+                ->andWhere(['!=', 'status', 'done'])
+                ->andWhere(['<', 'due_date', date('Y-m-d')])
+                ->count();
             $data = [
                 'user' => $accountant,
                 'company' => $company,

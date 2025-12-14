@@ -13,7 +13,7 @@ class DocListWidget extends Widget
     public function run()
     {
         if ($this->company) {
-            $docs = Document::find(['company_id' => $this->company->id])->all();
+            $docs = Document::find()->where(['company_id' => $this->company->id])->all();
         } else {
             $docs = Document::find()->all();
         }

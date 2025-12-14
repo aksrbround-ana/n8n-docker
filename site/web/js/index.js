@@ -244,7 +244,7 @@ $(document).on('click', '#lang-card-mini', function () {
 
 $(document).on('click', '.company_open_profile', function (e) {
   e.preventDefault();
-  let id = $(this).find('input.company').val();
+  let id = $(this).data('id');
   let data = {
     id: id
   }
