@@ -150,6 +150,7 @@ class DictionaryService
             'fileSize' => 'Размер файла',
             'company' => 'Компания',
             'currentStatus' => 'Текущий статус',
+            'by_unknown' => 'Неизвестно',
 
             // Priorities
             'priorityLow' =>  'Низкий',
@@ -352,6 +353,7 @@ class DictionaryService
             'fileSize' => 'Veličina fajla',
             'company' => 'Kompanija',
             'currentStatus' => 'Trenutni status',
+            'by_unknown' => 'Nepoznato',
 
             // Priorities
             'priorityLow' =>  'Nizak',

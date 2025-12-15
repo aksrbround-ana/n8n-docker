@@ -8,6 +8,16 @@ class m251207_090235_insert_accountants extends Migration
     private $accountants = [
         [
             'id' => 0,
+            'firstname' => 'Bot',
+            'lastname' => 'Buhgalterija',
+            'rule' => 'bot',
+            'lang' => 'ru',
+            'email' => '',
+            'password' => '',
+            'token' => '',
+        ],
+        [
+            'id' => 0,
             'firstname' => 'Marija',
             'lastname' => 'Kovačević',
             'rule' => 'accountant',
@@ -65,10 +75,14 @@ class m251207_090235_insert_accountants extends Migration
         $renameQuery = 'ALTER TABLE "accountant" RENAME COLUMN "status" TO "rule"';
         $this->execute($renameQuery);
         $nextIdQuery = 'SELECT nextval(\'accountant_id_seq\'::regclass)';
-        foreach ($this->accountants as $accountant) {
-            $nextId = Yii::$app->db
-                ->createCommand($nextIdQuery)
-                ->queryScalar();
+        foreach ($this->accountants as $key => $accountant) {
+            if ($key == 0) {
+                $nextId = $accountant['id'];
+            } else {
+                $nextId = Yii::$app->db
+                    ->createCommand($nextIdQuery)
+                    ->queryScalar();
+            }
             $accountant['id'] = $nextId;
             $accountant['password'] = AuthService::encodePassword($accountant['password']);
             $this->insert('{{%accountant}}', $accountant);
