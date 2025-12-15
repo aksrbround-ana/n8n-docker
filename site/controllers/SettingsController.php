@@ -1,7 +1,7 @@
 <?php
 
 namespace app\controllers;
-
+use app\models\Accountant;
 class SettingsController extends BaseController
 {
     public function actionPage()
@@ -9,7 +9,10 @@ class SettingsController extends BaseController
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
-        $data = [];
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        $data = [
+            'user' => $accountant,
+        ];
         return $this->renderPage($data);
     }
 

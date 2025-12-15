@@ -57,6 +57,9 @@ class SiteController extends BaseController
                 ->select(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email', 'COUNT(t.id) AS tasks'])
                 ->from(['c' => Accountant::tableName()])
                 ->leftJoin(['t' => Task::tableName()], 't.accountant_id = c.id')
+                ->where(['!=', 'c.rule', 'bot'])
+                ->andWhere(['!=', 'c.rule', 'admin'])
+                ->andWhere(['!=', 'c.rule', 'ceo'])
                 ->groupBy(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email'])
                 ->orderBy(['tasks' => SORT_DESC, 'c.lastname' => SORT_ASC, 'c.firstname' => SORT_ASC]);
             $accountantsRaw = $accountantQuery->all();
@@ -69,6 +72,9 @@ class SiteController extends BaseController
                 ->select(['a.id', 'COUNT(t.id) AS "overdue_tasks"'])
                 ->from(['a' => 'accountant'])
                 ->leftJoin(['t' => Task::tableName()], 't.accountant_id = a.id AND t.status != \'done\' AND t.due_date < CURRENT_DATE')
+                ->where(['!=', 'a.rule', 'bot'])
+                ->andWhere(['!=', 'a.rule', 'admin'])
+                ->andWhere(['!=', 'a.rule', 'ceo'])
                 ->groupBy('a.id')
                 ->orderBy(['a.id' => SORT_ASC]);
             if ($accountant->rule !== 'ceo') {

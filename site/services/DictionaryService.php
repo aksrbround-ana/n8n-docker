@@ -9,8 +9,37 @@ class DictionaryService
         'normal' => '●',
         'high' => '↑',
     ];
+
+    static array $months = [
+        'january',
+        'february',
+        'march',
+        'april',
+        'may',
+        'june',
+        'july',
+        'august',
+        'september',
+        'october',
+        'november',
+        'december',
+    ];
     static array $dictionary = [
         'ru' =>   [
+            // Months
+            'january' => 'Январь',
+            'february' => 'Февраль',
+            'march' => 'Март',
+            'april' => 'Апрель',
+            'may' => 'Май',
+            'june' => 'Июнь',
+            'july' => 'Июль',
+            'august' => 'Август',
+            'september' => 'Сентябрь',
+            'october' => 'Октябрь',
+            'november' => 'Ноябрь',
+            'december' => 'Декабрь',
+
             // Navigation
             'dashboard' =>  'Главная',
             'companies' =>  'Компании',
@@ -84,7 +113,7 @@ class DictionaryService
             'phone' =>  'Телефон',
             'notes' =>  'Заметки',
             'contacts' =>  'Контакты',
-            'chat'=> 'Чат',
+            'chat' => 'Чат',
             'addCompany' =>  'Добавить компанию',
 
             // Company statuses
@@ -129,7 +158,7 @@ class DictionaryService
             'taskStepOverdue' =>  'просрочена',
             'taskStepDone' =>  'выполнена',
             'taskStepClosed' =>  'закрыта',
-            'taskStepArchived' =>  'архивирована',  
+            'taskStepArchived' =>  'архивирована',
             'taskStepPriorityChanged' =>  'приоритет изменён',
             'taskStepDueDateChanged' =>  'срок изменён',
 
@@ -141,7 +170,7 @@ class DictionaryService
             'taskTypeOther' =>  'Другое',
 
             // Other
-            'addComment'=> 'Добавить комментарий',
+            'addComment' => 'Добавить комментарий',
             'companyInformation' => 'Информация о компании',
             'activity' => 'Активность',
             'viewDocument' => 'Просмотр документа',
@@ -200,9 +229,13 @@ class DictionaryService
 
             // Settings
             'systemSettings' =>  'Системные настройки',
+            'systemSettingsManaging' =>  'Управление настройками системы',
             'taxPeriods' =>  'Налоговые периоды',
             'defaultDeadlines' =>  'Сроки по умолчанию',
+            'defaultDeadlinesForVariousTasks' =>  'Сроки по умолчанию для различных типов задач',
             'notificationTemplates' =>  'Шаблоны уведомлений',
+            'notificationTemplatesForEmailAndSMS' => 'Шаблоны уведомлений для email и SMS',
+            'set' => 'настроить',
 
             // Time
             'today' =>  'Сегодня',
@@ -212,8 +245,29 @@ class DictionaryService
             'overdue' =>  'Просрочено',
             'daysLeft' =>  'дней осталось',
             'daysOverdue' =>  'дней просрочено',
+
+            // Reminders
+            'actionDate' => 'Дата действия',
+            'reminderDate' => 'Дата напоминания',
+            'activityType' => 'Тип активности',
+            'reminderText' => 'Текст напоминания',
+            'taxCalendar' => 'Налоговый календарь',
         ],
         'rs' =>   [
+            // Months
+            'january' => 'Januar',
+            'february' => 'Februar',
+            'march' => 'Mart',
+            'april' => 'April',
+            'may' => 'Maj',
+            'june' => 'Jun',
+            'july' => 'Jul',
+            'august' => 'Avgust',
+            'september' => 'Septembar',
+            'october' => 'Oktobar',
+            'november' => 'Novembar',
+            'december' => 'Decembar',
+
             // Navigation
             'dashboard' =>  'Početna',
             'companies' =>  'Kompanije',
@@ -287,7 +341,7 @@ class DictionaryService
             'phone' =>  'Telefon',
             'notes' =>  'Beleške',
             'contacts' =>  'Kontakti',
-            'chat'=> 'Chat',
+            'chat' => 'Chat',
             'addCompany' =>  'Dodaj kompaniju',
 
             // Company statuses
@@ -344,8 +398,8 @@ class DictionaryService
             'taskTypeOther' =>  'Ostalo',
 
             // Other
-            'addComment'=> 'Dodaj komentar',
-            'companyInformation'=> 'Informacije o kompaniji',
+            'addComment' => 'Dodaj komentar',
+            'companyInformation' => 'Informacije o kompaniji',
             'activity' => 'Aktivnost',
             'viewDocument' => 'Pregled dokumenta',
             'open' => 'Otvori',
@@ -403,9 +457,13 @@ class DictionaryService
 
             // Settings
             'systemSettings' =>  'Sistemska podešavanja',
+            'systemSettingsManaging' =>  'Upravljanje podešavanjima sistema',
             'taxPeriods' =>  'Poreski periodi',
             'defaultDeadlines' =>  'Podrazumevani rokovi',
+            'defaultDeadlinesForVariousTasks' =>  'Podrazumevani rokovi za različite zadatke',
             'notificationTemplates' =>  'Šabloni obaveštenja',
+            'notificationTemplatesForEmailAndSMS' => 'Šabloni obaveštenja za email i SMS',
+            'set' => 'Podesi',
 
             // Time
             'today' =>  'Danas',
@@ -415,6 +473,13 @@ class DictionaryService
             'overdue' =>  'Zakasnelo',
             'daysLeft' =>  'dana preostalo',
             'daysOverdue' =>  'dana zakašnjenja',
+
+            // Reminders
+            'actionDate' => 'Datum akcije',
+            'reminderDate' => 'Datum podsećanja',
+            'activityType' => 'Tip aktivnosti',
+            'reminderText' => 'Tekst podsećanja',
+            'taxCalendar' => 'Poreski kalendar',
         ],
     ];
 

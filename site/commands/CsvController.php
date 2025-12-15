@@ -2,10 +2,8 @@
 
 namespace app\commands;
 
-use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
-use app\services\AuthService;
 
 class CsvController extends Controller
 {
