@@ -23,8 +23,8 @@ class m251209_092641_document_types extends Migration
         $this->createTable('document_types', [
             'id' => $this->primaryKey(),
             'name' => $this->string(64)->notNull()->unique(),
-            'create_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
-            'update_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
+            'created_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
+            'updated_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
         foreach ($this->types as $type) {
             $this->insert(self::TABLE_NAME, [

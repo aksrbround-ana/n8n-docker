@@ -11,7 +11,7 @@ use app\services\DictionaryService;
     $activities = $task->getActivities();
     foreach ($activities as $activity) {
         $formattedDate = Yii::$app->formatter->asDatetime(
-            $task->create_at,
+            $task->created_at,
             'php:d M Y г. в H:m'
         );
     ?>

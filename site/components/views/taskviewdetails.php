@@ -81,7 +81,7 @@ use app\services\DictionaryService;
                 </div>
                 <div>
                     <p class="text-xs text-muted-foreground"><?= DictionaryService::getWord('lastUpdate', $user->lang) ?></p>
-                    <p class="text-sm font-medium"><?= $task->update_at ?></p>
+                    <p class="text-sm font-medium"><?= $task->updated_at ?></p>
                 </div>
             </div>
         </div>

@@ -21,8 +21,8 @@ use app\services\DictionaryService;
  * @property string|null $embedding
  * @property string|null $filename
  * @property string|null $mimetype
- * @property string $create_at
- * @property string $update_at
+ * @property string $created_at
+ * @property string $updated_at
  * @property string $status
  */
 class Document extends \yii\db\ActiveRecord
@@ -55,7 +55,7 @@ class Document extends \yii\db\ActiveRecord
             [['content', 'metadata', 'embedding', 'tg_id', 'company_id', 'filename', 'mimetype'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'uploaded'],
             [['content', 'embedding'], 'string'],
-            [['metadata', 'create_at', 'update_at'], 'safe'],
+            [['metadata', 'created_at', 'updated_at'], 'safe'],
             [['tg_id', 'company_id'], 'default', 'value' => null],
             [['tg_id', 'company_id', 'type_id'], 'integer'],
             [['filename'], 'string', 'max' => 512],
@@ -79,8 +79,8 @@ class Document extends \yii\db\ActiveRecord
             'type_id' => 'Type ID',
             'filename' => 'Filename',
             'mimetype' => 'Mimetype',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
+            'created_at' => 'Create At',
+            'updated_at' => 'Update At',
             'status' => 'Status',
         ];
     }

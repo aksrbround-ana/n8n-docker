@@ -22,12 +22,12 @@ class AuthController extends Controller
         $response->format = Response::FORMAT_JSON;
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
         if ($accountant) {
-            if (!$accountant->token || (strtotime($accountant->update_at) + Accountant::TOKEN_EXPIRATION_INTERVAL < time())) {
+            if (!$accountant->token || (strtotime($accountant->updated_at) + Accountant::TOKEN_EXPIRATION_INTERVAL < time())) {
                 $accountant->token = $token = $accountant->generateAccessToken();
             } else {
                 $token = $accountant->token;
             }
-            $accountant->update_at = date('Y-m-d H:i:s');
+            $accountant->updated_at = date('Y-m-d H:i:s');
             $accountant->save();
             $session = Yii::$app->getSession();
             $session->set($token, $token);
@@ -107,7 +107,7 @@ class AuthController extends Controller
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
         if ($accountant && ($accountant instanceof ActiveRecord)) {
             $accountant->token = '';
-            $accountant->update_at = date('Y-m-d H:i:s');
+            $accountant->updated_at = date('Y-m-d H:i:s');
             $accountant->save();
             $session = Yii::$app->getSession();
             $session->remove($token);

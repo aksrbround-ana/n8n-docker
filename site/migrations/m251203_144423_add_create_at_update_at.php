@@ -9,20 +9,20 @@ class m251203_144423_add_create_at_update_at extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%company}}', 'create_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%company}}', 'update_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%customer}}', 'create_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%customer}}', 'update_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%accountant}}', 'create_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%accountant}}', 'update_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%reminder}}', 'create_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%reminder}}', 'update_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%event}}', 'create_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%event}}', 'update_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%task}}', 'create_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%task}}', 'update_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%documents}}', 'create_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
-        $this->addColumn('{{%documents}}', 'update_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%company}}', 'created_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%company}}', 'updated_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%customer}}', 'created_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%customer}}', 'updated_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%accountant}}', 'created_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%accountant}}', 'updated_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%reminder}}', 'created_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%reminder}}', 'updated_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%event}}', 'created_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%event}}', 'updated_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%task}}', 'created_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%task}}', 'updated_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%documents}}', 'created_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
+        $this->addColumn('{{%documents}}', 'updated_at', $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'));
     }
 
     /**
@@ -30,20 +30,20 @@ class m251203_144423_add_create_at_update_at extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%company}}', 'update_at');
-        $this->dropColumn('{{%company}}', 'create_at');
-        $this->dropColumn('{{%customer}}', 'update_at');
-        $this->dropColumn('{{%customer}}', 'create_at');
-        $this->dropColumn('{{%accountant}}', 'update_at');
-        $this->dropColumn('{{%accountant}}', 'create_at');
-        $this->dropColumn('{{%reminder}}', 'update_at');
-        $this->dropColumn('{{%reminder}}', 'create_at');
-        $this->dropColumn('{{%event}}', 'update_at');
-        $this->dropColumn('{{%event}}', 'create_at');
-        $this->dropColumn('{{%task}}', 'update_at');
-        $this->dropColumn('{{%task}}', 'create_at');
-        $this->dropColumn('{{%documents}}', 'update_at');
-        $this->dropColumn('{{%documents}}', 'create_at');
+        $this->dropColumn('{{%company}}', 'updated_at');
+        $this->dropColumn('{{%company}}', 'created_at');
+        $this->dropColumn('{{%customer}}', 'updated_at');
+        $this->dropColumn('{{%customer}}', 'created_at');
+        $this->dropColumn('{{%accountant}}', 'updated_at');
+        $this->dropColumn('{{%accountant}}', 'created_at');
+        $this->dropColumn('{{%reminder}}', 'updated_at');
+        $this->dropColumn('{{%reminder}}', 'created_at');
+        $this->dropColumn('{{%event}}', 'updated_at');
+        $this->dropColumn('{{%event}}', 'created_at');
+        $this->dropColumn('{{%task}}', 'updated_at');
+        $this->dropColumn('{{%task}}', 'created_at');
+        $this->dropColumn('{{%documents}}', 'updated_at');
+        $this->dropColumn('{{%documents}}', 'created_at');
     }
 
 }

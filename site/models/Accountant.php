@@ -17,8 +17,8 @@ use \yii\db\ActiveRecord;
  * @property string|null $email
  * @property string|null $password
  * @property string|null $token
- * @property string|null $create_at
- * @property string|null $update_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property AccountantAccountantActivity[] $accountantAccountantActivities
  * @property AccountantActivity[] $accountantActivities
@@ -129,7 +129,7 @@ class Accountant extends ActiveRecord //implements \yii\web\IdentityInterface
             $accountant = new self();
         } else {
             if ($accountant->isValid()) {
-                $accountant->update_at = date('Y-m-d H:i:s');
+                $accountant->updated_at = date('Y-m-d H:i:s');
                 $accountant->save();
             }
         }
@@ -153,7 +153,7 @@ class Accountant extends ActiveRecord //implements \yii\web\IdentityInterface
 
     public function isValid()
     {
-        return $this->token && $this->update_at && (strtotime($this->update_at) + Accountant::TOKEN_EXPIRATION_INTERVAL > time());
+        return $this->token && $this->updated_at && (strtotime($this->updated_at) + Accountant::TOKEN_EXPIRATION_INTERVAL > time());
     }
 
     public function getId()

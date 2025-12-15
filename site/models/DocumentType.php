@@ -9,8 +9,8 @@ use Yii;
  *
  * @property int $id
  * @property string $name
- * @property string $create_at
- * @property string $update_at
+ * @property string $created_at
+ * @property string $updated_at
  *
  * @property Documents[] $documents
  */
@@ -33,7 +33,7 @@ class DocumentType extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['create_at', 'update_at'], 'safe'],
+            [['created_at', 'updated_at'], 'safe'],
             [['name'], 'string', 'max' => 64],
             [['name'], 'unique'],
         ];
@@ -47,8 +47,8 @@ class DocumentType extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Name',
-            'create_at' => 'Create At',
-            'update_at' => 'Update At',
+            'created_at' => 'Create At',
+            'updated_at' => 'Update At',
         ];
     }
 
