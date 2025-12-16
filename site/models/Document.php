@@ -31,11 +31,13 @@ class Document extends \yii\db\ActiveRecord
     const STATUS_UPLOADED = 'uploaded';
     const STATUS_CHECKED = 'checked';
     const STATUS_NEEDS_REVISION = 'needs_revision';
+    const STATUS_PROCESSING = 'processing';
 
     public $statuses = [
         'uploaded' =>  self::STATUS_UPLOADED,
         'checked' =>  self::STATUS_CHECKED,
         'needsRevision' =>  self::STATUS_NEEDS_REVISION,
+        'processing' => self::STATUS_PROCESSING,
     ];
 
     /**

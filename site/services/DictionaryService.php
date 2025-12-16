@@ -211,6 +211,7 @@ class DictionaryService
             'docStatusUploaded' =>  'Загружен',
             'docStatusChecked' =>  'Проверен',
             'docStatusNeedsRevision' =>  'Требует правки',
+            'docStatusProcessing' => 'В обработке',
 
             // Notes
             'addNote' => 'Добавить заметку',
@@ -439,6 +440,7 @@ class DictionaryService
             'docStatusUploaded' =>  'Otpremljen',
             'docStatusChecked' =>  'Proveren',
             'docStatusNeedsRevision' =>  'Potrebna ispravka',
+            'docStatusProcessing' => 'U obradi',
 
             // Notes
             'addNote' => 'Dodaj belešku',
