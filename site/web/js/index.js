@@ -455,6 +455,11 @@ $(document).on('click', '#doc-send-comment', function (e) {
   return false;
 });
 
+$(document).on('click', '#upload-docs', function (e) {
+  loadPage('/document/upload', {}, true);
+  return false;
+});
+
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------

@@ -56,6 +56,22 @@ class DocumentController extends BaseController
         }
     }
 
+    public function actionUpload()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $data = [
+                'user' => $accountant,
+            ];
+            return $this->renderPage($data, 'upload');
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
     public function actionFile($id)
     {
         $this->layout = false;
