@@ -253,6 +253,13 @@ class DictionaryService
             'activityType' => 'Тип активности',
             'reminderText' => 'Текст напоминания',
             'taxCalendar' => 'Налоговый календарь',
+
+            // OCR
+            'ocrSummary' => 'Резюме',
+            'ocrCategory' => 'Категория',
+            'ocr' => 'OCR текст',
+            'notRecognized'=>'Не распознано',
+
         ],
         'rs' =>   [
             // Months
@@ -482,6 +489,12 @@ class DictionaryService
             'activityType' => 'Tip aktivnosti',
             'reminderText' => 'Tekst podsećanja',
             'taxCalendar' => 'Poreski kalendar',
+
+            // OCR
+            'ocrSummary' => 'Резюме',
+            'ocrCategory' => 'Категорија',
+            'ocr' => 'OCR текст',
+            'notRecognized'=>'Nije prepoznato',
         ],
     ];
 

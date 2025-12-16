@@ -32,6 +32,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <script src="/js/jquery.js"></script>
     <script src="/js/index.js"></script>
     <script src="/js/tiff.min.js"></script>
+    <link rel="stylesheet" href="/css/site.css">
     <link rel="stylesheet" href="/css/index.css">
 </head>
 
