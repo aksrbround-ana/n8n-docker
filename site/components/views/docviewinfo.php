@@ -89,7 +89,7 @@ if ($document->mimetype == 'application/pdf') {
         <div class="grid gap-4 grid-cols-1">
             <div class="space-y-1">
                 <h3 class="font-semibold tracking-tight text-lg"><?= DictionaryService::getWord('ocr', $user->lang) ?></h3>
-                <p><?= nl2br($document->ocr_text)  ?? DictionaryService::getWord('notRecognized', $user->lang) ?></p>
+                <p><?= $document->ocr_tex ? nl2br($document->ocr_text)  : DictionaryService::getWord('notRecognized', $user->lang) ?></p>
             </div>
         </div>
     </div>
