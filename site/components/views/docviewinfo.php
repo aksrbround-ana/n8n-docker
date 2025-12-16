@@ -43,14 +43,15 @@ if ($document->mimetype == 'application/pdf') {
             <?php
             switch ($type) {
                 case 'pdf':
-                case 'image':
+                // case 'image':
             ?>
                     <iframe style="width:100%;height:100%;border:none;overflow:auto" src="/document/file/<?= $document->id ?>"></iframe>
                     <?php
                     break;
-                    // case 'image':
+                    case 'image':
                     ?>
-                    <img class="max-h-full max-w-full object-contain" src="/document/file/<?= $document->id ?>" alt="<?= $document->filename ?>" />
+                    <iframe style="width:100%;height:100%;border:none;overflow:hidden" src="/document/image/<?= $document->id ?>"></iframe>
+                    <!-- <img class="max-h-full max-w-full object-contain" src="/document/file/<?= $document->id ?>" alt="<?= $document->filename ?>" /> -->
                 <?php
                     break;
                 case 'tiff':

@@ -88,6 +88,27 @@ class DocumentController extends BaseController
         }
     }
 
+    public function actionImage($id)
+    {
+        $this->layout = false;
+        // $response = \Yii::$app->response;
+        $document = Document::findOne(['id' => $id]);
+        $this->layout = false;
+        return $this->render('image', [
+            'document' => $document,
+        ]);
+    }
+    //     if ($document) {
+    //         $response->format = Response::FORMAT_RAW;
+    //         $response->headers->add('Content-Type', $document->mimetype);
+    //         $response->headers->add('Content-Disposition', "inline; filename=\"{$document->filename}\"");
+    //         $response->content = stream_get_contents($document->content);
+    //         return $response;
+    //     } else {
+    //         throw new \yii\web\NotFoundHttpException('Document not found');
+    //     }
+    // }
+
     public function actionChangeStatus()
     {
         $this->layout = false;
