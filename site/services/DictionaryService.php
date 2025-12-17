@@ -180,6 +180,7 @@ class DictionaryService
             'company' => 'Компания',
             'currentStatus' => 'Текущий статус',
             'by_unknown' => 'Неизвестно',
+            'unknown' => 'Неизвестно',
 
             // Priorities
             'priorityLow' =>  'Низкий',
@@ -416,6 +417,7 @@ class DictionaryService
             'company' => 'Kompanija',
             'currentStatus' => 'Trenutni status',
             'by_unknown' => 'Nepoznato',
+            'unknown' => 'Nepoznato',
 
             // Priorities
             'priorityLow' =>  'Nizak',

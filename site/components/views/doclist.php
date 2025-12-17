@@ -44,7 +44,7 @@ use Codeception\Lib\Di;
                         </div>
                     </div>
                 </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $doc->getCompany()->name ?></td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $doc->getCompany() ? $doc->getCompany()->name : DictionaryService::getWord('unknown', $user->lang) ?></td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= DictionaryService::getWord('docType' . ucfirst($doc->getType()->name), $user->lang) ?></td>
                 <!-- <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Q3 2024</td> -->
                 <?php
