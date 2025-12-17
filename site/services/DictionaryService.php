@@ -235,7 +235,7 @@ class DictionaryService
             'defaultDeadlines' =>  'Сроки по умолчанию',
             'defaultDeadlinesForVariousTasks' =>  'Сроки по умолчанию для различных типов задач',
             'notificationTemplates' =>  'Шаблоны уведомлений',
-            'notificationTemplatesForEmailAndSMS' => 'Шаблоны уведомлений для email и SMS',
+            'notificationTemplatesForTelegram' => 'Шаблоны уведомлений для Telegram',
             'set' => 'настроить',
 
             // Time
@@ -471,7 +471,7 @@ class DictionaryService
             'defaultDeadlines' =>  'Podrazumevani rokovi',
             'defaultDeadlinesForVariousTasks' =>  'Podrazumevani rokovi za različite zadatke',
             'notificationTemplates' =>  'Šabloni obaveštenja',
-            'notificationTemplatesForEmailAndSMS' => 'Šabloni obaveštenja za email i SMS',
+            'notificationTemplatesForTelegram' => 'Šabloni obaveštenja za Telegram',
             'set' => 'Podesi',
 
             // Time
