@@ -20,7 +20,7 @@ $company = $document->getCompany();
         </h3>
     </div>
     <div class="p-6 pt-0">
-        <button data-id="<?= $company ? $company->id : None ?>" class="company_open_profile text-left hover:underline">
+        <button data-id="<?= $company ? $company->id : 'None' ?>" class="<?= $company ? 'company_open_profile ' : '' ?>text-left hover:underline w-full">
             <p class="font-medium text-primary"><strong><?= $company ? $company->name : '' ?></strong></p>
         </button>
         <p class="text-sm text-muted-foreground mt-1"><?= DictionaryService::getWord('pib', $user->lang) ?>: <?= $company ? $company->pib : '' ?></p>
