@@ -84,6 +84,8 @@ services:
       - TZ=${GENERIC_TIMEZONE}
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
       - N8N_DATA_FOLDER=/home/node/.n8n
+      - N8N_DEFAULT_CORS=true
+      - N8N_CORS_ALLOWED_ORIGINS=https://receipt-insights-bot.vercel.app/
     ports:
       - '5678:5678'
     volumes:
