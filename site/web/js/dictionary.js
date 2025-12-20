@@ -8,16 +8,16 @@ const translations = {
     reports: 'Отчёты',
     settings: 'Настройки',
     users: 'Пользователи',
-    
+
     // Roles
     director: 'Руководитель',
     administrator: 'Администратор',
     accountant: 'Бухгалтер',
-    
+
     // Auth
     login: 'Войти',
     password: 'Пароль',
-    
+
     // Common
     search: 'Поиск',
     searchPlaceholder: 'Поиск по компании, ПИБ, задаче...',
@@ -43,7 +43,7 @@ const translations = {
     noData: 'Нет данных',
     loading: 'Загрузка...',
     all: 'Все',
-    
+
     // Dashboard
     welcomeBack: 'Добро пожаловать',
     overview: 'Обзор',
@@ -55,7 +55,7 @@ const translations = {
     tasksByAccountant: 'Задачи по бухгалтерам',
     recentActivity: 'Последняя активность',
     workloadDistribution: 'Загрузка бухгалтеров',
-    
+
     // Companies
     companyName: 'Название компании',
     pib: 'ПИБ',
@@ -73,13 +73,13 @@ const translations = {
     notes: 'Заметки',
     contacts: 'Контакты',
     addCompany: 'Добавить компанию',
-    
+
     // Company statuses
     statusActive: 'Активная',
     statusOnboarding: 'Адаптация',
     statusPaused: 'Приостановлена',
     statusInactive: 'Неактивная',
-    
+
     // Tasks
     taskId: 'ID',
     taskType: 'Тип задачи',
@@ -98,26 +98,26 @@ const translations = {
     changeStatus: 'Изменить статус',
     assignAccountant: 'Назначить исполнителя',
     selectedTasks: 'Выбрано задач',
-    
+
     // Task statuses
     taskStatusNew: 'Новая',
     taskStatusInProgress: 'В работе',
     taskStatusWaiting: 'Ожидание документов',
     taskStatusDone: 'Выполнена',
     taskStatusOverdue: 'Просрочена',
-    
+
     // Task types
     taskTypeVat: 'НДС декларация',
     taskTypePayroll: 'Зарплата',
     taskTypeAnnualReport: 'Годовой отчёт',
     taskTypeReconciliation: 'Сверка',
     taskTypeOther: 'Другое',
-    
+
     // Priorities
     priorityLow: 'Низкий',
     priorityNormal: 'Обычный',
     priorityHigh: 'Высокий',
-    
+
     // Documents
     fileName: 'Имя файла',
     documentType: 'Тип документа',
@@ -129,7 +129,7 @@ const translations = {
     selectCompany: 'Выберите компанию',
     selectPeriod: 'Выберите период',
     selectDocType: 'Выберите тип документа',
-    
+
     // Document types
     docTypeInvoice: 'Счёт-фактура',
     docTypeBankStatement: 'Банковская выписка',
@@ -137,12 +137,12 @@ const translations = {
     docTypeContract: 'Договор',
     docTypeTaxReturn: 'Налоговая декларация',
     docTypeOther: 'Другое',
-    
+
     // Document statuses
     docStatusUploaded: 'Загружен',
     docStatusChecked: 'Проверен',
     docStatusNeedsRevision: 'Требует правки',
-    
+
     // User management
     userManagement: 'Управление пользователями',
     createUser: 'Создать пользователя',
@@ -154,13 +154,13 @@ const translations = {
     userBlocked: 'Заблокирован',
     blockUser: 'Заблокировать',
     unblockUser: 'Разблокировать',
-    
+
     // Settings
     systemSettings: 'Системные настройки',
     taxPeriods: 'Налоговые периоды',
     defaultDeadlines: 'Сроки по умолчанию',
     notificationTemplates: 'Шаблоны уведомлений',
-    
+
     // Time
     today: 'Сегодня',
     yesterday: 'Вчера',
@@ -169,6 +169,7 @@ const translations = {
     overdue: 'Просрочено',
     daysLeft: 'дней осталось',
     daysOverdue: 'дней просрочено',
+    editReminder: 'Редактировать напоминание',
   },
   rs: {
     // Navigation
@@ -179,16 +180,16 @@ const translations = {
     reports: 'Izveštaji',
     settings: 'Podešavanja',
     users: 'Korisnici',
-    
+
     // Roles
     director: 'Direktor',
     administrator: 'Administrator',
     accountant: 'Knjigovođa',
-    
+
     // Auth
     login: 'Prijava',
     password: 'Lozinka',
-    
+
     // Common
     search: 'Pretraga',
     searchPlaceholder: 'Pretraga po kompaniji, PIB-u, zadatku...',
@@ -214,7 +215,7 @@ const translations = {
     noData: 'Nema podataka',
     loading: 'Učitavanje...',
     all: 'Sve',
-    
+
     // Dashboard
     welcomeBack: 'Dobrodošli',
     overview: 'Pregled',
@@ -226,7 +227,7 @@ const translations = {
     tasksByAccountant: 'Zadaci po knjigovođama',
     recentActivity: 'Poslednja aktivnost',
     workloadDistribution: 'Opterećenje knjigovođa',
-    
+
     // Companies
     companyName: 'Naziv kompanije',
     pib: 'PIB',
@@ -244,13 +245,13 @@ const translations = {
     notes: 'Beleške',
     contacts: 'Kontakti',
     addCompany: 'Dodaj kompaniju',
-    
+
     // Company statuses
     statusActive: 'Aktivna',
     statusOnboarding: 'U postupku',
     statusPaused: 'Pauzirana',
     statusInactive: 'Neaktivna',
-    
+
     // Tasks
     taskId: 'ID',
     taskType: 'Tip zadatka',
@@ -269,26 +270,26 @@ const translations = {
     changeStatus: 'Promeni status',
     assignAccountant: 'Dodeli izvršioca',
     selectedTasks: 'Izabrano zadataka',
-    
+
     // Task statuses
     taskStatusNew: 'Novi',
     taskStatusInProgress: 'U toku',
     taskStatusWaiting: 'Čeka dokumente',
     taskStatusDone: 'Završen',
     taskStatusOverdue: 'Zakasnelo',
-    
+
     // Task types
     taskTypeVat: 'PDV prijava',
     taskTypePayroll: 'Obračun zarada',
     taskTypeAnnualReport: 'Godišnji izveštaj',
     taskTypeReconciliation: 'Usaglašavanje',
     taskTypeOther: 'Ostalo',
-    
+
     // Priorities
     priorityLow: 'Nizak',
     priorityNormal: 'Normalan',
     priorityHigh: 'Visok',
-    
+
     // Documents
     fileName: 'Naziv fajla',
     documentType: 'Tip dokumenta',
@@ -300,7 +301,7 @@ const translations = {
     selectCompany: 'Izaberite kompaniju',
     selectPeriod: 'Izaberite period',
     selectDocType: 'Izaberite tip dokumenta',
-    
+
     // Document types
     docTypeInvoice: 'Faktura',
     docTypeBankStatement: 'Izvod iz banke',
@@ -308,12 +309,12 @@ const translations = {
     docTypeContract: 'Ugovor',
     docTypeTaxReturn: 'Poreska prijava',
     docTypeOther: 'Ostalo',
-    
+
     // Document statuses
     docStatusUploaded: 'Otpremljen',
     docStatusChecked: 'Proveren',
     docStatusNeedsRevision: 'Potrebna ispravka',
-    
+
     // User management
     userManagement: 'Upravljanje korisnicima',
     createUser: 'Kreiraj korisnika',
@@ -325,13 +326,13 @@ const translations = {
     userBlocked: 'Blokiran',
     blockUser: 'Blokiraj',
     unblockUser: 'Odblokiraj',
-    
+
     // Settings
     systemSettings: 'Sistemska podešavanja',
     taxPeriods: 'Poreski periodi',
     defaultDeadlines: 'Podrazumevani rokovi',
     notificationTemplates: 'Šabloni obaveštenja',
-    
+
     // Time
     today: 'Danas',
     yesterday: 'Juče',
@@ -340,13 +341,9 @@ const translations = {
     overdue: 'Zakasnelo',
     daysLeft: 'dana preostalo',
     daysOverdue: 'dana zakašnjenja',
+    editReminder: 'Izmeni podsećanje',
   },
 }
 function dictionaryLookup(word, lang) {
-    return translations[lang][word.toLowerCase()] || "Definition not found.";
+  return translations[lang][word] || word;
 }
-
-// Example usage:
-console.log(dictionaryLookup("apple"));  // Output: A fruit that is typically red, green, or yellow.
-console.log(dictionaryLookup("banana")); // Output: A long yellow fruit that is sweet and soft inside.
-console.log(dictionaryLookup("grape"));  // Output: Definition not found.
