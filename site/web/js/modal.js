@@ -1,3 +1,8 @@
+// import { dictionaryLookup } from './dictionary.js';
+
+// ================================================================
+// КЛАСС МОДАЛЬНОГО ОКНА
+// ================================================================
 class Modal {
     constructor(modalId = 'modal-overlay', headerText = '', type = 'calendar') {
         this.modal = document.getElementById(modalId);
@@ -138,7 +143,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if ($(event.target).hasClass('edit-calendar-btn')) {
             let id = $(row).data('item-id');
-            editReminderModal = new Modal('modal-edit-reminder', 'Edit Reminder', 'edit-reminder');
+            const user = getUser();
+            let title = dictionaryLookup('editReminder', user?.lang || 'ru');
+            editReminderModal = new Modal('modal-edit-reminder', title, 'edit-reminder');
             // editReminderModal.currentRow = id;
             let text = $('#tax-calendar-table').find('tr[data-item-id="' + id + '"] td.calendar-text').text();
             $(editReminderModal.modal).find('.modal-body').empty().append('<textarea class="edit-reminder-text" style="height: 100%;width: 100%;">' + text + '</textarea>');

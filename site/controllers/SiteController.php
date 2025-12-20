@@ -107,6 +107,7 @@ class SiteController extends BaseController
 
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         Yii::$app->view->params['accountant'] = $accountant;
+        Yii::$app->view->params['token'] = $token;
         $data = [
             'user' => $accountant,
         ];
