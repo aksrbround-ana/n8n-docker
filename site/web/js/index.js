@@ -164,6 +164,16 @@ function goBack() {
   }
 }
 
+function putLangDependentWords() {
+  let user = getUser();
+  let lang = user ? user?.lang : 'rs';
+  $('.edit-calendar-btn').attr('title', dictionaryLookup('edit', lang));
+  $('.delete-calendar-btn').attr('title', dictionaryLookup('delete', lang));
+  $('.cancel-btn').text(dictionaryLookup('cancel', lang));
+  $('#do-edit-reminder').text(dictionaryLookup('save', lang));
+  $('#do-action-reminder').text(dictionaryLookup('save', lang));
+}
+
 //------------------------------------------------------------------
 //                Handlers
 //------------------------------------------------------------------
@@ -186,6 +196,7 @@ $(document).on('click', '#login-button', function (e) {
       if (response.status === 'success') {
         setUser(response.user);
         loadContent();
+        putLangDependentWords();
       } else {
         showError('Ошибка входа', response.message);
       }

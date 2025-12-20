@@ -215,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     type: 'json'
                 });
-                console.log('Действие выполнено для строки:', reminder_id);
             }
 
             companyListModal.close();
