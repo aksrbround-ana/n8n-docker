@@ -4,6 +4,7 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
+use app\components\ModalEditCalendarWidget;
 use app\components\ModalWindowWidget;
 
 AppAsset::register($this);
@@ -40,6 +41,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         <ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"></ol>
     </div>
     <?= ModalWindowWidget::widget([
+        'user' => Yii::$app->view->params['accountant'],
+    ]) ?>
+    <?= ModalEditCalendarWidget::widget([
         'user' => Yii::$app->view->params['accountant'],
     ]) ?>
 </body>

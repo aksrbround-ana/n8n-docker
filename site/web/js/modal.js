@@ -60,6 +60,7 @@ class Modal {
 
 let companyListModal;
 let companyList = [];
+let editReminderModal;
 
 function loadCompanyListModal(id) {
     let user = getUser();
@@ -77,8 +78,8 @@ function loadCompanyListModal(id) {
                 $(companyListModal.modal).find('.modal-body ul').empty();
                 let ul = $(companyListModal.modal).find('.modal-body tbody');
                 for (let i = 0; i < response.data.list.length; i++) {
-                    let tr = '<tr><td><label for="company_ps_reminder_' + response.data.list[i].id + '">' + response.data.list[i].name + '</label></td>'+
-                    '<td><input id="company_ps_reminder_' + response.data.list[i].id + '" type="checkbox" value="' + response.data.list[i].id + '"' + (response.data.list[i].count > 0 ? ' checked' : '') + ' /></td></tr>';
+                    let tr = '<tr><td><label for="company_ps_reminder_' + response.data.list[i].id + '">' + response.data.list[i].name + '</label></td>' +
+                        '<td><input id="company_ps_reminder_' + response.data.list[i].id + '" type="checkbox" value="' + response.data.list[i].id + '"' + (response.data.list[i].count > 0 ? ' checked' : '') + ' /></td></tr>';
                     ul.append(tr);
                 }
             } else if (response.status === 'logout') {
@@ -96,6 +97,35 @@ function loadCompanyListModal(id) {
 
 }
 
+function removeReminder(id) {
+    let user = getUser();
+    let token = user ? user?.token : '';
+    if (confirm('Are you sure you want to delete this calendar row?')) {
+        $.ajax({
+            url: '/company/delete-calendar-reminder',
+            type: 'POST',
+            data: {
+                token: token,
+                id: id
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    $('#tax-calendar-table').find('tr[data-item-id="' + id + '"]').remove();
+                } else if (response.status === 'logout') {
+                    clearUser();
+                    loadContent();
+                } else {
+                    showError('Delete error', response.message);
+                }
+            },
+            error: function (e) {
+                showError('Delete error', e);
+            },
+            type: 'json'
+        })
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // Делегирование клика по таблице
@@ -105,17 +135,31 @@ document.addEventListener('DOMContentLoaded', () => {
         if (row.length === 0) {
             return; // Клик был не по строке с классом .open-modal-btn
         }
-        // const user = getUser();
-        const title = $(row).find('.reminder-text').text();
-        // const title = user.lang === 'ru' ? 'Расписание напоминаний по налоговому календарю' : 'Raspored podsetnika za poreski kalendar';
-        companyListModal = new Modal('modal-overlay', title);
-        const id = $(row).data('item-id');
-        loadCompanyListModal(id);
 
-        if (row) {
-            // Передаем саму строку в метод open
-            companyListModal.open(row);
+        if ($(event.target).hasClass('edit-calendar-btn')) {
+            let id = $(row).data('item-id');
+            editReminderModal = new Modal('modal-edit-reminder', 'Edit Reminder', 'edit-reminder');
+            // editReminderModal.currentRow = id;
+            let text = $('#tax-calendar-table').find('tr[data-item-id="' + id + '"] td.calendar-text').text();
+            $(editReminderModal.modal).find('.modal-body').empty().append('<textarea class="edit-reminder-text" style="height: 100%;width: 100%;">' + text + '</textarea>');
+            editReminderModal.open(id);
+            return;
+        } else if ($(event.target).hasClass('delete-calendar-btn')) {
+            removeReminder($(row).data('item-id'));
+            return;
+        } else {
+            const title = $(row).find('.calendar-text').text();
+
+            companyListModal = new Modal('modal-overlay', title);
+            const id = $(row).data('item-id');
+            loadCompanyListModal(id);
+
+            if (row) {
+                // Передаем саму строку в метод open
+                companyListModal.open(row);
+            }
         }
+
     });
 
     // Логика кнопки действия
@@ -129,11 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Или получить данные из атрибутов строки
                 const reminder_id = $(row).data('item-id');
                 const checkedCompanies = [];
-                $(companyListModal.modal).find('tbody input[type="checkbox"]:checked').each(function() {
+                $(companyListModal.modal).find('tbody input[type="checkbox"]:checked').each(function () {
                     checkedCompanies.push($(this).val());
                 });
                 const unchekedCompanies = [];
-                $(companyListModal.modal).find('tbody input[type="checkbox"]').not(':checked').each(function() {
+                $(companyListModal.modal).find('tbody input[type="checkbox"]').not(':checked').each(function () {
                     unchekedCompanies.push($(this).val());
                 });
 
@@ -168,6 +212,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             companyListModal.close();
+        });
+    }
+
+    const doEditReminderBtn = document.querySelector('#do-edit-reminder');
+    if (doEditReminderBtn) {
+        doEditReminderBtn.addEventListener('click', () => {
+            // Логика сохранения изменений напоминания
+            const reminder_id = editReminderModal.currentRow;
+
+            if (reminder_id) {
+
+                let user = getUser();
+                let token = user ? user?.token : '';
+                let text = $(editReminderModal.modal).find('.edit-reminder-text').val();
+
+                $.ajax({
+                    url: '/company/update-reminder-details',
+                    type: 'POST',
+                    data: {
+                        token: token,
+                        id: reminder_id,
+                        text: text
+                    },
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            $('#tax-calendar-table').find('tr[data-item-id="' + reminder_id + '"] td.calendar-text').text(text);
+                        } else if (response.status === 'logout') {
+                            clearUser();
+                            loadContent();
+                        } else {
+                            showError('Update error', response.message);
+                        }
+                    },
+                    error: function (e) {
+                        showError('Update error', e);
+                    },
+                    type: 'json'
+                });
+            }
+
+            editReminderModal.close();
         });
     }
 });

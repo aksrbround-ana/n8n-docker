@@ -18,7 +18,7 @@ use app\services\DictionaryService;
                 <h3 class="font-semibold tracking-tight text-base"><?= DictionaryService::getWord('taxCalendar', $user->lang) ?>. <?= ucfirst(DictionaryService::getWord(DictionaryService::$months[$monthNumber], $user->lang)) . ' ' . date('Y') ?></h3>
             </div>
         </div>
-        <table class="w-full table-auto">
+        <table id="tax-calendar-table" class="w-full table-auto">
             <thead>
                 <tr class="border-t bg-muted/50">
                     <!-- <th class="p-6 text-left text-sm font-semibold tracking-tight">ID</th> -->
@@ -36,11 +36,14 @@ use app\services\DictionaryService;
                     <tr class="open-modal-btn" data-item-id="<?= $item->id ?>">
                         <!-- <td class="p-6 pt-0"><?php //= $item->id 
                                                     ?></td> -->
-                        <td class="reminder-action-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->input_date)) ?></td>
-                        <td class="reminder-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->notification_date)) ?></td>
-                        <td class="reminder-activity-type p-6 pt-0"><?= $item->activity_type ?></td>
-                        <td class="reminder-text p-6 pt-0"><?= $item->activity_text ?></td>
-                        <td class="reminder-activity p-6 pt-0"><?= $item->activity ?></td>
+                        <td class="calendar-action-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->input_date)) ?></td>
+                        <td class="calendar-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->notification_date)) ?></td>
+                        <td class="calendar-activity-type p-6 pt-0"><?= $item->activity_type ?></td>
+                        <td class="calendar-text p-6 pt-0"><?= $item->activity_text ?></td>
+                        <td class="calendar-activity p-6 pt-0">
+                            <button class="edit-calendar-btn rounded-lg bg-muted text-sm p-1 text-info hover:underline" data-item-id="<?= $item->id ?>"><?= DictionaryService::getWord('edit', $user->lang) ?></button>
+                            <button class="delete-calendar-btn rounded-lg text-sm p-1 rounded-lg bg-primary text-primary-foreground hover:underline" data-item-id="<?= $item->id ?>"><?= DictionaryService::getWord('delete', $user->lang) ?></button>
+                        </td>
                     </tr>
                 <?php
                 }

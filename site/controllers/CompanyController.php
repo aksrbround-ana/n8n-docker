@@ -11,7 +11,7 @@ use app\models\Accountant;
 use app\models\CompanyActivities;
 use app\models\Customer;
 use app\components\CompanyNotesWidget;
-use app\models\PoreskiKalendar;
+use app\models\TaxCalendar;
 use app\models\Reminder;
 use app\models\Task;
 
@@ -220,7 +220,7 @@ class CompanyController extends BaseController
             // Добавляем новые напоминания
             if (!empty($checkedCompanies)) {
                 for ($i = 0; $i < count($checkedCompanies); $i++) {
-                    $ps = PoreskiKalendar::findOne(['id' => $reminderId]);
+                    $ps = TaxCalendar::findOne(['id' => $reminderId]);
                     $reminder = new Reminder();
                     $reminder->company_id = $checkedCompanies[$i];
                     $reminder->type = 'calendar';
@@ -239,6 +239,56 @@ class CompanyController extends BaseController
                 'status' => 'success',
                 'code' => 200,
                 'message' => 'Reminders updated successfully.',
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionDeleteCalendarReminder()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $reminderId = $request->post('id');
+            Reminder::deleteAll(['type' => 'calendar', 'template_id' => $reminderId]);
+            TaxCalendar::deleteAll(['id' => $reminderId]);
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => 'Calendar reminder deleted successfully.',
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionUpdateReminderDetails()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $reminderId = $request->post('id');
+            $text = $request->post('text');
+            $tc = TaxCalendar::findOne(['id' => $reminderId]);
+            if ($tc) {
+                $tc->activity_text = $text;
+                $tc->save();
+            }
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => 'Reminder details updated successfully.',
             ];
             return $response;
         } else {

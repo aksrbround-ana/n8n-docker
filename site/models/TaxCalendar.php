@@ -14,7 +14,7 @@ use Yii;
  * @property string $activity_text
  * @property string $activity
  */
-class PoreskiKalendar extends \yii\db\ActiveRecord
+class TaxCalendar extends \yii\db\ActiveRecord
 {
 
 
