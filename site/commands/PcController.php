@@ -4,7 +4,7 @@ namespace app\commands;
 
 use yii\console\Controller;
 use yii\console\ExitCode;
-use app\models\PoreskiKalendar;
+use app\models\TaxCalendar;
 
 class PcController extends Controller
 {
@@ -18,7 +18,7 @@ class PcController extends Controller
         $calendarFile = self::TEST_DIRECTORY . self::CALENDAR_DATA_FILE_NAME;
         $calendar = file_get_contents(\Yii::getAlias($calendarFile));
         foreach (json_decode($calendar, true) as $item) {
-            $calendarItem = new PoreskiKalendar();
+            $calendarItem = new TaxCalendar();
             $calendarItem->attributes = $item;
             $calendarItem->save();
             echo $item['activity_type'] . PHP_EOL;
