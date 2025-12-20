@@ -84,6 +84,7 @@ $config = [
             'rules' => [
                 'GET document/<action>/<id:\d+>' => 'document/<action>',
                 // 'GET document/image/<id:\d+>' => 'document/image',
+                'POST company/<action:\w+>' => 'company/<action>',
                 'POST login' => 'auth/login',
                 'GET auth' => 'site/login',
                 'POST api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',

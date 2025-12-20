@@ -17,6 +17,8 @@ use app\models\TaskActivity;
 class SiteController extends BaseController
 {
 
+    public $user;
+
     protected function putHtml($label = '')
     {
         $filePath = $filePath = \Yii::getAlias('@app/web/index.html');
@@ -44,7 +46,16 @@ class SiteController extends BaseController
     public function actionIndex()
     {
         $this->layout = 'main';
-        $token = Yii::$app->response->cookies->has(AuthService::ACCESS_TOKEN_NAME) ? Yii::$app->response->cookies->get(AuthService::ACCESS_TOKEN_NAME) : null;
+        $cookies = Yii::$app->request->cookies;
+
+        if (($cookie = $cookies->get('token')) !== null) {
+            $token = $cookie->value;
+        } else {
+            $token = 'token_not_found';
+        }
+
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        Yii::$app->view->params['accountant'] = $accountant;
         return $this->render('empty');
     }
 

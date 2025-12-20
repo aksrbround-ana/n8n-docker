@@ -65,7 +65,7 @@ use app\services\AuthService;
                 <span><?= DictionaryService::getWord('documents', $user->lang) ?></span>
             </a>
             <?php
-            if (AuthService::hasPermission($user, AuthService::PERMISSION_SYSTEM_SETTINGS)) {  
+            // if (AuthService::hasPermission($user, AuthService::PERMISSION_SYSTEM_SETTINGS)) {  
             ?>
             <a class="menuitem flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground" href="/settings/page">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings h-5 w-5 flex-shrink-0">
@@ -76,7 +76,7 @@ use app\services\AuthService;
                 <span><?= DictionaryService::getWord('settings', $user->lang) ?></span>
             </a>
             <?php
-            }   
+            // }
             ?>
         </nav>
         <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:text-accent-foreground h-10 w-10 absolute bottom-4 text-sidebar-foreground hover:bg-sidebar-accent right-3">

@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\web\Response;
+use yii\web\Cookie;
 use yii\db\ActiveRecord;
 use \app\models\Accountant;
 use yii\web\Controller;
@@ -27,6 +28,15 @@ class AuthController extends Controller
             } else {
                 $token = $accountant->token;
             }
+            $cookies = $response->cookies;
+            $cookies->add(new Cookie([
+                'name' => 'token',
+                'value' => $token,
+                'expire' => time() + 3600, // Срок действия: 30 дней
+                // 'domain' => '.example.com',      // Доступно для поддоменов (необязательно)
+                // 'secure' => true,                // Только по HTTPS
+                'httpOnly' => true,              // Недоступно через JavaScript (защита от XSS)
+            ]));
             $accountant->updated_at = date('Y-m-d H:i:s');
             $accountant->save();
             $session = Yii::$app->getSession();

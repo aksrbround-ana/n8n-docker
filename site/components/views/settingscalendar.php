@@ -20,26 +20,27 @@ use app\services\DictionaryService;
         </div>
         <table class="w-full table-auto">
             <thead>
-                <tr>
+                <tr class="border-t bg-muted/50">
                     <!-- <th class="p-6 text-left text-sm font-semibold tracking-tight">ID</th> -->
                     <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('actionDate', $user->lang)  ?></th>
                     <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderDate', $user->lang) ?></th>
                     <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('activityType', $user->lang) ?></th>
                     <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderText', $user->lang) ?></th>
+                    <th class="p-6 text-left text-sm font-semibold tracking-tight"></th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 foreach ($items as $item) {
                 ?>
-                    <tr>
+                    <tr class="open-modal-btn" data-item-id="<?= $item->id ?>">
                         <!-- <td class="p-6 pt-0"><?php //= $item->id 
                                                     ?></td> -->
-                        <td class="p-6 pt-0"><?= date('Y-m-d', strtotime($item->input_date)) ?></td>
-                        <td class="p-6 pt-0"><?= date('Y-m-d', strtotime($item->notification_date)) ?></td>
-                        <td class="p-6 pt-0"><?= $item->activity_type ?></td>
-                        <td class="p-6 pt-0"><?= $item->activity_text ?></td>
-                        <td class="p-6 pt-0"><?= $item->activity ?></td>
+                        <td class="reminder-action-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->input_date)) ?></td>
+                        <td class="reminder-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->notification_date)) ?></td>
+                        <td class="reminder-activity-type p-6 pt-0"><?= $item->activity_type ?></td>
+                        <td class="reminder-text p-6 pt-0"><?= $item->activity_text ?></td>
+                        <td class="reminder-activity p-6 pt-0"><?= $item->activity ?></td>
                     </tr>
                 <?php
                 }

@@ -36,7 +36,7 @@ class Reminder extends \yii\db\ActiveRecord
             [['company_id', 'template_id', 'send_date', 'type', 'message'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'new'],
             [['company_id', 'template_id', 'send_date'], 'default', 'value' => null],
-            [['company_id', 'template_id', 'send_date'], 'integer'],
+            [['company_id', 'template_id', ], 'integer'],
             [['type', 'status'], 'string', 'max' => 32],
             [['message'], 'string', 'max' => 512],
         ];

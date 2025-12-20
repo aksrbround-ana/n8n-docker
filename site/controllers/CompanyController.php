@@ -11,6 +11,8 @@ use app\models\Accountant;
 use app\models\CompanyActivities;
 use app\models\Customer;
 use app\components\CompanyNotesWidget;
+use app\models\PoreskiKalendar;
+use app\models\Reminder;
 use app\models\Task;
 
 class CompanyController extends BaseController
@@ -40,16 +42,16 @@ class CompanyController extends BaseController
             ->leftJoin(['ca' => 'company_activities'], 'ca.id = c.activity_id')
             // ->leftJoin(['t' => 'task'], 't.company_id = c.id')
             // ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id')
-            ;
+        ;
         $companies = $companiesQuery->all();
         foreach ($companies as &$company) {
             $openTasks = Task::find()
-                ->where(['company_id'=> $company['company_id']])
+                ->where(['company_id' => $company['company_id']])
                 ->andWhere(['!=', 'status', '\'done\''])
                 ->count();
             $company['openTasks'] = $openTasks;
             $overdueTasks = Task::find()
-                ->where(['company_id'=> $company['company_id']])
+                ->where(['company_id' => $company['company_id']])
                 ->andWhere(['!=', 'status', 'done'])
                 ->andWhere(['<', 'due_date', date('Y-m-d')])
                 ->count();
@@ -163,6 +165,84 @@ class CompanyController extends BaseController
             return $response;
         } else {
             $this->renderLogout();
+        }
+    }
+
+    public function actionListToCalendar()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $eventId = $request->post('id');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $rows = (new Query())
+                ->select(['c.id', 'c.name', 'count(r.id) AS count'])
+                ->from(['c' => 'company'])
+                ->leftJoin(['r' => Reminder::tableName()], 'r.company_id = c.id AND r.type = \'calendar\' AND r.template_id = ' . intval($eventId))
+                ->orderBy('c.name ASC')
+                ->groupBy(['c.id', 'c.name']);
+
+            $companies = $rows->all();
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'code' => 200,
+                'data' => [
+                    'list' => $companies
+                ]
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionUpdateCalendarReminders()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $reminderId = $request->post('reminder_id');
+            $checkedCompanies = $request->post('checked_companies');
+            $uncheckedCompanies = $request->post('uncheked_companies');
+            // Удаляем существующие напоминания для этой компании и события
+            if (!empty($uncheckedCompanies)) {
+                Reminder::deleteAll([
+                    'type' => 'calendar',
+                    'template_id' => $reminderId,
+                    'company_id' => $uncheckedCompanies,
+                ]);
+            }
+            // Добавляем новые напоминания
+            if (!empty($checkedCompanies)) {
+                for ($i = 0; $i < count($checkedCompanies); $i++) {
+                    $ps = PoreskiKalendar::findOne(['id' => $reminderId]);
+                    $reminder = new Reminder();
+                    $reminder->company_id = $checkedCompanies[$i];
+                    $reminder->type = 'calendar';
+                    $reminder->template_id = $reminderId;
+                    $reminder->created_at = date('Y-m-d H:i:s');
+                    $reminder->updated_at = date('Y-m-d H:i:s');
+                    $reminder->send_date = date('Y-m-d H:i:s', strtotime($ps->notification_date));
+                    // $reminder->message = $ps->activity_text;
+                    $reminder->save();
+                }
+            }
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => 'Reminders updated successfully.',
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
         }
     }
 
