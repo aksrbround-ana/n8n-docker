@@ -87,6 +87,11 @@ services:
       - N8N_DEFAULT_CORS=true
       - N8N_CORS_ALLOWED_ORIGINS=https://receipt-insights-bot.vercel.app/
       - N8N_PROXY_HOPS=1
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_MAX_AGE=168   # 7 дней
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none # Экономит кучу места. 'info' - компромисс
+      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false # <-- Исправлено на false для скорости!
     ports:
       - '5678:5678'
     volumes:

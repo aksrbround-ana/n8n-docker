@@ -3,6 +3,7 @@
 use yii\db\Migration;
 use app\models\Accountant;
 use app\models\Task;
+use app\models\TaskComment;
 
 /**
  * Handles the creation of table `{{%task_comment}}`.
@@ -14,7 +15,7 @@ class m251211_160058_create_task_comments_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%task_comment}}', [
+        $this->createTable(TaskComment::tableName(), [
             'id' => $this->primaryKey(),
             'task_id' => $this->bigInteger(),
             'accountant_id' => $this->bigInteger()->notNull(),
@@ -22,11 +23,11 @@ class m251211_160058_create_task_comments_table extends Migration
             'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
             'updated_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
-        $this->createIndex('idx_task_comments_task_id', '{{%task_comment}}', 'task_id');
-        $this->createIndex('idx_task_comments_accountant_id', '{{%task_comment}}', 'accountant_id');
+        $this->createIndex('idx_task_comments_task_id', TaskComment::tableName(), 'task_id');
+        $this->createIndex('idx_task_comments_accountant_id', TaskComment::tableName(), 'accountant_id');
         $this->addForeignKey(
             'fk_task_comments_task_id',
-            '{{%task_comment}}',
+            TaskComment::tableName(),
             'task_id',
             Task::tableName(),
             'id',
@@ -34,7 +35,7 @@ class m251211_160058_create_task_comments_table extends Migration
         );
         $this->addForeignKey(
             'fk_task_comments_accountant_id',
-            '{{%task_comment}}',
+            TaskComment::tableName(),
             'accountant_id',
             Accountant::tableName(),
             'id',
@@ -47,10 +48,10 @@ class m251211_160058_create_task_comments_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('fk_task_comments_task_id', '{{%task_comment}}');
-        $this->dropForeignKey('fk_task_comments_accountant_id', '{{%task_comment}}');
-        $this->dropIndex('idx_task_comments_task_id', '{{%task_comment}}');
-        $this->dropIndex('idx_task_comments_accountant_id', '{{%task_comment}}');
-        $this->dropTable('{{%task_comment}}');
+        $this->dropForeignKey('fk_task_comments_task_id', TaskComment::tableName());
+        $this->dropForeignKey('fk_task_comments_accountant_id', TaskComment::tableName());
+        $this->dropIndex('idx_task_comments_task_id', TaskComment::tableName());
+        $this->dropIndex('idx_task_comments_accountant_id', TaskComment::tableName());
+        $this->dropTable(TaskComment::tableName());
     }
 }

@@ -32,7 +32,7 @@ class m251211_110605_filling_in_accountant_accountant_activity_table extends Mig
                         ->where(['name' => $activityName])
                         ->one();
                         if ($activity) {
-                            $this->insert('accountant_accountant_activity', [
+                            $this->insert(AccountantAccountantActivity::tableName(), [
                                 'accountant_id' => $accountant['id'],
                                 'accountant_activity_id' => $activity['id'],
                                 // 'created_at' => date('Y-m-d H:i:s'),

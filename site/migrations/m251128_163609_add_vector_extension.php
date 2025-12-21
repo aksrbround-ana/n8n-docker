@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Document;
 use yii\db\Migration;
 
 class m251128_163609_add_vector_extension extends Migration
@@ -11,7 +12,7 @@ class m251128_163609_add_vector_extension extends Migration
     {
         $this->execute('CREATE EXTENSION IF NOT EXISTS vector;');
 
-        $this->createTable('{{%documents}}', [
+        $this->createTable(Document::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'content' => $this->text(),
             'metadata' => 'JSONB',
@@ -24,7 +25,7 @@ class m251128_163609_add_vector_extension extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%documents}}');
+        $this->dropTable(Document::tableName());
         $this->execute('DROP EXTENSION IF EXISTS vector;');
     }
 }

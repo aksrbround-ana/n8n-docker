@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Event;
 use yii\db\Migration;
 
 class m251203_162057_add_chat_id_to_event extends Migration
@@ -9,7 +10,7 @@ class m251203_162057_add_chat_id_to_event extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%event}}', 'chat_id', $this->bigInteger()->notNull()->defaultValue(0)->after('id'));
+        $this->addColumn(Event::tableName(), 'chat_id', $this->bigInteger()->notNull()->defaultValue(0)->after('id'));
     }
 
     /**
@@ -17,6 +18,6 @@ class m251203_162057_add_chat_id_to_event extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%event}}', 'chat_id');
+        $this->dropColumn(Event::tableName(), 'chat_id');
     }
 }

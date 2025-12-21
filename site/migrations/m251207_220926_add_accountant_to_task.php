@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Task;
 use yii\db\Migration;
 
 class m251207_220926_add_accountant_to_task extends Migration
@@ -9,7 +10,7 @@ class m251207_220926_add_accountant_to_task extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%task}}', 'accountant_id', $this->bigInteger()->after('company_id')->defaultValue(0));
+        $this->addColumn(Task::tableName(), 'accountant_id', $this->bigInteger()->after('company_id')->defaultValue(0));
     }
 
     /**
@@ -17,7 +18,6 @@ class m251207_220926_add_accountant_to_task extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%task}}', 'accountant_id');
+        $this->dropColumn(Task::tableName(), 'accountant_id');
     }
-
 }

@@ -1,5 +1,8 @@
 <?php
 
+use app\models\Accountant;
+use app\models\Company;
+use app\models\CompanyNotes;
 use yii\db\Migration;
 
 /**
@@ -12,7 +15,7 @@ class m251209_110549_create_company_notes_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%company_notes}}', [
+        $this->createTable(CompanyNotes::tableName(), [
             'id' => $this->primaryKey(),
             'company_id' => $this->integer()->notNull(),
             'note' => $this->string(200),
@@ -22,22 +25,22 @@ class m251209_110549_create_company_notes_table extends Migration
         ]);
         $this->createIndex(
             '{{%idx-company_notes-company_id}}',
-            '{{%company_notes}}',
+            CompanyNotes::tableName(),
             'company_id'
         );
         $this->addForeignKey(
             '{{%fk-company_notes-company_id}}',
-            '{{%company_notes}}',
+            CompanyNotes::tableName(),
             'company_id',
-            '{{%company}}',
+            Company::tableName(),
             'id',
             'CASCADE'
         );
         $this->addForeignKey(
             '{{%fk-company_notes-accountant_id}}',
-            '{{%company_notes}}',
+            CompanyNotes::tableName(),
             'accountant_id',
-            '{{%accountant}}',
+            Accountant::tableName(),
             'id',
             'CASCADE'
         );
@@ -50,16 +53,16 @@ class m251209_110549_create_company_notes_table extends Migration
     {
         $this->dropForeignKey(
             '{{%fk-company_notes-company_id}}',
-            '{{%company_notes}}'
+            CompanyNotes::tableName()
         );
         $this->dropForeignKey(
             '{{%fk-company_notes-accountant_id}}',
-            '{{%company_notes}}'
+            CompanyNotes::tableName()
         );
         $this->dropIndex(
             '{{%idx-company_notes-company_id}}',
-            '{{%company_notes}}'
+            CompanyNotes::tableName()
         );
-        $this->dropTable('{{%company_notes}}');
+        $this->dropTable(CompanyNotes::tableName());
     }
 }
