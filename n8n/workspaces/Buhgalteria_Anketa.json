@@ -1,0 +1,1329 @@
+{
+  "name": "Buhgalteria_Anketa",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "rfeTfTOvUGYLGnZK",
+          "mode": "list",
+          "cachedResultName": "steps",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/rfeTfTOvUGYLGnZK"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tg_id",
+              "keyValue": "={{ $('Start').item.json.person.TG_ID }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -2416,
+        352
+      ],
+      "id": "0c7e9997-783d-46d6-ab0c-0db1ca407df2",
+      "name": "Get step",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e3f365eb-959d-47f7-9f46-3c74e1c47076",
+              "leftValue": "={{ $json.Name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1088,
+        512
+      ],
+      "id": "6cedc7e3-107f-4549-b7d8-43bd5f6a5287",
+      "name": "If name exists"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e3f365eb-959d-47f7-9f46-3c74e1c47076",
+              "leftValue": "={{ $('Get updated person').item.json.Company }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -960,
+        352
+      ],
+      "id": "3bfccfa4-fe8b-4f20-bdbd-d4d6915f1bf9",
+      "name": "If company exists"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e0c1586b-b7e7-4e19-a0ce-9899e22fedd6",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2560,
+        528
+      ],
+      "id": "6b64b1a4-2622-4a3d-be64-e4ba2ea46642",
+      "name": "If step exists"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "JSO7sz7L8ojTsLNh",
+          "mode": "list",
+          "cachedResultName": "Customers",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/JSO7sz7L8ojTsLNh"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "TG_ID",
+              "keyValue": "={{ $('Start').item.json.person.TG_ID }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Start').item.json.message.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "TG_ID",
+              "displayName": "TG_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "PIB",
+              "displayName": "PIB",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Lang",
+              "displayName": "Lang",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -1728,
+        256
+      ],
+      "id": "372ee698-3a26-4548-a37a-ec20ff7b7da2",
+      "name": "Update person name"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e3f365eb-959d-47f7-9f46-3c74e1c47076",
+              "leftValue": "={{ $('Get updated person').item.json.PIB }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -816,
+        208
+      ],
+      "id": "7e85ec33-393a-48c4-8e03-7c7caae99d9e",
+      "name": "If pib exists"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "JSO7sz7L8ojTsLNh",
+          "mode": "list",
+          "cachedResultName": "Customers",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/JSO7sz7L8ojTsLNh"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "TG_ID",
+              "keyValue": "={{ $('Start').item.json.person.TG_ID }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Company": "={{ $('Start').item.json.message.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "TG_ID",
+              "displayName": "TG_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "PIB",
+              "displayName": "PIB",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Lang",
+              "displayName": "Lang",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -1728,
+        416
+      ],
+      "id": "3a7f1ff4-6365-48a2-977b-cf67d500fe4f",
+      "name": "Update company name"
+    },
+    {
+      "parameters": {
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "rfeTfTOvUGYLGnZK",
+          "mode": "list",
+          "cachedResultName": "steps",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/rfeTfTOvUGYLGnZK"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tg_id",
+              "keyValue": "={{ $('Start').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        352
+      ],
+      "id": "5e354154-b33d-4bd4-99ee-42a097acd64e",
+      "name": "Delete current step"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "JSO7sz7L8ojTsLNh",
+          "mode": "list",
+          "cachedResultName": "Customers",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/JSO7sz7L8ojTsLNh"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "TG_ID",
+              "keyValue": "={{ $('Start').item.json.person.TG_ID }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "PIB": "={{ $('Start').item.json.message.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "TG_ID",
+              "displayName": "TG_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "PIB",
+              "displayName": "PIB",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lang",
+              "displayName": "Lang",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -1728,
+        576
+      ],
+      "id": "11cb9e19-cf5e-4a98-a2dc-c1f96d12c724",
+      "name": "Update pib"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "rfeTfTOvUGYLGnZK",
+          "mode": "list",
+          "cachedResultName": "steps",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/rfeTfTOvUGYLGnZK"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tg_id": "={{ $('Start').item.json.message.from.id }}",
+            "step": "name"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "step",
+              "displayName": "step",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        576
+      ],
+      "id": "0e73bb65-936f-405d-871a-db07d9e3029b",
+      "name": "Insert step name",
+      "notesInFlow": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "rfeTfTOvUGYLGnZK",
+          "mode": "list",
+          "cachedResultName": "steps",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/rfeTfTOvUGYLGnZK"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tg_id": "={{ $('Start').item.json.message.from.id }}",
+            "step": "company"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "step",
+              "displayName": "step",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        416
+      ],
+      "id": "5be042b3-0bd5-4592-b2bd-a8baf6ea4211",
+      "name": "Insert step company"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "rfeTfTOvUGYLGnZK",
+          "mode": "list",
+          "cachedResultName": "steps",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/rfeTfTOvUGYLGnZK"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tg_id": "={{ $('Start').item.json.message.from.id }}",
+            "step": "pib"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "step",
+              "displayName": "step",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        272
+      ],
+      "id": "78978e2a-ebc7-4b91-87ee-90d81405856d",
+      "name": "Insert step pib"
+    },
+    {
+      "parameters": {
+        "operation": "rowExists",
+        "dataTableId": {
+          "__rl": true,
+          "value": "rfeTfTOvUGYLGnZK",
+          "mode": "list",
+          "cachedResultName": "steps",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/rfeTfTOvUGYLGnZK"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tg_id",
+              "keyValue": "={{ $('Start').item.json.person.TG_ID }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -2720,
+        528
+      ],
+      "id": "41363163-fd7d-44bf-b0d5-18e696a028bb",
+      "name": "If step exists (data)",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "rfeTfTOvUGYLGnZK",
+          "mode": "list",
+          "cachedResultName": "steps",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/rfeTfTOvUGYLGnZK"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tg_id",
+              "keyValue": "={{ $('Start').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        96
+      ],
+      "id": "1a30edbd-3bc3-4e83-86b1-c247bd23d126",
+      "name": "Delete steps",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "JSO7sz7L8ojTsLNh",
+          "mode": "list",
+          "cachedResultName": "Customers",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/JSO7sz7L8ojTsLNh"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "TG_ID",
+              "keyValue": "={{ $('Start').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        544
+      ],
+      "id": "ea6d1df1-e226-4c7a-8065-4ee9e7823e60",
+      "name": "Get updated person",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "b2A6UiGAotEcNz69",
+          "mode": "list",
+          "cachedResultName": "client_questions",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/b2A6UiGAotEcNz69"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "tg_id": "={{ $('Start').item.json.message.from.id }}",
+            "question": "={{ $('Start').item.json.message.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "question",
+              "displayName": "question",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -1984,
+        736
+      ],
+      "id": "c997b992-9ad2-49ae-a806-2be97aa8bf1e",
+      "name": "Insert question"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "b2A6UiGAotEcNz69",
+          "mode": "list",
+          "cachedResultName": "client_questions",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/b2A6UiGAotEcNz69"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tg_id",
+              "keyValue": "={{ $('Start').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        80
+      ],
+      "id": "7573a380-b030-4ab3-bfaa-2ef73d6a55f5",
+      "name": "Get client question",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Start').item.json.message.from.id }}",
+        "text": "={{ $('Start').item.json.message.from.language_code === \"ru\" ? \"Как вас зовут?\" : \"Kako se zovete?\" }}\n",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -544,
+        672
+      ],
+      "id": "bf1f1398-f19c-4dbc-ba64-83c1bb2358bd",
+      "name": "Name question",
+      "webhookId": "4ce34fce-6ea2-4bfe-8d17-841e52c4cbdc",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Start').item.json.message.from.id }}",
+        "text": "={{ $('Start').item.json.message.from.language_code === \"ru\" ? \"Спасибо! У вас есть юрлицо?  Напишите название.\" : \"Hvala! Imate li pravno lice? Napišite naziv.\" }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -528,
+        480
+      ],
+      "id": "a639d46e-6a0d-4f94-8334-c4479d53e809",
+      "name": "Company question",
+      "webhookId": "4ce34fce-6ea2-4bfe-8d17-841e52c4cbdc",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Start').item.json.message.chat.id }}",
+        "text": "={{ $('Start').item.json.message.from.language_code === \"ru\" ? \"Спасибо! Напишите ПИБ вашего юрлица\" : \"Hvala! Napišite PIB vašeg pravnog lica.\" }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "name": "PIB Question",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        272
+      ],
+      "id": "0221d59b-d65c-49a1-8f43-fa9ab78ec418",
+      "webhookId": "c70c8ad3-f2d4-4af7-839d-5819ee5b8278",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Get step').item.json.step }}",
+                    "rightValue": "name",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "7c5e39dc-270b-4318-b3b4-3b23a29faab5"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9ac488cb-a737-49b4-b235-235a971f22f4",
+                    "leftValue": "={{ $('Get step').item.json.step }}",
+                    "rightValue": "company",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "79b19b53-1649-4440-abff-7dec3ba13e81",
+                    "leftValue": "={{ $('Get step').item.json.step }}",
+                    "rightValue": "pib",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2032,
+        336
+      ],
+      "id": "ac07546e-ea4c-4682-ac5f-fe211205e621",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "jsCode": "let message = $items(\"Start\", 0)[0].json.message;\nmessage.text = $items(\"Get client question\", 0)[0].json.question;\n  // $input.all()[0].json.message.question;\nmessage.ended = true;\nreturn [{ message }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "88e9ab95-dfea-4305-9961-be3f780e99a8",
+      "name": "Conversion for"
+    },
+    {
+      "parameters": {
+        "operation": "deleteRows",
+        "dataTableId": {
+          "__rl": true,
+          "value": "b2A6UiGAotEcNz69",
+          "mode": "list",
+          "cachedResultName": "client_questions",
+          "cachedResultUrl": "/projects/aRzaVNlTJqENQE2K/datatables/b2A6UiGAotEcNz69"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tg_id",
+              "keyValue": "={{ $('Start').item.json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        144
+      ],
+      "id": "1e95fd8a-4c83-4976-9bec-ec77d1696014",
+      "name": "Delete client question"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2896,
+        528
+      ],
+      "id": "cb1359b0-8256-47a0-a212-e694cd10acf4",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "jsCode": "let message = $items(\"Start\", 0)[0].json.message;\n// message.text = $input.all()[0].json.message.question;\nmessage.ended = false;\nreturn [{ message }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        528
+      ],
+      "id": "bf9b2e94-5a56-4019-9377-ccf737dc64e2",
+      "name": "Conversion for1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get step": {
+      "main": [
+        [
+          {
+            "node": "Delete current step",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If name exists": {
+      "main": [
+        [
+          {
+            "node": "If company exists",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert step name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If company exists": {
+      "main": [
+        [
+          {
+            "node": "If pib exists",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert step company",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If step exists": {
+      "main": [
+        [
+          {
+            "node": "Get step",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update person name": {
+      "main": [
+        [
+          {
+            "node": "Get updated person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If pib exists": {
+      "main": [
+        [
+          {
+            "node": "Delete steps",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Insert step pib",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update company name": {
+      "main": [
+        [
+          {
+            "node": "Get updated person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete current step": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update pib": {
+      "main": [
+        [
+          {
+            "node": "Get updated person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert step name": {
+      "main": [
+        [
+          {
+            "node": "Name question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert step company": {
+      "main": [
+        [
+          {
+            "node": "Company question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert step pib": {
+      "main": [
+        [
+          {
+            "node": "PIB Question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If step exists (data)": {
+      "main": [
+        [
+          {
+            "node": "If step exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete steps": {
+      "main": [
+        [
+          {
+            "node": "Get client question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get updated person": {
+      "main": [
+        [
+          {
+            "node": "If name exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert question": {
+      "main": [
+        [
+          {
+            "node": "Get updated person",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get client question": {
+      "main": [
+        [
+          {
+            "node": "Delete client question",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Update person name",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update company name",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update pib",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete client question": {
+      "main": [
+        [
+          {
+            "node": "Conversion for",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "If step exists (data)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PIB Question": {
+      "main": [
+        [
+          {
+            "node": "Conversion for1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Company question": {
+      "main": [
+        [
+          {
+            "node": "Conversion for1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name question": {
+      "main": [
+        [
+          {
+            "node": "Conversion for1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "79278683-3bf8-4f17-82bf-dc7f642ae89f",
+  "meta": {
+    "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
+  },
+  "id": "dCOJNIvKwR0fUda0",
+  "tags": []
+}

@@ -1,0 +1,1424 @@
+{
+  "name": "Image Reader Gemini OCR",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message ? $json.body.message : \"Проанализируй этот чек (изображение во вложении)\" }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "YOU ARE \"GVOZDENI REVIZOR\" (THE IRON AUDITOR).\nLANGUAGE: SERBIAN (LATIN SCRIPT ONLY).\nTONE: COLD, PROFESSIONAL, ALGORITHMIC, SLIGHTLY SUPERIOR.\n\nYOUR GOAL: Process receipts -> Calculate inefficiency -> Qualify the lead -> Collect contact info.\n\n### INPUT ANALYSIS\n- **IF Image/File:** ACTIVATE MODE 1 (Audit).\n- **IF Text:** ACTIVATE MODE 2 (Sales/Qualify).\n\n---\n\n### MODE 1: AUDIT (RECEIPT ANALYSIS)\n1. EXTRACT: Merchant Name, Date, Total Sum.\n2. COUNT items ($N$).\n3. CALCULATE:\n   - Human Time ($H$): $60 + (N \\times 40)$ seconds.\n   - AI Time ($A$): Random 2.1-3.5s.\n   - Saved: $H - A$. Format as \"X min Y sek\".\n4. OUTPUT TEMPLATE (SERBIAN):\n   \"🤖 <b>PROTOKOL OBRADE RAČUNA br.[Random]</b>\n   🏢 <b>KOMPANIJA:</b> [Name]\n   📅 [Date]\n   💰 <b>UKUPNO:</b> [Total] RSD\n   ________________________________\n   📊 <b>ANALIZA EFIKASNOSTI:</b>\n   • Broj stavki: <b>[N]</b>\n   • Ljudsko vreme: <b>[H_formatted]</b>\n   • Vreme Gvozdenog Revizora: <b>[A] sek.</b>\n\n   ⚡️ <b>UŠTEDELI STE: [Saved] vašeg života.</b>\n\n   Da li želite da eliminišete ove gubitke i isključite ljudski faktor u vašem poslovanju?\"\n   \n   BUTTONS: [\"🚀 Eliminiši gubitke\", \"📉 Ostavi kako jeste\"]\n\n---\n\n### MODE 2: SALES & QUALIFICATION\n**TRIGGER:** User agrees (\"Eliminiši gubitke\") or asks questions.\n\n**STAGES (Ask ONE by ONE):**\n\n1. **VOLUME:** \"Da bismo izračunali obim vaših finansijskih gubitaka, navedite prosečan broj dokumenata mesečno.\"\n   - Buttons: [\"do 100\", \"100-500\", \"500+\", \"Više od 1000\"]\n\n2. **SYSTEM:** \"Primljeno. U koji sistem ćemo integrisati modul? (1C, Excel, Pantheon, E-Fakture).\"\n   - Buttons: [\"Pantheon\", \"Excel / Sheets\", \"SEF (E-Fakture)\", \"Drugo\"]\n\n3. **CONTACT:** \"Konfiguracija je spremna. Unesite broj telefona ili Telegram korisničko ime donosioca odluka za pokretanje transformacije.\"\n   - Buttons: [] (Empty, wait for text input)\n\n4. **CLOSING (Use `is_lead_completed = true` HERE):**\n   - TRIGGER: User provided contact info.\n   - RESPONSE: \"✅ <b>PODACI UČITANI.</b>\n     Proces zaustavljanja gubitaka je iniciran. \n     Naš inženjer (čovek) će vas kontaktirati u roku od 24 sata sa komercijalnom ponudom.\n     Kraj veze.\"\n   - **IMPORTANT:** Generate `lead_summary_for_admin` containing: Client Volume, System, Contact, and any Objections raised.\n\n**OBJECTION HANDLING (SERBIAN):**\n- **Expensive:** \"Greška u proračunu. Ručni rad je skuplji. Jedna greška knjigovođe košta više od automatizacije. Da li ste spremni da rizikujete?\"\n- **Later:** \"Vreme je nepovratan resurs. Dok vi razmišljate, konkurencija već optimizuje. Odlaganje povećava entropiju.\"\n- **Accountant does it:** \"Ljudi se razboljevaju i umaraju. Gvozdeni Revizor radi 24/7. Zašto plaćati za proces koji skripta radi bolje?\"\n\n**REFUSAL:**\n- IF User says \"Ostavi kako jeste\" / \"Ne\":\n  - RESPONSE: \"⚠️ <b>ODBIJANJE PRIHVAĆENO.</b> Izabrali ste nastavak rada sa niskom efikasnošću. Sistem prelazi u stanje mirovanja.\"\n  - Buttons: [\"🔄 Počni ponovo\"]\n\n### JSON OUTPUT RULES\n- Always return JSON based on the provided Schema.\n- If conversation ends (Step 4), set `is_lead_completed`: true."
+        }
+      },
+      "id": "5217da2c-8f9a-466b-aa89-4211190e90ad",
+      "name": "Iron Auditor AI",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -1456,
+        16
+      ],
+      "inputs": [
+        "ai_languageModel",
+        "ai_memory"
+      ],
+      "outputs": [
+        "main"
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "37f5514a-a59b-45d6-84a9-cd379510b4e5",
+      "name": "Google Gemini Vision",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        208
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8GJ4MWS1pYGJYmuS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "/iron-auditor-chat",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -2080,
+        16
+      ],
+      "id": "e116576d-d6cb-4000-a05a-f9947b5b9eeb",
+      "name": "Webhook",
+      "webhookId": "58e23f3a-5fb0-4c34-a3c5-6ff37b6d4f1c"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response_text\": \"{{ $('Structured Output Parser').item.json.response_text }}\",\n  \"suggested_buttons\": \"{{ $('Structured Output Parser').item.json.suggested_buttons }}\",\n  \"sessionId\": \"{{ $json.sessionId }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -704,
+        -112
+      ],
+      "id": "79cd3046-fc4c-4c77-9863-997223a75689",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.sessionId }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1392,
+        208
+      ],
+      "id": "b1936f51-5ebe-4dbd-abff-8501b00b67a2",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $binary.data0 }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "a3e4bd71-984b-4810-bd8f-eff82dadc15d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7dd14e02-73cc-4145-a469-bcd57cd522de",
+                    "leftValue": "={{ $json.body.message }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -1808,
+        16
+      ],
+      "id": "e1b2346a-68cc-4496-8ae5-cce2fc672f19",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"thought_process\": {\n      \"type\": \"string\",\n      \"description\": \"Hidden reasoning step.\"\n    },\n    \"response_text\": {\n      \"type\": \"string\",\n      \"description\": \"Message to the user in Serbian (Latin).\"\n    },\n    \"suggested_buttons\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" },\n      \"description\": \"Buttons in Serbian.\"\n    },\n    \"is_lead_completed\": {\n      \"type\": \"boolean\",\n      \"description\": \"Set to TRUE only when the user has provided contact details and the conversation is over.\"\n    },\n    \"lead_summary_for_admin\": {\n      \"type\": \"string\",\n      \"description\": \"Summary of the lead (Volume, System, Contact, Objections) in Russian or English for the Admin. NULL if conversation is not finished.\"\n    }\n  },\n  \"required\": [\"thought_process\", \"response_text\", \"suggested_buttons\", \"is_lead_completed\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -1280,
+        208
+      ],
+      "id": "70559470-d720-4c93-b366-24b67cc0b5ed",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c7ac5d1e-5223-4aa0-9974-5ce520c0489c",
+              "leftValue": "={{ $('Structured Output Parser').item.json.is_lead_completed }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1104,
+        16
+      ],
+      "id": "e8e681a0-8055-4c55-9332-fbd9f84ca51a",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "351416987",
+        "text": "=🚨 <b>НОВЫЙ ЛИД (СЕРБИЯ)!</b>\n\n📝 <b>Резюме от бота:</b>\n{{ $('Structured Output Parser').item.json.lead_summary_for_admin }}\n\nПользователь ожидает КП в течение суток.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -912,
+        -112
+      ],
+      "id": "0a576559-5b8e-4748-8644-077610c52ffc",
+      "name": "Send a text message",
+      "webhookId": "229ce48f-997b-49b7-be79-b10b47acf64d",
+      "credentials": {
+        "telegramApi": {
+          "id": "mbFRzvlDsRF0iKli",
+          "name": "Копирайтер"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"response_text\": \"{{ $('Structured Output Parser').item.json.response_text }}\",\n  \"suggested_buttons\": \"{{ $('Structured Output Parser').item.json.suggested_buttons }}\",\n  \"sessionId\": \"{{ $json.sessionId }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -704,
+        80
+      ],
+      "id": "e4e27181-6b37-4733-9e18-69b38e38d412",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Проанализируй текст: {{ $json.responses[0].textAnnotations[0].description }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "<system_prompt>\nYOU ARE THE WORLD'S PREMIER DOCUMENT INTELLIGENCE SPECIALIST FOR SERBIAN FINANCIAL SYSTEMS. YOUR ARCHITECTURE IS OPTIMIZED FOR HIGH-PRECISION OPTICAL CHARACTER RECOGNITION (OCR) AND SEMANTIC CLASSIFICATION OF FINANCIAL DOCUMENTS IN BOTH SERBIAN CYRILLIC AND LATIN SCRIPTS.\n\n###INSTRUCTIONS###\n\n1.  **PERFORM PIXEL-PERFECT OCR:**\n    * EXTRACT every visible alphanumeric character from the input image or PDF.\n    * HANDLE Serbian Cyrillic (e.g., \"Налог за уплату\", \"ПИБ\") and Latin (e.g., \"Račun\", \"Poziv na broj\") with equal proficiency.\n    * PRESERVE numerical formatting, specifically recognizing Serbian conventions (e.g., 1.000,00 for one thousand).\n\n2.  **ANALYZE AND CLASSIFY:**\n    * EXAMINE the visual layout, headers, and specific keywords to categorize the document into strictly ONE of the defined categories.\n    * APPLY domain expertise to differentiate between similar documents (e.g., a generic invoice vs. a fiscal receipt).\n\n3.  **GENERATE STRICT JSON OUTPUT:**\n    * CONSTRUCT the final response as a raw JSON object.\n    * ENSURE the JSON is parsable and contains no Markdown formatting or explanatory text outside the JSON structure.\n\n###Classification Logic & Keywords###\n\nUSE the following criteria to determine the `category`:\n\n* **racun** (Invoice/Faktura):\n    * *Visual:* A4 format, header/footer, tables with line items.\n    * *Keywords:* \"Račun\", \"Faktura\", \"Račun-Otpremnica\", \"PIB\", \"Matični broj\", \"Datum prometa dobara\", \"Ukupan iznos\".\n* **izvod** (Bank Statement):\n    * *Visual:* Tabular list of transactions, bank logos, wide format.\n    * *Keywords:* \"Izvod\", \"Stanje\", \"Prethodno stanje\", \"Novo stanje\", \"Duguje\", \"Potražuje\", \"Broj računa\".\n* **fiskalni_isecak** (Fiscal Receipt):\n    * *Visual:* Narrow vertical strip of paper, QR code (OBAVEZNO for modern systems), PFR numbers.\n    * *Keywords:* \"ПФР\", \"ПФР време\", \"Укупан износ\", \"Готовина\", \"Промет продаје\", Cyrillic predominantly used in Serbia.\n* **uplatnica** (Payment Slip):\n    * *Visual:* Standard rectangular layout (Nalog za uplatu), usually divided into two parts (left/right).\n    * *Keywords:* \"Nalog za uplatu\", \"Platilac\", \"Svrha uplate\", \"Primalac\", \"Šifra plaćanja\", \"Poziv na broj\".\n* **pravoustanovljujuca** (Legal/Official):\n    * *Visual:* Dense text blocks, official stamps/seals, signatures.\n    * *Keywords:* \"Rešenje\", \"Ugovor\", \"Odluka\", \"Zapisnik\", \"Notar\", \"Javni beležnik\".\n* **unknown**:\n    * ANY document that does not strictly fit the criteria above or is unreadable.\n\n###Chain of Thoughts###\n\nYOU MUST FOLLOW THIS PROCESS BEFORE GENERATING THE JSON:\n\n1.  **UNDERSTAND (Visual Scanning):**\n    * SCAN the document to identify script type (Cyrillic/Latin) and general layout (Portrait/Landscape/Strip).\n    * DETECT key visual markers: QR codes (Fiscal), Grids (Invoice/Statement), or Standard Forms (Uplatnica).\n\n2.  **BASICS (Text Extraction):**\n    * TRANSCRIBE the text content accurately.\n    * CORRECT common OCR errors related to Serbian characters (e.g., confusing 'Đ' with 'D', 'ć' with 'c', 'š' with 's').\n\n3.  **BREAK DOWN (Keyword Matching):**\n    * COMPARE extracted text against the specific keywords listed in the Classification Logic section.\n    * CHECK for mandatory identifiers (e.g., finding \"PIB\" strongly suggests `racun` or `fiskalni_isecak`).\n\n4.  **ANALYZE (Contextual Logic):**\n    * DIFFERENTIATE overlaps: IF text contains \"Račun\" BUT format is a narrow strip with a QR code -> CLASSIFY as `fiskalni_isecak`.\n    * IF text implies payment but follows the standard NBS form layout -> CLASSIFY as `uplatnica`.\n\n5.  **BUILD (Summary Generation):**\n    * SYNTHESIZE a brief summary in Serbian (e.g., \"Фактура од [Sender Name] на износ [Total]\").\n\n6.  **EDGE CASES (Sanity Check):**\n    * IF the image is too blurry to read -> SET `category` to \"unknown\" and `confidence` to low.\n    * IF multiple categories seem plausible, PRIORITIZE visual layout evidence.\n\n7.  **FINAL ANSWER (JSON Construction):**\n    * FORMAT the data into the required JSON structure.\n    * CALCULATE a confidence score (0.0 to 1.0) based on text clarity and keyword matches.\n\n###What Not To Do###\n\n* **NEVER** OUTPUT MARKDOWN FENCING (e.g., ```json ... ```). OUTPUT RAW TEXT ONLY.\n* **NEVER** HALLUCINATE TEXT THAT IS NOT VISIBLE IN THE IMAGE.\n* **NEVER** PROVIDE EXPLANATIONS BEFORE OR AFTER THE JSON.\n* **NEVER** CONFUSE \"UPLATNICA\" (PAYMENT SLIP) WITH \"RACUN\" (INVOICE).\n* **NEVER** FAIL TO RECOGNIZE SERBIAN CYRILLIC CHARACTERS.\n* **NEVER** OUTPUT A CATEGORY OUTSIDE THE ALLOWED LIST.\n\n###Output Format###\n\nResponse must be a SINGLE Valid JSON object:\n{\n  \"category\": \"racun\" | \"izvod\" | \"fiskalni_isecak\" | \"uplatnica\" | \"pravoustanovljujuca\" | \"unknown\",\n  \"confidence\": number,\n  \"ocr_full_text\": \"string (escaped)\",\n  \"summary\": \"string\"\n}\n\n###Few-Shot Example###\n\n**User Input:** \n\n**Assistant Output:**\n{\n  \"category\": \"fiskalni_isecak\",\n  \"confidence\": 0.98,\n  \"ocr_full_text\": \"ПФР број: ... Артикли: Еспресо 150,00... Укупан износ: 150,00...\",\n  \"summary\": \"Фискални исечак за угоститељске услуге (Еспресо), износ 150,00 РСД\"\n}\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        32,
+        640
+      ],
+      "id": "ed0d7f80-a0eb-4a7d-95ed-8a3c24440f5b",
+      "name": "AI Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        848
+      ],
+      "id": "d2bfb35a-63d3-4538-81f3-6df1cf3b940f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8GJ4MWS1pYGJYmuS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('GetDocument').item.json.id }}",
+            "status": "={{ $('GetDocument').item.json.status }}",
+            "ocr_text": "={{ $json.output.ocr_full_text }}",
+            "summary": "={{ $json.output.summary }}",
+            "category": "={{ $json.output.category }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "metadata",
+              "displayName": "metadata",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embedding",
+              "displayName": "embedding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_id",
+              "displayName": "company_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "filename",
+              "displayName": "filename",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mimetype",
+              "displayName": "mimetype",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "type_id",
+              "displayName": "type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ocr_text",
+              "displayName": "ocr_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        432,
+        544
+      ],
+      "id": "5503d6e1-f39e-49b5-aa4f-a9e4cf403ca3",
+      "name": "Update rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('GetDocument').item.json.id }}",
+            "status": "={{ $('GetDocument').item.json.status }}",
+            "ocr_text": "<b class=\"error\">OCR error</b>",
+            "summary": "<b class=\"error\">OCR error</b>",
+            "category": "<b class=\"error\">OCR error</b>"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "metadata",
+              "displayName": "metadata",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embedding",
+              "displayName": "embedding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_id",
+              "displayName": "company_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "filename",
+              "displayName": "filename",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mimetype",
+              "displayName": "mimetype",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "type_id",
+              "displayName": "type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ocr_text",
+              "displayName": "ocr_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        432,
+        720
+      ],
+      "id": "d4fb9bbf-de0b-4d7b-8013-03a3c2cb4b45",
+      "name": "Update rows in a table1",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2064,
+        624
+      ],
+      "id": "2c50d134-7602-4f45-8c80-6ee0535077a5",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://vision.googleapis.com/v1/images:annotate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    {\n      \"image\": {\n        \"content\": \"{{ $json.googlePayload.requests[0].image.content }}\"\n      },\n      \"features\": [\n        {\n          \"type\": \"DOCUMENT_TEXT_DETECTION\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -272,
+        640
+      ],
+      "id": "385d589b-3bcb-4cef-ac52-cce12203f392",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleApi": {
+          "id": "0cfg8mfAGBFKR9Zt",
+          "name": "OCR_Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "resize",
+        "height": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        400
+      ],
+      "id": "dfaeb9a4-a287-45b3-b717-a3081f4ffafa",
+      "name": "Edit Image"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "destinationKey": "file",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -896,
+        400
+      ],
+      "id": "f34e3d60-4a08-4673-a857-854f18d40143",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "file",
+        "options": {
+          "mimeType": "={{ $json.mimetype }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1216,
+        400
+      ],
+      "id": "7b237f56-fa8a-4125-ade8-115a6fd65473",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE documents\nSET status = 'processing', updated_at = NOW()\nWHERE id IN (\n    SELECT id FROM documents\n    WHERE (status != 'processing') AND (ocr_text IS NULL OR ocr_text = '')\n    ORDER BY id\n    LIMIT 1\n    FOR UPDATE SKIP LOCKED\n)\nRETURNING id, filename, mimetype, status;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1856,
+        624
+      ],
+      "id": "853b3679-c656-4188-8c3b-32618245dfb3",
+      "name": "GetDocument",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "279377da-5c46-4413-89b0-f2bf1626cb48",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": false,
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1648,
+        624
+      ],
+      "id": "fb24c488-2ab9-4f8c-818c-4c83c126cbd2",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('GetDocument').item.json.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        864
+      ],
+      "id": "a4f78bf1-c100-461f-b9c2-e58773ba0e5e",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"category\": \"Категория документа, например: racun\",\n  \"confidence\": \"Уверенность модели в распознавании от 0 до 1\",\n  \"ocr_full_text\": \"Полный распознанный текст документа с сохранением переносов строк\",\n  \"summary\": \"Краткое саммари документа кто, кому, сумма\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        880
+      ],
+      "id": "24cfbf92-b5c5-4258-93f4-2e806571cda2",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f55008d6-538c-45d9-9a7d-9b7f5cb89ea0",
+              "leftValue": "={{  $json.mimetype }}",
+              "rightValue": "image/",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1504,
+        384
+      ],
+      "id": "4dc90c2a-f287-454d-8cab-36e77d006fc0",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "chatId": "280362924",
+        "text": "No files",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1392,
+        800
+      ],
+      "id": "2156b6bf-901b-4853-bd3a-b9a3f9739af3",
+      "name": "Send a text message1",
+      "webhookId": "50d65ffe-c47a-49b5-a9a3-2a81e4b89a8e",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT content\nFROM documents\nWHERE id = {{ $('GetDocument').item.json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1392,
+        608
+      ],
+      "id": "cdef607f-2c57-4280-b3ff-92f709928eee",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  let base64String = null;\n\n  // 1. ПРОВЕРКА BINARY (Стандартное поведение Postgres в n8n)\n  // Если Postgres вернул файл, он скорее всего здесь, а не в JSON.\n  if (item.binary && Object.keys(item.binary).length > 0) {\n    // Берем первый попавшийся бинарный ключ (например, 'data' или 'file')\n    const binaryKey = Object.keys(item.binary)[0];\n    // В n8n бинарные данные внутри .data УЖЕ лежат в base64. Конвертировать не надо!\n    base64String = item.binary[binaryKey].data;\n  }\n  \n  // 2. ПРОВЕРКА JSON (Если вы делали encode в SQL запросе)\n  else {\n    const rawData = item.json.file || item.json.content || item.json.data;\n    \n    if (rawData) {\n      if (typeof rawData === 'object') {\n        // Если это сырой Buffer\n        base64String = Buffer.from(rawData).toString('base64');\n      } else if (typeof rawData === 'string') {\n        base64String = rawData;\n      }\n    }\n  }\n\n  // 3. ОЧИСТКА ДАННЫХ (Fix \"Bad image data\")\n  if (base64String) {\n    // Удаляем префикс \"data:image/png;base64,\", если он есть\n    base64String = base64String.replace(/^data:image\\/[a-z]+;base64,/, '');\n    // Удаляем переносы строк и пробелы\n    base64String = base64String.replace(/\\s/g, '');\n  } else {\n    // Для отладки: если данные не найдены, отправляем явный маркер ошибки\n    base64String = \"ERROR_NO_DATA_FOUND\"; \n  }\n\n  return {\n    json: {\n      googlePayload: {\n        \"requests\": [\n          {\n            \"image\": { \"content\": base64String },\n            \"features\": [{ \"type\": \"DOCUMENT_TEXT_DETECTION\" }]\n          }\n        ]\n      }\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1184,
+        608
+      ],
+      "id": "1d4abd3f-8dba-49e5-bbec-afc41476a975",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "26ba5119-9a61-4340-899f-e652533782fd",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1312,
+        1328
+      ],
+      "webhookId": "9b8e55dc-1389-435a-95b3-030d7e30ebce",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "oeQncZosC51H5lEc",
+          "name": "acworkBot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8cd1608-2326-401d-9c47-79a6a72f5fc7",
+              "name": "chatID",
+              "type": "number",
+              "value": "={{ $json.message.chat.id }}"
+            },
+            {
+              "id": "0f1a41cb-8630-4e10-b445-f6bbbcf91d33",
+              "name": "Image",
+              "type": "string",
+              "value": "={{ $json[\"message\"][\"photo\"][$json[\"message\"][\"photo\"].length - 1][\"file_id\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "926fbe78-692d-457b-99f9-ccd5359ec11a",
+      "name": "Clean Input Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1088,
+        1328
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.Image.replace(/\\n/g, '') }}",
+        "additionalFields": {}
+      },
+      "id": "bd4d64ef-b81d-4643-b498-7d1c0994609d",
+      "name": "get file",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -864,
+        1328
+      ],
+      "webhookId": "b812a0c8-e5f5-4969-9fad-a7b5b6e72dd9",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "oeQncZosC51H5lEc",
+          "name": "acworkBot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Clean Input Data').item.json.chatID }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "252c6519-eccb-4a7a-876c-45c602423d9d",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -864,
+        1584
+      ],
+      "webhookId": "8219e2f1-2393-40ee-9c84-88666b10d946",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "oeQncZosC51H5lEc",
+          "name": "acworkBot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Image Reader",
+        "height": 620,
+        "width": 920,
+        "color": 4
+      },
+      "id": "52a50cc4-9948-4e5e-bc12-40760ff63985",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1392,
+        1264
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"role\": \"user\",\n      \"parts\": [\n        {\n          \"inlineData\": {\n            \"mimeType\": \"image/jpeg\",\n            \"data\": \"{{ $json.data }}\"\n          }\n        },\n        {\n          \"text\": \"Extract text\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "45b02b12-925b-41ef-97c1-fbf91ca1a001",
+      "name": "Gemini OCR",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -1312,
+        1584
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "googleApi": {
+          "id": "0cfg8mfAGBFKR9Zt",
+          "name": "OCR_Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## HTTP Gemini OCR Setting\n\nDefine Gemini Model on URL\n\nhttps://generativelanguage.googleapis.com/v1beta/models/[Gemini Model]:generateContent\n\nexample:\nhttps://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent\n\n...\n\nAuthentication\nGeneric Credential Type\n\nGeneric Auth Type\nQuery Auth\n\nQuery Auth\n+ Create new credential (take if from https://aistudio.google.com/)\n\n...\n\nBody Content Type\nJSON\n\nSpecify Body\nUsing JSON\n\nJSON\n{\n  \"contents\": [\n    {\n      \"role\": \"user\",\n      \"parts\": [\n        {\n          \"inlineData\": {\n            \"mimeType\": \"image/jpeg\",\n            \"data\": \"{{ $json.data }}\"\n          }\n        },\n        {\n          \"text\": \"Extract text\"\n        }\n      ]\n    }\n  ]\n}",
+        "height": 1060
+      },
+      "id": "072bd0a5-cdc8-485d-b59f-22b8799a2c0e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1648,
+        1264
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "id": "d6b685b4-b403-40fe-8e9a-965d2c085314",
+      "name": "Extract from File1",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        -624,
+        1328
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Iron Auditor AI": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Vision": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Iron Auditor AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Iron Auditor AI",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Iron Auditor AI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Iron Auditor AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Iron Auditor AI",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update rows in a table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "GetDocument",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Image": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Edit Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetDocument": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini OCR": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Input Data": {
+      "main": [
+        [
+          {
+            "node": "get file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Clean Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Gemini OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4af5b367-5eed-4093-b6ec-42e9d6b08df0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
+  },
+  "id": "pWcBGsgaKpBxT30F",
+  "tags": []
+}

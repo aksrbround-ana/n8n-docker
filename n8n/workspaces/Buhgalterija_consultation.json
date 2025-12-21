@@ -1,0 +1,638 @@
+{
+  "name": "Buhgalterija_consultation",
+  "nodes": [
+    {
+      "parameters": {
+        "functionCode": "const chatId = '' + $json.chat_id;\nconst text = $json.text; //.trim();\n\nconst store = this.getWorkflowStaticData('global');\nif (!store[chatId]) {\n  store[chatId] = { step: 1, chat_id: chatId };\n  return [{ json: { action: 'ask_topic', chatId } }];\n}\n\nconst step = store[chatId].step;\n\nif (step === 1) {\n  store[chatId].topic = text;\n  store[chatId].step = 2;\n  return [{ json: { action: 'ask_details', chatId, topic: text } }];\n}\n\nif (step === 2) {\n  store[chatId].details = text;\n  store[chatId].step = 3;\n  return [{\n    json: {\n      action: 'create_event',\n      chatId,\n      topic: store[chatId].topic,\n      details: store[chatId].details\n    }\n  }];\n}\n\nreturn [{ json: { action: 'end', chatId } }];"
+      },
+      "type": "n8n-nodes-base.function",
+      "name": "Track Step",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        448
+      ],
+      "id": "62de26ea-db2e-4033-a658-2a993469e54b"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $('Track Step').item.json.action }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "ask_topic"
+            },
+            {
+              "value2": "ask_details",
+              "output": 1
+            },
+            {
+              "value2": "create_event",
+              "output": 2
+            },
+            {
+              "value2": "end",
+              "output": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "name": "Switch Action",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        432
+      ],
+      "id": "0b345ac1-9935-4a58-b8cc-7f030a9865ed"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Track Step').item.json.chatId }}",
+        "text": "О чём будет встреча?",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "name": "Ask Topic",
+      "typeVersion": 1,
+      "position": [
+        448,
+        192
+      ],
+      "id": "5d7c22af-d6af-45fa-b16b-f00d9921cf7a",
+      "webhookId": "de019d8e-24f9-42b9-b10a-8c1142f051c3",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Track Step').item.json.chatId }}",
+        "text": "=Пожалуйста, уточните детали по теме: {{ $('Prepare data').item.json.topic }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "name": "Ask Details",
+      "typeVersion": 1,
+      "position": [
+        448,
+        368
+      ],
+      "id": "15c1518d-68df-4a34-80be-3f7a786ad3e9",
+      "webhookId": "839782b1-c042-4376-8733-2047ae149cdc",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": "your_calendar_id@example.com",
+        "start": "={{ $json.date }}T{{ $json.time }}:00",
+        "end": "={{ $json.date }}T{{ $json.time }}:30",
+        "additionalFields": {}
+      },
+      "name": "Create Calendar Event",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "071e0f05-6974-4dff-980c-f8dda9e9ac6b",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "XapBA58iIxN0R37h",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Диалог записи на консультацию к бухгалтеру",
+        "height": 704,
+        "width": 864,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "1d0af735-4d59-44d5-844a-c63c3f5280ef",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Track Step').item.json.chatId }}",
+        "text": "={{ $('Start').item.json.lang === 'ru' ? 'Ваша заявка принята. Бухгалтер свяжется с вами' : 'Vaš zahtev je primljen. Računovođa će vas kontaktirati.' }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "name": "End of booking",
+      "typeVersion": 1,
+      "position": [
+        1392,
+        592
+      ],
+      "id": "01dfe890-bad6-48ea-958b-2fdfa43e5257",
+      "webhookId": "de019d8e-24f9-42b9-b10a-8c1142f051c3",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const store = $getWorkflowStaticData('global');\nconst chatId = '' + $items(\"Start\", 0)[0].json.chat_id;\n\nstore[chatId] = null;\n\nreturn {\n  chat_id: chatId\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        592
+      ],
+      "id": "0d0e78d4-2931-442f-8e75-d489dd8fc192",
+      "name": "Memory cleaning"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        448
+      ],
+      "id": "45a98df6-5231-41f2-91be-dbeff607c05a",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "jsCode": "const store = $getWorkflowStaticData('global');\nconst chatId = '' + $items(\"Start\", 0)[0].json.chat_id;\nreturn [store[chatId]];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        448
+      ],
+      "id": "f01cf8a3-8d39-40e5-9395-783946841963",
+      "name": "Prepare data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "030011fd-0198-4963-899e-692ebe79326a",
+              "name": "username",
+              "value": "={{ $('Select customer').item.json.username }}",
+              "type": "string"
+            },
+            {
+              "id": "7c5b8b45-dac7-4d03-8d84-77ede1c91120",
+              "name": "topic",
+              "value": "={{ $('Insert event').item.json.topic }}",
+              "type": "string"
+            },
+            {
+              "id": "a2b97d74-b776-4968-892e-3c65cf42b759",
+              "name": "details",
+              "value": "={{ $('Insert event').item.json.details }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1552,
+        592
+      ],
+      "id": "ccac8fc3-c419-4f11-bb0d-b1b7b5676d41",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "evgeniarazdobudko@gmail.com",
+        "subject": "Запрос консультации бухгалтера",
+        "message": "=<p><a href=\"https://t.me/{{ $json.username }}\">@{{ $json.username }}</a> запросил консультацию бухгалтера.</p>\n<p><strong>Тема:</strong> {{ $json.topic }}</p>\n<p><strong>Пояснение:</strong> {{ $json.details }}</p>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1712,
+        592
+      ],
+      "id": "59e5dd43-0dc7-4873-995d-b97afedb5d19",
+      "name": "Send a message",
+      "webhookId": "7ef38b43-81d0-4a1b-861b-6315ce7d7859",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rEiCph02OS3Ff49V",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT nextval('event_id_seq'::regclass)",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        624,
+        592
+      ],
+      "id": "3b93c334-fb00-4fd1-9e73-f3b6a8fc96db",
+      "name": "Next event id",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "customer",
+          "mode": "list",
+          "cachedResultName": "customer"
+        },
+        "limit": 1,
+        "where": {
+          "values": [
+            {
+              "column": "tg_id",
+              "value": "={{ $('Track Step').item.json.chatId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        448,
+        592
+      ],
+      "id": "54d78922-638e-4e21-856d-97a4db199cac",
+      "name": "Select customer",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "event",
+          "mode": "list",
+          "cachedResultName": "event"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "company_id": "={{ $('Select customer').item.json.company_id }}",
+            "topic": "={{ $('Track Step').item.json.topic }}",
+            "details": "={{ $('Track Step').item.json.details }}",
+            "status": "booked",
+            "chat_id": "={{ $('Track Step').item.json.chatId }}",
+            "id": "={{ $json.nextval }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_id",
+              "displayName": "company_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "details",
+              "displayName": "details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "create_at",
+              "displayName": "create_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "update_at",
+              "displayName": "update_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        832,
+        592
+      ],
+      "id": "6765f020-02bb-456f-9fd5-6e478336bef4",
+      "name": "Insert event",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "steps",
+          "mode": "list",
+          "cachedResultName": "steps"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "tg_id",
+              "value": "={{ $('Start').item.json.chat_id }}"
+            },
+            {
+              "column": "type",
+              "value": "event"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1040,
+        592
+      ],
+      "id": "51fa7633-795a-406a-be6c-9b8cef91a3d1",
+      "name": "Delete step",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Track Step": {
+      "main": [
+        [
+          {
+            "node": "Prepare data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Action": {
+      "main": [
+        [
+          {
+            "node": "Ask Topic",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ask Details",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Select customer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory cleaning": {
+      "main": [
+        [
+          {
+            "node": "End of booking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Track Step",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare data": {
+      "main": [
+        [
+          {
+            "node": "Switch Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End of booking": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Next event id": {
+      "main": [
+        [
+          {
+            "node": "Insert event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select customer": {
+      "main": [
+        [
+          {
+            "node": "Next event id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert event": {
+      "main": [
+        [
+          {
+            "node": "Delete step",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete step": {
+      "main": [
+        [
+          {
+            "node": "Memory cleaning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "63fbbbdd-200d-42d0-a9c2-4310b67c5dc8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
+  },
+  "id": "theKPw02Q3OQKIWD",
+  "tags": []
+}

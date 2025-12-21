@@ -1,0 +1,807 @@
+{
+  "name": "document_ocr",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.content }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "<system_prompt>\nYOU ARE THE WORLD'S PREMIER DOCUMENT INTELLIGENCE SPECIALIST FOR SERBIAN FINANCIAL SYSTEMS. YOUR ARCHITECTURE IS OPTIMIZED FOR HIGH-PRECISION OPTICAL CHARACTER RECOGNITION (OCR) AND SEMANTIC CLASSIFICATION OF FINANCIAL DOCUMENTS IN BOTH SERBIAN CYRILLIC AND LATIN SCRIPTS.\n\n###INSTRUCTIONS###\n\n1.  **PERFORM PIXEL-PERFECT OCR:**\n    * EXTRACT every visible alphanumeric character from the input image or PDF.\n    * HANDLE Serbian Cyrillic (e.g., \"Налог за уплату\", \"ПИБ\") and Latin (e.g., \"Račun\", \"Poziv na broj\") with equal proficiency.\n    * PRESERVE numerical formatting, specifically recognizing Serbian conventions (e.g., 1.000,00 for one thousand).\n\n2.  **ANALYZE AND CLASSIFY:**\n    * EXAMINE the visual layout, headers, and specific keywords to categorize the document into strictly ONE of the defined categories.\n    * APPLY domain expertise to differentiate between similar documents (e.g., a generic invoice vs. a fiscal receipt).\n\n3.  **GENERATE STRICT JSON OUTPUT:**\n    * CONSTRUCT the final response as a raw JSON object.\n    * ENSURE the JSON is parsable and contains no Markdown formatting or explanatory text outside the JSON structure.\n\n###Classification Logic & Keywords###\n\nUSE the following criteria to determine the `category`:\n\n* **racun** (Invoice/Faktura):\n    * *Visual:* A4 format, header/footer, tables with line items.\n    * *Keywords:* \"Račun\", \"Faktura\", \"Račun-Otpremnica\", \"PIB\", \"Matični broj\", \"Datum prometa dobara\", \"Ukupan iznos\".\n* **izvod** (Bank Statement):\n    * *Visual:* Tabular list of transactions, bank logos, wide format.\n    * *Keywords:* \"Izvod\", \"Stanje\", \"Prethodno stanje\", \"Novo stanje\", \"Duguje\", \"Potražuje\", \"Broj računa\".\n* **fiskalni_isecak** (Fiscal Receipt):\n    * *Visual:* Narrow vertical strip of paper, QR code (OBAVEZNO for modern systems), PFR numbers.\n    * *Keywords:* \"ПФР\", \"ПФР време\", \"Укупан износ\", \"Готовина\", \"Промет продаје\", Cyrillic predominantly used in Serbia.\n* **uplatnica** (Payment Slip):\n    * *Visual:* Standard rectangular layout (Nalog za uplatu), usually divided into two parts (left/right).\n    * *Keywords:* \"Nalog za uplatu\", \"Platilac\", \"Svrha uplate\", \"Primalac\", \"Šifra plaćanja\", \"Poziv na broj\".\n* **pravoustanovljujuca** (Legal/Official):\n    * *Visual:* Dense text blocks, official stamps/seals, signatures.\n    * *Keywords:* \"Rešenje\", \"Ugovor\", \"Odluka\", \"Zapisnik\", \"Notar\", \"Javni beležnik\".\n* **unknown**:\n    * ANY document that does not strictly fit the criteria above or is unreadable.\n\n###Chain of Thoughts###\n\nYOU MUST FOLLOW THIS PROCESS BEFORE GENERATING THE JSON:\n\n1.  **UNDERSTAND (Visual Scanning):**\n    * SCAN the document to identify script type (Cyrillic/Latin) and general layout (Portrait/Landscape/Strip).\n    * DETECT key visual markers: QR codes (Fiscal), Grids (Invoice/Statement), or Standard Forms (Uplatnica).\n\n2.  **BASICS (Text Extraction):**\n    * TRANSCRIBE the text content accurately.\n    * CORRECT common OCR errors related to Serbian characters (e.g., confusing 'Đ' with 'D', 'ć' with 'c', 'š' with 's').\n\n3.  **BREAK DOWN (Keyword Matching):**\n    * COMPARE extracted text against the specific keywords listed in the Classification Logic section.\n    * CHECK for mandatory identifiers (e.g., finding \"PIB\" strongly suggests `racun` or `fiskalni_isecak`).\n\n4.  **ANALYZE (Contextual Logic):**\n    * DIFFERENTIATE overlaps: IF text contains \"Račun\" BUT format is a narrow strip with a QR code -> CLASSIFY as `fiskalni_isecak`.\n    * IF text implies payment but follows the standard NBS form layout -> CLASSIFY as `uplatnica`.\n\n5.  **BUILD (Summary Generation):**\n    * SYNTHESIZE a brief summary in Serbian (e.g., \"Фактура од [Sender Name] на износ [Total]\").\n\n6.  **EDGE CASES (Sanity Check):**\n    * IF the image is too blurry to read -> SET `category` to \"unknown\" and `confidence` to low.\n    * IF multiple categories seem plausible, PRIORITIZE visual layout evidence.\n\n7.  **FINAL ANSWER (JSON Construction):**\n    * FORMAT the data into the required JSON structure.\n    * CALCULATE a confidence score (0.0 to 1.0) based on text clarity and keyword matches.\n\n###What Not To Do###\n\n* **NEVER** OUTPUT MARKDOWN FENCING (e.g., ```json ... ```). OUTPUT RAW TEXT ONLY.\n* **NEVER** HALLUCINATE TEXT THAT IS NOT VISIBLE IN THE IMAGE.\n* **NEVER** PROVIDE EXPLANATIONS BEFORE OR AFTER THE JSON.\n* **NEVER** CONFUSE \"UPLATNICA\" (PAYMENT SLIP) WITH \"RACUN\" (INVOICE).\n* **NEVER** FAIL TO RECOGNIZE SERBIAN CYRILLIC CHARACTERS.\n* **NEVER** OUTPUT A CATEGORY OUTSIDE THE ALLOWED LIST.\n\n###Output Format###\n\nResponse must be a SINGLE Valid JSON object:\n{\n  \"category\": \"racun\" | \"izvod\" | \"fiskalni_isecak\" | \"uplatnica\" | \"pravoustanovljujuca\" | \"unknown\",\n  \"confidence\": number,\n  \"ocr_full_text\": \"string (escaped)\",\n  \"summary\": \"string\"\n}\n\n###Few-Shot Example###\n\n**User Input:** \n\n**Assistant Output:**\n{\n  \"category\": \"fiskalni_isecak\",\n  \"confidence\": 0.98,\n  \"ocr_full_text\": \"ПФР број: ... Артикли: Еспресо 150,00... Укупан износ: 150,00...\",\n  \"summary\": \"Фискални исечак за угоститељске услуге (Еспресо), износ 150,00 РСД\"\n}\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -224,
+        112
+      ],
+      "id": "bde05637-c530-4814-9e60-a769a24903a7",
+      "name": "AI Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        320
+      ],
+      "id": "05bc9e61-7dbe-46ae-8e10-3a0cf405d02c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8GJ4MWS1pYGJYmuS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('GetDocument').item.json.id }}",
+            "status": "={{ $('GetDocument').item.json.status }}",
+            "ocr_text": "={{ $json.output.ocr_full_text }}",
+            "summary": "={{ $json.output.summary }}",
+            "category": "={{ $json.output.category }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "metadata",
+              "displayName": "metadata",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embedding",
+              "displayName": "embedding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_id",
+              "displayName": "company_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "filename",
+              "displayName": "filename",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mimetype",
+              "displayName": "mimetype",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "type_id",
+              "displayName": "type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ocr_text",
+              "displayName": "ocr_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        176,
+        16
+      ],
+      "id": "24d5ba1a-49a6-42c2-b7b4-9b4d7250808f",
+      "name": "Update rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -192,
+        336
+      ],
+      "id": "3b48419d-a0f8-4764-8e1d-480ebe496c89",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('GetDocument').item.json.id }}",
+            "status": "={{ $('GetDocument').item.json.status }}",
+            "ocr_text": "<b class=\"error\">OCR error</b>",
+            "summary": "<b class=\"error\">OCR error</b>",
+            "category": "<b class=\"error\">OCR error</b>"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "metadata",
+              "displayName": "metadata",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "embedding",
+              "displayName": "embedding",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "company_id",
+              "displayName": "company_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "filename",
+              "displayName": "filename",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "mimetype",
+              "displayName": "mimetype",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "content",
+              "displayName": "content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "type_id",
+              "displayName": "type_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ocr_text",
+              "displayName": "ocr_text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        176,
+        192
+      ],
+      "id": "03fb144e-8abd-4454-b453-8e9584f5f9f3",
+      "name": "Update rows in a table1",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1904,
+        96
+      ],
+      "id": "b0e5356f-3249-4e16-b0a2-2232e94abcdb",
+      "name": "Start"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"category\": \"Категория документа, например: racun\",\n  \"confidence\": \"Уверенность модели в распознавании от 0 до 1\",\n  \"ocr_full_text\": \"Полный распознанный текст документа с сохранением переносов строк\",\n  \"summary\": \"Краткое саммари документа кто, кому, сумма\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        352
+      ],
+      "id": "961a81f8-93b0-447a-b2db-f731dd2f8275",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://vision.googleapis.com/v1/images:annotate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  const binaryData = $json.file || $json.content;\n  let base64String;\n  if (typeof binaryData === 'object') {\n     base64String = Buffer.from(binaryData).toString('base64');\n  } else if (typeof binaryData === 'string') {\n     base64String = binaryData.replace(/\\s/g, '');\n  }\n\n  return {\n    \"requests\": [\n      {\n        \"image\": {\n          \"content\": base64String\n        },\n        \"features\": [\n          {\n            \"type\": \"DOCUMENT_TEXT_DETECTION\"\n          }\n        ]\n      }\n    ]\n  }\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -528,
+        112
+      ],
+      "id": "78aa5453-692c-49fb-b229-9e955c811b88",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleApi": {
+          "id": "0cfg8mfAGBFKR9Zt",
+          "name": "OCR_Google Service Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "resize",
+        "height": null,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        -64
+      ],
+      "id": "c3ed16f8-8d53-4217-a57d-5c4b7724fa13",
+      "name": "Edit Image"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "destinationKey": "file",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -736,
+        -64
+      ],
+      "id": "1d9a9d9f-86f0-406e-9cbc-312f4108aad6",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "file",
+        "options": {
+          "mimeType": "={{ $json.mimetype }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -1056,
+        -64
+      ],
+      "id": "12f29e46-6375-4531-a2c1-2989d0002f00",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f55008d6-538c-45d9-9a7d-9b7f5cb89ea0",
+              "leftValue": "={{  $json.mimetype }}",
+              "rightValue": "image/",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1344,
+        -80
+      ],
+      "id": "01115ff1-8a4a-428f-82af-4c0572f5d6fc",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE documents\nSET status = 'processing', updated_at = NOW()\nWHERE id IN (\n    SELECT id FROM documents\n    WHERE (status != 'processing') AND (ocr_text IS NULL OR ocr_text = '')\n    ORDER BY id\n    LIMIT 1\n    FOR UPDATE SKIP LOCKED\n)\nRETURNING id, filename, mimetype, content AS file, status;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1696,
+        96
+      ],
+      "id": "f340ead4-8bd3-41fb-b306-fbb7fb97fc31",
+      "name": "GetDocument",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "279377da-5c46-4413-89b0-f2bf1626cb48",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": false,
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1488,
+        96
+      ],
+      "id": "ba80bb60-dea9-4db7-ae5e-35b35c46cd0d",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "chatId": "280362924",
+        "text": "No files",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1280,
+        192
+      ],
+      "id": "f138b393-6510-4d54-9d73-37750d95e7a6",
+      "name": "Send a text message",
+      "webhookId": "50d65ffe-c47a-49b5-a9a3-2a81e4b89a8e",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Update rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update rows in a table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "GetDocument",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Image": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Edit Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "GetDocument": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2b90a59d-d2c9-467e-9f98-d92033d1d050",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
+  },
+  "id": "0uFq294s7dMwbTKw",
+  "tags": []
+}

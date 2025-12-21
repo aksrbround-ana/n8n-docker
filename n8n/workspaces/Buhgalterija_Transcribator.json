@@ -1,0 +1,549 @@
+{
+  "name": "Buhgalterija_Transcribator",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{$('Start').item.json.message.voice.file_id}}",
+        "additionalFields": {}
+      },
+      "id": "bcd5e5d2-f8fa-4bf0-9d5d-b798a234e52b",
+      "name": "Download voice file",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        272,
+        480
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "d41cf112-3257-490b-9a84-6f097325065b",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bccbce0a-7786-49c9-979a-7a285cb69f78",
+              "name": "CombinedMessage",
+              "type": "string",
+              "value": "={{ $json.message && $json.message.text ? $json.message.text : ($json.text ? $json.text : '') }}"
+            },
+            {
+              "id": "5b1fc9f5-1408-4099-88cc-a23725c9eddb",
+              "name": "Message Type ",
+              "type": "string",
+              "value": "={{ $json.type }}"
+            },
+            {
+              "id": "1e9a17fa-ec5d-49dc-9ff6-1f28b57fb02e",
+              "name": "Source Type",
+              "type": "string",
+              "value": "={{ $('Start').item.json.message.forward_origin ? \" forwarded\" : \"\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b0ee8828-adc7-426d-b334-b240408a5c49",
+      "name": "Combine content and set properties",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1328,
+        288
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Start').item.json.message.chat.id }}",
+        "text": "=Sorry, {{ $('Start').item.json.message.from.first_name }}! This command is not supported yet. Please send text or voice messages.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "5466862f-ae35-42b4-9423-106fdc82a63c",
+      "name": "Send error message",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        496,
+        64
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "c316ffe6-15a2-4299-9390-239133d363a2",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ $json.message.chat.id }}"
+      },
+      "id": "3e19d248-5d5f-4e4d-8593-e29018670d95",
+      "name": "Send Typing action",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -160,
+        256
+      ],
+      "typeVersion": 1.2,
+      "webhookId": "324f0cdd-6fa0-4c0b-8cae-e9c132bf95d5",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $('Start').item.json.message.text }}",
+                    "rightValue": "/",
+                    "id": "7ee30c5e-e67e-48a8-80d4-9782d1b50472"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "dd41bbf0-bee0-450b-9160-b769821a4abc",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $('Start').item.json.message.voice}}",
+                    "rightValue": ""
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Voice"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "f22cc784-0b43-4508-9811-e9d7003e263b",
+      "name": "Determine content type",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        96,
+        320
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "content": "## Блок транскрибации голосовых в текст\n",
+        "height": 624,
+        "width": 1360
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "7efeeee9-a92b-4f58-a625-d4ad7bb6770c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Start').item.json.message.chat.id }}",
+        "text": "=ВЫ СКАЗАЛИ:\n{{ $json.CombinedMessage }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1616,
+        240
+      ],
+      "id": "11c127ce-ff78-4ab8-ae29-f7205c794dc1",
+      "name": "Send a text message",
+      "webhookId": "f54aefeb-9f25-422f-a564-d9b263137cde",
+      "credentials": {
+        "telegramApi": {
+          "id": "60eoLbEhTrrzsQC6",
+          "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dc739eaf-3fb9-489d-ab04-814a15c17ca5",
+              "leftValue": "={{ $json['Message Type '] }}",
+              "rightValue": "voice message",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1488,
+        416
+      ],
+      "id": "1d03976b-fccf-4506-8cc1-9ea953cf77c2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        192
+      ],
+      "id": "82011f76-1e78-4c22-9891-61c7f415f87d",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "id": "1f44951a-3604-4fc3-9570-5c3278638c86",
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const chatId = $('Start').item.json.message.chat.id;\nconst text = $('Combine content and set properties').item.json.CombinedMessage;\nconst lang = $('Start').item.json.message.from.language_code;\nreturn [{ \n  chat_id: chatId, \n  text: text,\n  lang: lang\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1824,
+        304
+      ],
+      "id": "e98f637c-d665-49cb-a93a-656f8f1be4df",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $items(\"Start\", 0)[0].json.message.text;\nconst type = 'text query';\n\nreturn [{text: text, type: type}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        304
+      ],
+      "id": "c9114afa-a3f3-435a-8182-8a97f3cdc0d6",
+      "name": "Prepare text data for the Combinator"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $items(\"Gemini Transcribator\", 0)[0].json.content.parts[0].text;\nconst type = 'voice message';\n\nreturn [{text: text, type: type}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        640
+      ],
+      "id": "8e7b2a2a-7b2b-440d-bd14-d0115052bc9d",
+      "name": "Prepare voice data to Combinator"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $items(\"OpenAI Transcribator\", 0)[0].json.text;\nconst type = 'voice message';\n\nreturn [{text: text, type: type}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        896,
+        480
+      ],
+      "id": "3f6eb895-6913-43e9-a09b-fac94611261e",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        464,
+        656
+      ],
+      "id": "f317d517-396f-48eb-8be8-fb8d49fcf60f",
+      "name": "Gemini Transcribator",
+      "retryOnFail": true,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8GJ4MWS1pYGJYmuS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "",
+          "temperature": 0.7
+        }
+      },
+      "id": "9c2ee8f8-6c68-4144-9bdd-b85889e8367f",
+      "name": "OpenAI Transcribator",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        480,
+        480
+      ],
+      "typeVersion": 1.5,
+      "credentials": {
+        "openAiApi": {
+          "id": "vCY3l1KnRpPF0i0I",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Разобраться, почему не работает Гугля",
+        "height": 400,
+        "width": 448,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        416,
+        448
+      ],
+      "typeVersion": 1,
+      "id": "95e13ff5-44fc-4bd9-a34b-0d3fdc3acc63",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Download voice file": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Transcribator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine content and set properties": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Determine content type": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare text data for the Combinator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download voice file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send error message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Send Typing action",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Determine content type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare text data for the Combinator": {
+      "main": [
+        [
+          {
+            "node": "Combine content and set properties",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Transcribator": {
+      "main": [
+        [
+          {
+            "node": "Prepare voice data to Combinator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Transcribator": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Combine content and set properties",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a09375c4-ba0a-421d-b857-37f29ec9bcb6",
+  "meta": {
+    "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
+  },
+  "id": "4tSGDpQI6hJjFvnp",
+  "tags": []
+}
