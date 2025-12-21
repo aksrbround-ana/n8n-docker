@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Document;
 use yii\db\Migration;
 
 class m251207_181047_document_status_field extends Migration
@@ -9,7 +10,7 @@ class m251207_181047_document_status_field extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%documents}}', 'status', $this->string(16)->notNull()->defaultValue('new')->after('mimetype'));
+        $this->addColumn(Document::tableName(), 'status', $this->string(16)->notNull()->defaultValue('new')->after('mimetype'));
     }
 
     /**
@@ -17,6 +18,6 @@ class m251207_181047_document_status_field extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%documents}}', 'status');
+        $this->dropColumn(Document::tableName(), 'status');
     }
 }

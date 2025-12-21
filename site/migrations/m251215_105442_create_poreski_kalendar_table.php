@@ -1,5 +1,6 @@
 <?php
 
+use app\models\TaxCalendar;
 use yii\db\Migration;
 
 /**
@@ -12,7 +13,7 @@ class m251215_105442_create_poreski_kalendar_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%poreski_kalendar}}', [
+        $this->createTable(TaxCalendar::tableName(), [
             'id' => $this->primaryKey(),
             'input_date' => $this->dateTime()->notNull(),
             'notification_date' => $this->dateTime()->notNull(),
@@ -27,6 +28,6 @@ class m251215_105442_create_poreski_kalendar_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%poreski_kalendar}}');
+        $this->dropTable(TaxCalendar::tableName());
     }
 }

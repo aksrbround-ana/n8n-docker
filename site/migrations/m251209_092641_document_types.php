@@ -1,10 +1,11 @@
 <?php
 
+use app\models\Document;
+use app\models\DocumentType;
 use yii\db\Migration;
 
 class m251209_092641_document_types extends Migration
 {
-    const TABLE_NAME = 'document_types';
     private $types = [
         'unknown',
         'invoice',
@@ -20,24 +21,24 @@ class m251209_092641_document_types extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('document_types', [
+        $this->createTable(DocumentType::tableName(), [
             'id' => $this->primaryKey(),
             'name' => $this->string(64)->notNull()->unique(),
             'created_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
             'updated_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
         ]);
         foreach ($this->types as $type) {
-            $this->insert(self::TABLE_NAME, [
+            $this->insert(DocumentType::tableName(), [
                 'name' => $type,
             ]);
         }
 
-        $this->addColumn('documents', 'type_id', $this->integer()->defaultValue(1)->after('status'));
+        $this->addColumn(Document::tableName(), 'type_id', $this->integer()->defaultValue(1)->after('status'));
         $this->addForeignKey(
             'fk_documents_type_id',
-            'documents',
+            Document::tableName(),
             'type_id',
-            'document_types',
+            DocumentType::tableName(),
             'id',
             'SET NULL',
             'CASCADE'
@@ -49,8 +50,8 @@ class m251209_092641_document_types extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('fk_documents_type_id', 'documents');
-        $this->dropColumn('documents', 'type_id');
-        $this->dropTable(self::TABLE_NAME);
+        $this->dropForeignKey('fk_documents_type_id', Document::tableName());
+        $this->dropColumn(Document::tableName(), 'type_id');
+        $this->dropTable(DocumentType::tableName());
     }
 }

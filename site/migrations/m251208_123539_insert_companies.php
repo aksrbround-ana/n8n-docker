@@ -12,7 +12,7 @@ class m251208_123539_insert_companies extends Migration
      */
     public function safeUp()
     {
-        $this->alterColumn('{{%company}}', 'status', $this->string(32)->defaultValue('onboarding'));
+        $this->alterColumn(Company::tableName(), 'status', $this->string(32)->defaultValue('onboarding'));
         $companyListJson = file_get_contents(self::CSV_FILE);
         $companyList = json_decode($companyListJson, JSON_OBJECT_AS_ARRAY);
         $nextIdQuery = 'SELECT nextval(\'company_id_seq\'::regclass)';

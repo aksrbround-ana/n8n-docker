@@ -14,10 +14,6 @@ class m251207_090230_insert_rules extends Migration
      */
     public function safeUp()
     {
-        // $defValToCreateQyery = 'ALTER TABLE auth_rule ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP';
-        // $defValToUpdateQyery = 'ALTER TABLE auth_rule ALTER COLUMN updated_at SET DEFAULT CURRENT_TIMESTAMP';
-        // $this->execute($defValToCreateQyery);
-        // $this->execute($defValToUpdateQyery);
         $this->dropColumn('{{%auth_rule}}', 'created_at');
         $this->dropColumn('{{%auth_rule}}', 'updated_at');
         $this->addColumn('{{%auth_rule}}', 'created_at', 'timestamp NOT NULL  DEFAULT CURRENT_TIMESTAMP');

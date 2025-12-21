@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Document;
 use yii\db\Migration;
 
 class m251209_090546_fix_content_field extends Migration
@@ -9,8 +10,8 @@ class m251209_090546_fix_content_field extends Migration
      */
     public function safeUp()
     {
-        $this->dropColumn("{{%documents}}","content");
-        $this->addColumn("{{%documents}}","content", 'BYTEA');
+        $this->dropColumn(Document::tableName(), "content");
+        $this->addColumn(Document::tableName(), "content", 'BYTEA');
     }
 
     /**
@@ -18,8 +19,7 @@ class m251209_090546_fix_content_field extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn("{{%documents}}","content");
-        $this->addColumn("{{%documents}}","content", $this->text());
+        $this->dropColumn(Document::tableName(), "content");
+        $this->addColumn(Document::tableName(), "content", $this->text());
     }
-
 }

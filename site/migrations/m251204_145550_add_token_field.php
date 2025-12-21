@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Accountant;
 use yii\db\Migration;
 
 class m251204_145550_add_token_field extends Migration
@@ -9,7 +10,7 @@ class m251204_145550_add_token_field extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('{{%accountant}}', 'token', $this->string(32)->notNull()->defaultValue('')->after('password'));
+        $this->addColumn(Accountant::tableName(), 'token', $this->string(32)->notNull()->defaultValue('')->after('password'));
     }
 
     /**
@@ -17,7 +18,6 @@ class m251204_145550_add_token_field extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%accountant}}', 'token');
+        $this->dropColumn(Accountant::tableName(), 'token');
     }
-
 }

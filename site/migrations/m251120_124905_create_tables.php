@@ -1,5 +1,17 @@
 <?php
 
+use app\models\Accountant;
+use app\models\AccountantAccountantActivity;
+use app\models\AccountantActivity;
+use app\models\Company;
+use app\models\CompanyAccountant;
+use app\models\CompanyActivities;
+use app\models\CompanyType;
+use app\models\Customer;
+use app\models\Event;
+use app\models\Reminder;
+use app\models\ReminderTemplate;
+use app\models\Task;
 use yii\db\Migration;
 
 class m251120_124905_create_tables extends Migration
@@ -9,42 +21,42 @@ class m251120_124905_create_tables extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%company_type}}', [
+        $this->createTable(CompanyType::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(512),
         ]);
         $this->createIndex(
             'idx_company_type_name',
-            '{{%company_type}}',
+            CompanyType::tableName(),
             'name',
             true
         );
-        $this->insert('{{%company_type}}', ['name' => 'DOO']);
-        $this->insert('{{%company_type}}', ['name' => 'Knigaš']);
-        $this->insert('{{%company_type}}', ['name' => 'Paušal']);
+        $this->insert(CompanyType::tableName(), ['name' => 'DOO']);
+        $this->insert(CompanyType::tableName(), ['name' => 'Knigaš']);
+        $this->insert(CompanyType::tableName(), ['name' => 'Paušal']);
 
-        $this->createTable('{{%company_activities}}', [
+        $this->createTable(CompanyActivities::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(32),
         ]);
         $this->createIndex(
             'idx_company_activities_name',
-            '{{%company_activities}}',
+            CompanyActivities::tableName(),
             'name',
             true
         );
-        $this->insert('{{%company_activities}}', ['name' => 'trgovina']);
-        $this->insert('{{%company_activities}}', ['name' => 'programiranje']);
-        $this->insert('{{%company_activities}}', ['name' => 'reklama']);
-        $this->insert('{{%company_activities}}', ['name' => 'kafić']);
-        $this->insert('{{%company_activities}}', ['name' => 'sushi']);
-        $this->insert('{{%company_activities}}', ['name' => 'konsalting']);
-        $this->insert('{{%company_activities}}', ['name' => 'prozori']);
-        $this->insert('{{%company_activities}}', ['name' => 'posrednik']);
-        $this->insert('{{%company_activities}}', ['name' => 'obrazovanje']);
-        $this->insert('{{%company_activities}}', ['name' => 'turizam']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'trgovina']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'programiranje']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'reklama']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'kafić']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'sushi']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'konsalting']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'prozori']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'posrednik']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'obrazovanje']);
+        $this->insert(CompanyActivities::tableName(), ['name' => 'turizam']);
 
-        $this->createTable('{{%company}}', [
+        $this->createTable(Company::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(512),
             'name_tg' => $this->string(512),
@@ -59,34 +71,34 @@ class m251120_124905_create_tables extends Migration
         ]);
         $this->createIndex(
             'idx_company_name',
-            '{{%company}}',
+            Company::tableName(),
             'name',
             true
         );
         $this->createIndex(
             'idx_company_pib',
-            '{{%company}}',
+            Company::tableName(),
             'pib',
             true
         );
         $this->addForeignKey(
             'fk_company_type',
-            '{{%company}}',
+            Company::tableName(),
             'type_id',
-            '{{%company_type}}',
+            CompanyType::tableName(),
             'id',
             'CASCADE'
         );
         $this->addForeignKey(
             'fk_company_activities',
-            '{{%company}}',
+            Company::tableName(),
             'activity_id',
-            '{{%company_activities}}',
+            CompanyActivities::tableName(),
             'id',
             'CASCADE'
         );
 
-        $this->createTable('{{%customer}}', [
+        $this->createTable(Customer::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'tg_id' => $this->bigInteger(),
             'company_id' => $this->bigInteger(),
@@ -97,43 +109,43 @@ class m251120_124905_create_tables extends Migration
         ]);
         $this->createIndex(
             'idx_customer_company_id',
-            '{{%customer}}',
+            Customer::tableName(),
             'company_id'
         );
         $this->createIndex(
             'idx_customer_tg_id',
-            '{{%customer}}',
+            Customer::tableName(),
             'tg_id',
             true
         );
         $this->createIndex(
             'idx_customer_username',
-            '{{%customer}}',
+            Customer::tableName(),
             'username',
             true
         );
 
-        $this->createTable('{{%accountant_activity}}', [
+        $this->createTable(AccountantActivity::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'name' => $this->string(64),
             'due_date' => $this->integer(),
         ]);
         $this->createIndex(
             'idx_accountant_activity_name',
-            '{{%accountant_activity}}',
+            AccountantActivity::tableName(),
             'name',
             true
         );
-        $this->insert('{{%accountant_activity}}', ['name' => 'knjiženje', 'due_date' => 5]);
-        $this->insert('{{%accountant_activity}}', ['name' => 'obračun zarada', 'due_date' => 2]);
-        $this->insert('{{%accountant_activity}}', ['name' => 'odgovor na pitanja vezanih za poslovanje firmi', 'due_date' => 5]);
-        $this->insert('{{%accountant_activity}}', ['name' => 'pdv', 'due_date' => 5]);
-        $this->insert('{{%accountant_activity}}', ['name' => 'plaćanje računa', 'due_date' => 2]);
-        $this->insert('{{%accountant_activity}}', ['name' => 'prijava/odjava radnika (pio/croso)', 'due_date' => 5]);
-        $this->insert('{{%accountant_activity}}', ['name' => 'promena podataka', 'due_date' => 6]);
-        $this->insert('{{%accountant_activity}}', ['name' => 'rad na terenu', 'due_date' => 5]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'knjiženje', 'due_date' => 5]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'obračun zarada', 'due_date' => 2]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'odgovor na pitanja vezanih za poslovanje firmi', 'due_date' => 5]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'pdv', 'due_date' => 5]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'plaćanje računa', 'due_date' => 2]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'prijava/odjava radnika (pio/croso)', 'due_date' => 5]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'promena podataka', 'due_date' => 6]);
+        $this->insert(AccountantActivity::tableName(), ['name' => 'rad na terenu', 'due_date' => 5]);
 
-        $this->createTable('{{%accountant}}', [
+        $this->createTable(Accountant::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'firstname' => $this->string(32),
             'lastname' => $this->string(32),
@@ -141,70 +153,70 @@ class m251120_124905_create_tables extends Migration
             'status' => $this->string(32)->defaultValue('new'),
         ]);
 
-        $this->createTable('{{%company_accountant}}', [
+        $this->createTable(CompanyAccountant::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'accountant_id' => $this->bigInteger(),
         ]);
         $this->createIndex(
             'idx_company_accountant_unique',
-            '{{%company_accountant}}',
+            CompanyAccountant::tableName(),
             ['company_id', 'accountant_id' ],
             true
         );
         $this->addForeignKey(
             'fk_company_accountant_company',
-            '{{%company_accountant}}',
+            CompanyAccountant::tableName(),
             'company_id',
-            '{{%company}}',
+            Company::tableName(),
             'id',
             'CASCADE'
         );
         $this->addForeignKey(
             'fk_company_accountant_accountant',
-            '{{%company_accountant}}',
+            CompanyAccountant::tableName(),
             'accountant_id',
-            '{{%accountant}}',
+            Accountant::tableName(),
             'id',
             'CASCADE'
         );
 
-        $this->createTable('{{%accountant_accountant_activity}}', [
+        $this->createTable(AccountantAccountantActivity::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'accountant_id' => $this->bigInteger(),
             'accountant_activity_id' => $this->bigInteger(),
         ]);
         $this->createIndex(
             'idx_accountant_activity_unique',
-            '{{%accountant_accountant_activity}}',
+            AccountantAccountantActivity::tableName(),
             ['accountant_id', 'accountant_activity_id' ],
             true
         );
         $this->addForeignKey(
             'fk_accountant_activity_accountant',
-            '{{%accountant_accountant_activity}}',
+            AccountantAccountantActivity::tableName(),
             'accountant_id',
-            '{{%accountant}}',
+            Accountant::tableName(),
             'id',
             'CASCADE'
         );
         $this->addForeignKey(
             'fk_accountant_activity_activity',
-            '{{%accountant_accountant_activity}}',
+            AccountantAccountantActivity::tableName(),
             'accountant_activity_id',
-            '{{%accountant_activity}}',
+            AccountantActivity::tableName(),
             'id',
             'CASCADE'
         );
 
-        $this->createTable('{{%reminder_template}}', [
+        $this->createTable(ReminderTemplate::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'description' => $this->string(128),
             'text_ru' => $this->text(),
             'text_rs' => $this->text(),
         ]);
 
-        $this->createTable('{{%reminder}}', [
+        $this->createTable(Reminder::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'template_id' => $this->bigInteger(),
@@ -215,11 +227,11 @@ class m251120_124905_create_tables extends Migration
         ]);
         $this->createIndex(
             'idx_reminder_company_id',
-            '{{%reminder}}',
+            Reminder::tableName(),
             'company_id'
         );
 
-        $this->createTable('{{%event}}', [
+        $this->createTable(Event::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'topic' => $this->string(128),
@@ -228,11 +240,11 @@ class m251120_124905_create_tables extends Migration
         ]);
         $this->createIndex(
             'idx_event_company_id',
-            '{{%event}}',
+            Event::tableName(),
             'company_id'
         );
 
-        $this->createTable('{{%task}}', [
+        $this->createTable(Task::tableName(), [
             'id' => 'BIGSERIAL PRIMARY KEY',//$this->primaryKey(),
             'company_id' => $this->bigInteger(),
             'category' => $this->string(64),
@@ -242,7 +254,7 @@ class m251120_124905_create_tables extends Migration
         ]);
         $this->createIndex(
             'idx_task_company_id',
-            '{{%task}}',
+            Task::tableName(),
             'company_id'
         );
     }
@@ -252,34 +264,34 @@ class m251120_124905_create_tables extends Migration
      */
     public function safeDown()
     {
-        $this->dropIndex('idx_task_company_id', '{{%task}}');
-        $this->dropIndex('idx_event_company_id', '{{%event}}');
-        $this->dropIndex('idx_reminder_company_id', '{{%reminder}}');
-        $this->dropIndex('idx_accountant_activity_name', '{{%accountant_activity}}');
-        $this->dropIndex('idx_company_activities_name', '{{%company_activities}}');
-        $this->dropIndex('idx_company_type_name', '{{%company_type}}');
-        $this->dropTable('{{%task}}');
-        $this->dropTable('{{%event}}');
-        $this->dropTable('{{%reminder}}');
-        $this->dropTable('{{%reminder_template}}');
-        $this->dropForeignKey('fk_accountant_activity_activity', '{{%accountant_accountant_activity}}');
-        $this->dropForeignKey('fk_accountant_activity_accountant', '{{%accountant_accountant_activity}}');
-        $this->dropTable('{{%accountant_accountant_activity}}');
-        $this->dropForeignKey('fk_company_accountant_accountant', '{{%company_accountant}}');
-        $this->dropForeignKey('fk_company_accountant_company', '{{%company_accountant}}');
-        $this->dropTable('{{%company_accountant}}');
-        $this->dropTable('{{%accountant}}');
-        $this->dropTable('{{%accountant_activity}}');
-        $this->dropForeignKey('fk_company_activities', '{{%company}}');
-        $this->dropForeignKey('fk_company_type', '{{%company}}');
-        $this->dropIndex('idx_customer_company_id', '{{%customer}}');
-        $this->dropIndex('idx_customer_username', '{{%customer}}');
-        $this->dropIndex('idx_customer_tg_id', '{{%customer}}');
-        $this->dropTable('{{%customer}}');
-        $this->dropIndex('idx_company_pib', '{{%company}}');
-        $this->dropIndex('idx_company_name', '{{%company}}');
-        $this->dropTable('{{%company}}');
-        $this->dropTable('{{%company_activities}}');
-        $this->dropTable('{{%company_type}}');
+        $this->dropIndex('idx_task_company_id', Task::tableName());
+        $this->dropIndex('idx_event_company_id', Event::tableName());
+        $this->dropIndex('idx_reminder_company_id', Reminder::tableName());
+        $this->dropIndex('idx_accountant_activity_name', AccountantActivity::tableName());
+        $this->dropIndex('idx_company_activities_name', CompanyActivities::tableName());
+        $this->dropIndex('idx_company_type_name', CompanyType::tableName());
+        $this->dropTable(Task::tableName());
+        $this->dropTable(Event::tableName());
+        $this->dropTable(Reminder::tableName());
+        $this->dropTable(ReminderTemplate::tableName());
+        $this->dropForeignKey('fk_accountant_activity_activity', AccountantAccountantActivity::tableName());
+        $this->dropForeignKey('fk_accountant_activity_accountant', AccountantAccountantActivity::tableName());
+        $this->dropTable(AccountantAccountantActivity::tableName());
+        $this->dropForeignKey('fk_company_accountant_accountant', CompanyAccountant::tableName());
+        $this->dropForeignKey('fk_company_accountant_company', CompanyAccountant::tableName());
+        $this->dropTable(CompanyAccountant::tableName());
+        $this->dropTable(Accountant::tableName());
+        $this->dropTable(AccountantActivity::tableName());
+        $this->dropForeignKey('fk_company_activities', Company::tableName());
+        $this->dropForeignKey('fk_company_type', Company::tableName());
+        $this->dropIndex('idx_customer_company_id', Customer::tableName());
+        $this->dropIndex('idx_customer_username', Customer::tableName());
+        $this->dropIndex('idx_customer_tg_id', Customer::tableName());
+        $this->dropTable(Customer::tableName());
+        $this->dropIndex('idx_company_pib', Company::tableName());
+        $this->dropIndex('idx_company_name', Company::tableName());
+        $this->dropTable(Company::tableName());
+        $this->dropTable(CompanyActivities::tableName());
+        $this->dropTable(CompanyType::tableName());
     }
 }

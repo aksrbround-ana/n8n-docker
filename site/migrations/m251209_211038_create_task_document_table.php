@@ -1,5 +1,8 @@
 <?php
 
+use app\models\TaskDocument;
+use app\models\Document;
+use app\models\Task;
 use yii\db\Migration;
 
 /**
@@ -12,24 +15,24 @@ class m251209_211038_create_task_document_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('{{%task_document}}', [
+        $this->createTable(TaskDocument::tableName(), [
             'id' => $this->primaryKey(),
             'task_id' => $this->integer()->notNull(),
             'document_id' => $this->integer()->notNull(),
         ]);
         $this->addForeignKey(
             'fk-task_document-task_id',
-            '{{%task_document}}',
+            TaskDocument::tableName(),
             'task_id',
-            '{{%task}}',
+            Task::tableName(),
             'id',
             'CASCADE'
         );
         $this->addForeignKey(
             'fk-task_document-document_id',
-            '{{%task_document}}',
+            TaskDocument::tableName(),
             'document_id',
-            '{{%documents}}',
+            Document::tableName(),
             'id',
             'CASCADE'
         );
@@ -40,8 +43,8 @@ class m251209_211038_create_task_document_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropForeignKey('fk-task_document-task_id', '{{%task_document}}');
-        $this->dropForeignKey('fk-task_document-document_id', '{{%task_document}}');
-        $this->dropTable('{{%task_document}}');
+        $this->dropForeignKey('fk-task_document-task_id', TaskDocument::tableName());
+        $this->dropForeignKey('fk-task_document-document_id', TaskDocument::tableName());
+        $this->dropTable(TaskDocument::tableName());
     }
 }

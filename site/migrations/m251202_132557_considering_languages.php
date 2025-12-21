@@ -1,5 +1,7 @@
 <?php
 
+use app\models\Accountant;
+use app\models\Customer;
 use yii\db\Migration;
 
 class m251202_132557_considering_languages extends Migration
@@ -9,11 +11,11 @@ class m251202_132557_considering_languages extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn('customer', 'lang', $this->string(8)->notNull()->defaultValue('ru'));
-        $this->addColumn('accountant', 'lang', $this->string(8)->notNull()->defaultValue('ru'));
-        $this->dropColumn('accountant', 'username');
-        $this->addColumn('accountant', 'email', $this->string(64)->notNull());
-        $this->addColumn('accountant', 'password', $this->string(64)->notNull());
+        $this->addColumn(Customer::tableName(), 'lang', $this->string(8)->notNull()->defaultValue('ru'));
+        $this->addColumn(Accountant::tableName(), 'lang', $this->string(8)->notNull()->defaultValue('ru'));
+        $this->dropColumn(Accountant::tableName(), 'username');
+        $this->addColumn(Accountant::tableName(), 'email', $this->string(64)->notNull());
+        $this->addColumn(Accountant::tableName(), 'password', $this->string(64)->notNull());
     }
 
     /**
@@ -21,11 +23,10 @@ class m251202_132557_considering_languages extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('customer', 'lang');
-        $this->dropColumn('accountant', 'lang');
-        $this->dropColumn('accountant', 'email');
-        $this->dropColumn('accountant', 'password');
-        $this->addColumn('accountant', 'username', $this->string(32));
+        $this->dropColumn(Customer::tableName(), 'lang');
+        $this->dropColumn(Accountant::tableName(), 'lang');
+        $this->dropColumn(Accountant::tableName(), 'email');
+        $this->dropColumn(Accountant::tableName(), 'password');
+        $this->addColumn(Accountant::tableName(), 'username', $this->string(32));
     }
-
 }
