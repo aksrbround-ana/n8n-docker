@@ -172,6 +172,7 @@ function putLangDependentWords() {
   $('.cancel-btn').text(dictionaryLookup('cancel', lang));
   $('#do-edit-reminder').text(dictionaryLookup('save', lang));
   $('#do-action-reminder').text(dictionaryLookup('save', lang));
+  $('#do-action-btn').text(dictionaryLookup('save', lang));
 }
 
 //------------------------------------------------------------------
