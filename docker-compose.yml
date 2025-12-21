@@ -66,13 +66,13 @@ services:
       - traefik.http.routers.n8n.middlewares=n8n@docker
       - traefik.http.services.n8n.loadbalancer.server.port=5678
     environment:
-      - DB_TYPE=sqlite
-#      - DB_TYPE=${DB_TYPE:-postgresdb}
-#      - DB_POSTGRESDB_HOST=${DB_HOST:-postgres}
-#      - DB_POSTGRESDB_PORT=${DB_PORT:-5432}
-#      - DB_POSTGRESDB_DATABASE=${DB_DATABASE:-n8n}
-#      - DB_POSTGRESDB_USER=${DB_USER:-postgres}
-#      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD:-changeme}
+#      - DB_TYPE=sqlite
+      - DB_TYPE=${DB_TYPE:-postgresdb}
+      - DB_POSTGRESDB_HOST=${DB_HOST:-postgres}
+      - DB_POSTGRESDB_PORT=${DB_PORT:-5432}
+      - DB_POSTGRESDB_DATABASE=${DB_DATABASE:-n8n}
+      - DB_POSTGRESDB_USER=${DB_USER:-postgres}
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD:-changeme}
       - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
