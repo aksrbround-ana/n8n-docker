@@ -19,6 +19,9 @@ class BaseController extends Controller
             'code' => 200,
             'data' => $html,
         ];
+        if (isset($data['debug'])) {
+            $response->data['debug'] = $data['debug'];
+        }
         return $response;
     }
 

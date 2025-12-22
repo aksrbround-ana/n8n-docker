@@ -84,10 +84,10 @@ $config = [
             'rules' => [
                 'GET document/<action>/<id:\d+>' => 'document/<action>',
                 'GET auth' => 'site/login',
-                'GET <controller:\w+>/<action:\w+>' => 'site/index',
+                'GET <controller:\w+>/<action:\w+>' => '<controller>/<action>',
 
-                'POST <controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 'POST <controller:\w+>/<action:\w+>/<status:[\w\-]+>' => '<controller>/<action>',
+                'POST <controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 'POST login' => 'auth/login',
                 'POST api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],

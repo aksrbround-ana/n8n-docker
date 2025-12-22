@@ -13,6 +13,7 @@ use app\models\Company;
 use app\models\Task;
 use app\models\Document;
 use app\models\TaskActivity;
+use app\models\TaskDocument;
 
 class SiteController extends BaseController
 {
@@ -200,9 +201,14 @@ class SiteController extends BaseController
             $overdueTasksQuery->andWhere('accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
         $overdueTasks = $overdueTasksQuery->count();
-        $docsToCheckQuery = Document::find()->where(['status' => 'uploaded']);
+        $docsToCheckQuery = Document::find()
+            ->from(['d' => Document::tableName()])
+            ->where(['d.status' => 'uploaded']);
         if ($accountant->rule !== 'ceo') {
-            $docsToCheckQuery->andWhere('accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+            $docsToCheckQuery
+                ->leftJoin(['td' => TaskDocument::tableName()], 'td.document_id = d.id')
+                ->leftJoin(['t' => Task::tableName()], 't.id = td.task_id')
+                ->andWhere('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
         $docsToCheck = $docsToCheckQuery->count();
         $data = [
