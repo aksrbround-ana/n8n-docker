@@ -9,17 +9,19 @@ class DocListWidget extends Widget
 {
     public $user;
     public $company;
+    public $documents;
 
     public function run()
     {
-        if ($this->company) {
-            $docs = Document::find()->where(['company_id' => $this->company->id])->all();
-        } else {
-            $docs = Document::find()->all();
+        if (!$this->documents && $this->company) {
+            $this->documents = Document::find()->where(['company_id' => $this->company->id])->all();
+        }
+        if (!$this->documents) {
+            $this->documents = [];
         }
         return $this->render('doclist', [
             'user' => $this->user,
-            'docs' => $docs,
+            'docs' => $this->documents,
         ]);
     }
 }

@@ -1,14 +1,31 @@
 <?php
 
 use app\components\DocListWidget;
+use app\services\DictionaryService;
+
 ?>
 <div class="p-6">
     <div class="space-y-6">
-        <div>
-            <h1 class="text-2xl font-heading font-bold">Документы</h1>
-            <p class="text-muted-foreground mt-1">5 документы</p>
+        <div class="flex items-center gap-4">
+            <?php
+            if ($back) {
+            ?>
+                <button class="back inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left h-5 w-5">
+                        <path d="m12 19-7-7 7-7"></path>
+                        <path d="M19 12H5"></path>
+                    </svg>
+                </button>
+            <?php
+            }
+            ?>
+            <div>
+                <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('documents', $user->lang) ?></h1>
+                <p class="text-muted-foreground mt-1">5 <?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?></p>
+            </div>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <!-- @todo Фильтры для документов -->
+        <!-- <div class="flex flex-wrap items-center gap-3">
             <div class="relative flex-1 max-w-md">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground">
                     <circle cx="11" cy="11" r="8"></circle>
@@ -43,10 +60,10 @@ use app\components\DocListWidget;
                     Загрузить документы
                 </button>
             </div>
-        </div>
+        </div> -->
         <div class="border rounded-lg overflow-hidden">
             <div class="relative w-full overflow-auto">
-                <?= DocListWidget::widget(['user' => $user, 'company' => null]); ?>
+                <?= DocListWidget::widget(['user' => $user, 'company' => null, 'documents' => $documents]); ?>
             </div>
         </div>
     </div>

@@ -181,6 +181,8 @@ class DictionaryService
             'currentStatus' => 'Текущий статус',
             'by_unknown' => 'Неизвестно',
             'unknown' => 'Неизвестно',
+            'information' => 'Информация',
+            'noItemsToShow' => 'Нет элементов для отображения',
 
             // Priorities
             'priorityLow' =>  'Низкий',
@@ -419,6 +421,8 @@ class DictionaryService
             'currentStatus' => 'Trenutni status',
             'by_unknown' => 'Nepoznato',
             'unknown' => 'Nepoznato',
+            'information' => 'Informacija',
+            'noItemsToShow' => 'Nema stavki za prikaz',
 
             // Priorities
             'priorityLow' =>  'Nizak',

@@ -11,11 +11,19 @@ use app\controllers\BaseController;
 class TaskController extends BaseController
 {
 
-    public function getDataForPage($accountant)
+    public function getDataForPage($accountant, $status = null)
     {
         $taskQuery = Task::find();
-        if (!$accountant->rule != 'ceo') {
-            $taskQuery->andWhere(['accountant_id' => $accountant->id]);
+        if ($accountant->rule !== Accountant::RULE_CEO) {
+            $taskQuery->where(['accountant_id' => $accountant->id]);
+        }
+        if ($status !== null) {
+            if ($status == Task::STATUS_OVERDUE) {
+                $taskQuery->andWhere(['<', 'due_date', date('Y-m-d')]);
+                $taskQuery->andWhere(['!=', 'status', Task::STATUS_DONE]);
+            } else {
+                $taskQuery->andWhere(['status' => $status]);
+            }
         }
         $tasks = $taskQuery->all();
 
@@ -23,17 +31,18 @@ class TaskController extends BaseController
             'user' => $accountant,
             'tasks' => $tasks,
         ];
+        $data['back'] = $status !== null ? true : false;
         return $data;
     }
 
-    public function actionPage()
+    public function actionPage($status = null)
     {
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
-            $data = $this->getDataForPage($accountant);
+            $data = $this->getDataForPage($accountant, $status);
             return $this->renderPage($data);
         } else {
             return $this->renderLogout([$accountant, $accountant->isValid()]);

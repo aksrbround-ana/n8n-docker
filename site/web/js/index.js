@@ -10,6 +10,7 @@ function getUser() {
 
 function clearUser() {
   localStorage.removeItem('user');
+  localStorage.removeItem('pageHistory');
 }
 
 function showError(title, message) {
@@ -126,7 +127,7 @@ function loadPage(url, data = {}, saveHistory = false) {
         showError('Load error', e.message);
       }
     },
-    type: 'json'
+    dataType: 'json'
   })
 }
 
@@ -137,10 +138,12 @@ function goBack() {
     pageHistory.pop();
     let lastPage = pageHistory[pageHistory.length - 1];
     localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+    let data = lastPage.data;
+    data.token = getUser().token;
     $.ajax({
       url: lastPage.url,
       type: 'POST',
-      data: lastPage.data,
+      data: data,
       success: function (response) {
         if (response.status === 'logout') {
           clearUser();
@@ -159,7 +162,7 @@ function goBack() {
           showError('Load error', e.message);
         }
       },
-      type: 'json'
+      dataType: 'json'
     })
   }
 }
@@ -325,12 +328,24 @@ $(document).on('click', '#add_note_button', function (e) {
   });
 });
 
-$(document).on('click', 'tr.task-row', function (e) {
-  let taskId = $(this).find('input.task-id').val();
+$(document).on('click', 'tr.task-row, div.task-row', function (e) {
+  let taskId = $(this).data('task-id');
   let data = {
     id: taskId
   }
   loadPage('/task/view', data, true);
+});
+
+$(document).on('click', '.go-to-link', function (e) {
+  const link = $(this).data('link');
+  const count = $(this).data('count');
+  if ((typeof count === 'number' && count > 0) || (typeof count === 'undefined')) {
+    loadPage(link, {}, true);
+  } else {
+    const user = getUser();
+    showError(dictionaryLookup('information', user.lang), dictionaryLookup('noItemsToShow', user.lang));
+  }
+  return false;
 });
 
 $(document).on('click', 'button.back', function (e) {

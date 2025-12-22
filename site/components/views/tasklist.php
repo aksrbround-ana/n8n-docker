@@ -24,11 +24,9 @@ use app\services\DictionaryService;
         foreach ($tasks as $task) {
             $company = $task->getCompany();
         ?>
-            <tr class="task-row border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors<?php if ($task->status == 'done') echo ' bg-destructive/5'; ?>">
+            <tr class="task-row border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors<?php if ($task->status == 'done') echo ' bg-destructive/5'; ?>" data-task-id="<?= $task->id ?>">
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                    <button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                        <input type="hidden" class="task-id" value="<?= $task->id ?>" />
-                    </button>
+                    <button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button>
                 </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs"><?= $task->id ?></td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">

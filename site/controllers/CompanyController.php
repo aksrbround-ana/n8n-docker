@@ -24,7 +24,7 @@ class CompanyController extends BaseController
         'statusInactive',
     ];
 
-    protected function getDataForPage($accountant)
+    protected function getDataForPage($accountant, $back = null)
     {
         $companiesQuery = (new Query())
             ->select([
@@ -61,18 +61,19 @@ class CompanyController extends BaseController
         $data = [
             'user' => $accountant,
             'companies' => $companies,
+            'back' => $back !== null,
         ];
         return $data;
     }
 
-    public function actionPage()
+    public function actionPage($back = null)
     {
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         if ($accountant->isValid()) {
-            $data = $this->getDataForPage($accountant);
+            $data = $this->getDataForPage($accountant, $back);
             return $this->renderPage($data);
         } else {
             return $this->renderLogout();

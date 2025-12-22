@@ -9,25 +9,25 @@ class TaskListWidget extends Widget
 {
     public $user;
     public $company;
+    public $tasks;
 
     public function run()
     {
-        if ($this->company) {
+        if (!$this->tasks && $this->company) {
             $tasksQuery = Task::find()->where(['company_id' => $this->company->id]);
-        } else {
-            $tasksQuery = Task::find();
-        }
-        if ($this->user) {
-            if ($this->user->rule != 'ceo') {
-                $tasksQuery->andWhere(['accountant_id' => $this->user->id]);
+            if ($this->user) {
+                if ($this->user->rule != 'ceo') {
+                    $tasksQuery->andWhere(['accountant_id' => $this->user->id]);
+                }
             }
+            $tasks = $tasksQuery->all();
+            $this->tasks = $tasks;
         }
-        $tasks = $tasksQuery->all();
 
         return $this->render('tasklist', [
             'user' => $this->user,
             'company' => $this->company,
-            'tasks' => $tasks,
+            'tasks' => $this->tasks,
         ]);
     }
 }
