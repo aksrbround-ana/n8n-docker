@@ -190,7 +190,7 @@ $(document).on('click', '#login-button', function (e) {
   const email = $('#login-email').val();
   const password = $('#login-password').val();
   $.ajax({
-    url: '/api/auth/login',
+    url: '/auth/login',
     type: 'POST',
     data: {
       username: email,
@@ -228,7 +228,7 @@ $(document).on('click', 'a.menuitem', function (e) {
 $(document).on('click', 'div span.ptm-logout', function (e) {
   let user = getUser();
   $.ajax({
-    url: '/api/auth/logout',
+    url: '/auth/logout',
     type: 'POST',
     data: {
       token: user.token
