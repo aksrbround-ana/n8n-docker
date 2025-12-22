@@ -83,12 +83,13 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'GET document/<action>/<id:\d+>' => 'document/<action>',
-                // 'GET document/image/<id:\d+>' => 'document/image',
-                'POST company/<action:\w+>' => 'company/<action>',
-                'POST login' => 'auth/login',
                 'GET auth' => 'site/login',
-                'POST api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 'GET <controller:\w+>/<action:\w+>' => 'site/index',
+
+                'POST <controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                'POST <controller:\w+>/<action:\w+>/<status:[\w\-]+>' => '<controller>/<action>',
+                'POST login' => 'auth/login',
+                'POST api/<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ]
     ],

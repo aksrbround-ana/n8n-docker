@@ -30,6 +30,9 @@ class Accountant extends ActiveRecord //implements \yii\web\IdentityInterface
 
     const TOKEN_EXPIRATION_INTERVAL = 3600; // 1 hour
     const TOKEN_EXPIRATION_INTERVAL_LONG = 86400;
+    const RULE_ACCOUNTANT = 'accountant';
+    const RULE_ADMIN = 'admin';
+    const RULE_CEO = 'ceo';
 
 
     /**

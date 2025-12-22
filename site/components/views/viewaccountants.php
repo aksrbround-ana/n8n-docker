@@ -25,7 +25,8 @@ use app\services\DictionaryService;
             $percents = round($accountant['tasks'] / $maxTasks * 100, 2);
         ?>
             <div>
-                <div class="flex items-center justify-between mb-1.5"><span class="text-sm font-medium truncate pr-2"><?= $accountant['firstname'] . ' ' . $accountant['lastname'] ?></span>
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="go-to-link text-sm font-medium truncate pr-2 cursor-pointer hover:underline" data-link="/accountant/view/<?= $accountant['id'] ?>"><?= $accountant['firstname'] . ' ' . $accountant['lastname'] ?></span>
                     <div class="flex items-center gap-2 flex-shrink-0"><span class="text-sm text-muted-foreground"><?= $accountant['tasks'] ?></span>
                         <?php
                         if (isset($accountant['overdueTasks'])) {

@@ -170,6 +170,10 @@ const translations = {
     daysLeft: 'дней осталось',
     daysOverdue: 'дней просрочено',
     editReminder: 'Редактировать напоминание',
+
+    //Other
+    information: 'Информация',
+    noItemsToShow: 'Нет элементов для отображения',
   },
   rs: {
     // Navigation
@@ -342,6 +346,10 @@ const translations = {
     daysLeft: 'dana preostalo',
     daysOverdue: 'dana zakašnjenja',
     editReminder: 'Izmeni podsećanje',
+
+    //Other
+    information: 'Informacija',
+    noItemsToShow: 'Nema stavki za prikaz',
   },
 }
 function dictionaryLookup(word, lang) {

@@ -1,4 +1,5 @@
 <?php
+
 use app\services\DictionaryService;
 ?>
 <div class="bg-card rounded-xl border p-5">
@@ -31,7 +32,7 @@ use app\services\DictionaryService;
                 $statusName = 'taskStatusOverdue';
             }
         ?>
-            <div class="flex items-center justify-between p-3 rounded-lg border transition-colors hover:bg-secondary/50 cursor-pointer border-destructive/30 bg-destructive/5">
+            <div class="task-row flex items-center justify-between p-3 rounded-lg border transition-colors hover:bg-secondary/50 cursor-pointer border-destructive/30 bg-destructive/5" data-task-id="<?= $deadline['task_id'] ?>">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2">
                         <span class="text-xs text-muted-foreground"><!--T-007--></span>
@@ -46,11 +47,14 @@ use app\services\DictionaryService;
                     <?php
                     if ($deadline['time_left'] < 0) {
                     ?>
-                        <p class="text-sm font-medium flex items-center gap-1 justify-end text-destructive"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
+                        <p class="text-sm font-medium flex items-center gap-1 justify-end text-destructive">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" x2="12" y1="8" y2="12"></line>
                                 <line x1="12" x2="12.01" y1="16" y2="16"></line>
-                            </svg><?= -$deadline['time_left'] ?> <?= DictionaryService::getWord('daysOverdue', $user->lang) ?></p>
+                            </svg>
+                            <?= -$deadline['time_left'] ?> <?= DictionaryService::getWord('daysOverdue', $user->lang) ?>
+                        </p>
                     <?php
                     }
                     ?>

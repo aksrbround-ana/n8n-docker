@@ -20,14 +20,14 @@ class SiteController extends BaseController
     public $user;
     public $mainMenu = [
         'dashboard' => [
-             'url' => '/site/page',
-             'picture' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard h-5 w-5 flex-shrink-0">
+            'url' => '/site/page',
+            'picture' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard h-5 w-5 flex-shrink-0">
 <rect width="7" height="9" x="3" y="3" rx="1"></rect>
 <rect width="7" height="5" x="14" y="3" rx="1"></rect>
 <rect width="7" height="9" x="14" y="12" rx="1"></rect>
 <rect width="7" height="5" x="3" y="16" rx="1"></rect>
 </svg>',
-            ],
+        ],
         'companies' => [
             'url' => '/company/page',
             'picture' => '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building2 h-5 w-5 flex-shrink-0">
@@ -111,7 +111,7 @@ class SiteController extends BaseController
         $data = [
             'user' => $accountant,
         ];
-        return $this->render('empty',$data);
+        return $this->render('empty', $data);
     }
 
     protected function getDataForPage($accountant)
@@ -193,12 +193,18 @@ class SiteController extends BaseController
         }
         $activeTasks = $activeTasksQuery->count();
 
-        $overdueTasksQuery = Task::find()->where(['<', 'due_date', date('Y-m-d')]);
+        $overdueTasksQuery = Task::find()
+            ->where(['<', 'due_date', date('Y-m-d')])
+            ->andWhere(['!=', 'status', Task::STATUS_DONE]);
         if ($accountant->rule !== 'ceo') {
             $overdueTasksQuery->andWhere('accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
         $overdueTasks = $overdueTasksQuery->count();
-        $docsToCheck = Document::find()->where(['status' => 'new'])->count();
+        $docsToCheckQuery = Document::find()->where(['status' => 'uploaded']);
+        if ($accountant->rule !== 'ceo') {
+            $docsToCheckQuery->andWhere('accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+        }
+        $docsToCheck = $docsToCheckQuery->count();
         $data = [
             'user' => $accountant,
             'data' => [
@@ -209,7 +215,7 @@ class SiteController extends BaseController
                 'upcomingDeadlines' => $upcomingDeadlines,
                 'docsToCheck' => $docsToCheck,
                 'activities' => $recentActivity,
-                'viewAccountants' => $viewAccountants,                
+                'viewAccountants' => $viewAccountants,
             ]
         ];
         return $data;

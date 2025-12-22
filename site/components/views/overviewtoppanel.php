@@ -4,7 +4,7 @@ use app\services\DictionaryService;
 
 ?>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="rounded-xl border p-5 transition-shadow hover:shadow-md bg-card">
+    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-card cursor-pointer" data-link="/company/page/back" data-count="<?= $data['clents'] ?>">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-muted-foreground font-medium"><?= DictionaryService::getWord('totalClients', $user->lang) ?></p>
@@ -22,22 +22,24 @@ use app\services\DictionaryService;
             </div>
         </div>
     </div>
-    <div class="rounded-xl border p-5 transition-shadow hover:shadow-md bg-card">
+    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-card cursor-pointer" data-link="/task/page/inProgress" data-count="<?= $data['activeTasks'] ?>">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-muted-foreground font-medium"><?= DictionaryService::getWord('activeTasks', $user->lang) ?></p>
                 <p class="mt-2 text-3xl font-bold font-heading"><?= $data['activeTasks'] ?></p>
             </div>
-            <div class="rounded-lg p-2.5 bg-primary/10 text-primary"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-todo h-5 w-5">
+            <div class="rounded-lg p-2.5 bg-primary/10 text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-todo h-5 w-5">
                     <rect x="3" y="5" width="6" height="6" rx="1"></rect>
                     <path d="m3 17 2 2 4-4"></path>
                     <path d="M13 6h8"></path>
                     <path d="M13 12h8"></path>
                     <path d="M13 18h8"></path>
-                </svg></div>
+                </svg>
+            </div>
         </div>
     </div>
-    <div class="rounded-xl border p-5 transition-shadow hover:shadow-md bg-destructive/5 border-destructive/20">
+    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-destructive/5 border-destructive/20 cursor-pointer" data-link="/task/page/overdue" data-count="<?= $data['overdueTasks'] ?>">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-muted-foreground font-medium"><?= DictionaryService::getWord('overdueTasks', $user->lang) ?></p>
@@ -50,7 +52,7 @@ use app\services\DictionaryService;
                 </svg></div>
         </div>
     </div>
-    <div class="rounded-xl border p-5 transition-shadow hover:shadow-md bg-warning/5 border-warning/20">
+    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-warning/5 border-warning/20 cursor-pointer" data-link="/document/page/uploaded" data-count="<?= $data['docsToCheck'] ?>">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-muted-foreground font-medium"><?= DictionaryService::getWord('pendingDocuments', $user->lang) ?></p>

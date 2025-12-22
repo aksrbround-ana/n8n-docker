@@ -9,28 +9,52 @@ use app\models\Document;
 use app\models\DocumentStep;
 use app\components\DocViewActivityWidget;
 use app\models\DocumentComment;
+use app\models\Task;
+use app\models\TaskDocument;
 
 class DocumentController extends BaseController
 {
 
-    public function getDataForPage($accountant)
+    public function getDataForPage($accountant, $status = null)
     {
-        $docs = Document::find()->all();
+        $docsQuery = Document::find();
+        if ($accountant->rule !== 'ceo') {
+            $docsQuery
+                ->leftJoin(['td' => TaskDocument::tableName()], 'documents.id = td.document_id')
+                ->leftJoin(['t' => Task::tableName()], 'td.task_id = t.id')
+                ->leftJoin(['a' => Accountant::tableName()], 't.accountant_id = a.id')
+                ->where('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+        }
+        if ($status !== null) {
+            $docsQuery->andWhere(['documents.status' => $status]);
+        }
+        $docs = $docsQuery->all();
+        $debug = [];
+        foreach ($docs as $doc) {
+            $debug[] = [
+                'id' => $doc->id,
+                'filename' => $doc->filename,
+                'status' => $doc->status,
+            ];
+        }
         $data = [
             'user' => $accountant,
             'documents' => $docs,
+            'status' => $status,
+            'back' => $status !== null,
+            'debug' => $debug,
         ];
         return $data;
     }
 
-    public function actionPage()
+    public function actionPage($status = null)
     {
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
-            $data = $this->getDataForPage($accountant);
+            $data = $this->getDataForPage($accountant, $status);
             return $this->renderPage($data);
         } else {
             return $this->renderLogout();
@@ -177,7 +201,7 @@ class DocumentController extends BaseController
                 'document' => Document::findOne(['id' => $id]),
             ];
             return
-            $page = $this->renderPage($data, 'addComment');
+                $page = $this->renderPage($data, 'addComment');
             // $response = \Yii::$app->response;
             // $response->format = Response::FORMAT_JSON;
             // $response->data =
