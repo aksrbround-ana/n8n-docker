@@ -36,6 +36,11 @@ class Document extends \yii\db\ActiveRecord
     const STATUS_NEEDS_REVISION = 'needs_revision';
     const STATUS_PROCESSING = 'processing';
 
+    const OCR_STATUS_TODO = 'todo';
+    const OCR_STATUS_PROCESSING = 'processing';
+    const OCR_STATUS_DONE = 'done';
+    const OCR_STATUS_NONE = 'none';
+
     public $statuses = [
         'uploaded' =>  self::STATUS_UPLOADED,
         'checked' =>  self::STATUS_CHECKED,
