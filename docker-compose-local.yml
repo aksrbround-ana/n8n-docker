@@ -45,6 +45,12 @@ services:
       - TZ=${GENERIC_TIMEZONE}
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
       - N8N_DATA_FOLDER=/home/node/.n8n
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_MAX_AGE=168   # 7 дней
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none # Экономит кучу места. 'info' - компромисс
+      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false # <-- Исправлено на false для скорости!
+      - NODE_OPTIONS=--max-old-space-size=2048
     ports:
       - '5678:5678'
     volumes:
@@ -94,13 +100,6 @@ services:
       - web
     depends_on:
       - postgres
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.pgadmin.rule=Host(`${PGA_SUBDOMAIN}.${DOMAIN_NAME}`)
-      - traefik.http.routers.pgadmin.entrypoints=websecure
-      - traefik.http.routers.pgadmin.tls=true
-      - traefik.http.routers.pgadmin.tls.certresolver=mytlschallenge
-      - traefik.http.services.pgadmin.loadbalancer.server.port=80
 
 networks:
   web:
