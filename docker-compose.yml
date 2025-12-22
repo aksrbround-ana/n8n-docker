@@ -92,6 +92,7 @@ services:
       - EXECUTIONS_DATA_SAVE_ON_ERROR=all
       - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none # Экономит кучу места. 'info' - компромисс
       - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false # <-- Исправлено на false для скорости!
+      - NODE_OPTIONS=--max-old-space-size=2048
     ports:
       - '5678:5678'
     volumes:
