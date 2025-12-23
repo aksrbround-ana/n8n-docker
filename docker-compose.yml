@@ -93,6 +93,8 @@ services:
       - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none # Экономит кучу места. 'info' - компромисс
       - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false # <-- Исправлено на false для скорости!
       - NODE_OPTIONS=--max-old-space-size=2048
+      - NODE_FUNCTION_ALLOW_BUILTIN=crypto
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
     ports:
       - '5678:5678'
     volumes:
