@@ -9,13 +9,10 @@ use app\services\DictionaryService;
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-20">ID</th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('taskType', $user->lang) ?></th>
-            <!-- <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('period', $user->lang) ?></th> -->
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('status', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('priority', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('dueDate', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('assignedTo', $user->lang) ?></th>
-            <!-- <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('lastUpdate', $user->lang) ?></th> -->
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-12"></th>
         </tr>
     </thead>
     <tbody class="[&amp;_tr:last-child]:border-0">
@@ -36,7 +33,6 @@ use app\services\DictionaryService;
                     </div>
                 </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $task->category ?></td>
-                <!-- <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">2024</td> -->
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $task->getStatusStyle() ?>"><?= $task->getStatusText($user->lang) ?></span></td>
                 <?php
                 $priorityWord = $task->getPriorityWord();
@@ -65,23 +61,6 @@ use app\services\DictionaryService;
                     ?>
                 </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $accountant->firstname . ' ' . $accountant->lastname ?></td>
-                <!-- <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">28.11, 08:45</td> -->
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                    <div class="flex items-center gap-1">
-                        <span class="flex items-center gap-0.5 text-xs text-muted-foreground">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-3.5 w-3.5">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            </svg>2
-                        </span>
-                        <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r181:" aria-haspopup="menu" aria-expanded="false" data-state="closed">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
-                                <circle cx="12" cy="12" r="1"></circle>
-                                <circle cx="19" cy="12" r="1"></circle>
-                                <circle cx="5" cy="12" r="1"></circle>
-                            </svg>
-                        </button>
-                    </div>
-                </td>
             </tr>
         <?php
         }

@@ -1,6 +1,8 @@
 <?php
 
 use app\services\DictionaryService;
+
+$initials = strtoupper($user->firstname[0] . $user->lastname[0]);
 ?>
 <header class="fixed top-0 right-0 left-64 z-30 h-16 bg-card border-b border-border flex items-center justify-between px-6">
     <div class="flex-1 max-w-xl">
@@ -17,7 +19,7 @@ use app\services\DictionaryService;
     <div class="flex items-center gap-4">
         <button id="user-card-mini" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground gap-3 h-auto py-2 px-3" type="button" aria-haspopup="menu" aria-expanded="false" data-state="closed">
             <span class="relative flex shrink-0 overflow-hidden rounded-full h-8 w-8">
-                <span class="flex h-full w-full items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">A</span>
+                <span class="flex h-full w-full items-center justify-center rounded-full bg-primary text-primary-foreground text-xs"><?= $initials ?></span>
             </span>
             <div class="flex flex-col items-start">
                 <span class="ptm-name text-sm font-medium"><?= $user->firstname . ' ' . $user->lastname ?></span>
