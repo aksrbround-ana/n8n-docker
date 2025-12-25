@@ -254,7 +254,7 @@ $(document).on('click', 'div span.ptm-logout', function (e) {
   });
 });
 
-$(document).on('click', '#user-card-mini', function () {
+$(document).on('click', '#user-card-mini, #user-menu .user-menu-item', function () {
   $('#user-menu').toggle();
   userMenuResize();
 })
