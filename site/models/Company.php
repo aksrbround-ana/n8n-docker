@@ -27,6 +27,12 @@ use Yii;
 class Company extends \yii\db\ActiveRecord
 {
 
+    public static $types = [
+        'DOO',
+        'Knigaš',
+        'Paušal,'
+    ];
+
 
     /**
      * {@inheritdoc}
@@ -141,5 +147,4 @@ class Company extends \yii\db\ActiveRecord
     {
         return Customer::find()->where(['company_id' => $this->id, 'status' => 'active'])->one();
     }
-
 }

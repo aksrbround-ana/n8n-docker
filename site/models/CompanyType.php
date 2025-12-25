@@ -56,4 +56,9 @@ class CompanyType extends \yii\db\ActiveRecord
         return $this->hasMany(Company::class, ['type_id' => 'id']);
     }
 
+    public static function getIdByName($name)
+    {
+        $type = self::findOne(['name' => $name]);
+        return $type ? $type->id : null;
+    }
 }
