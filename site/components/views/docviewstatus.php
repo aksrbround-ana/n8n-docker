@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Document;
 use app\services\DictionaryService;
 ?>
 <div id="doc-actions" class="rounded-lg border bg-card text-card-foreground shadow-sm">
@@ -17,7 +18,7 @@ use app\services\DictionaryService;
         </button>
         <?php
         $statuses = [];
-        foreach ($document->statuses as $status) {
+        foreach (Document::$statuses as $status) {
             $s = $document->status == $status ? ' selected' : '';
             $statuses[] = '<option value="' . $status . '"' . $s . '>' . $document->getStatusName($user->lang, $status) . '</option>';
         }

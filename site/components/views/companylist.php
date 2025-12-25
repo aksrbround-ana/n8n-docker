@@ -13,7 +13,14 @@ foreach ($companies as $company) {
                     <?php
                     $statusName = 'status' . ucfirst($company['company_status']);
                     ?>
-                </div><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20"><?= DictionaryService::getWord($statusName, $user->lang) ?></span>
+                </div>
+                <?php
+                if ($user->rule == 'ceo') {
+                ?>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20"><?= DictionaryService::getWord($statusName, $user->lang) ?></span>
+                <?php
+                }
+                ?>
             </div>
         </div>
         <div class="p-4 space-y-3">
@@ -80,7 +87,7 @@ foreach ($companies as $company) {
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 </svg>Открыть профиль
             </button>
-            <button class="company_open_tasks inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
+            <!-- <button class="company_open_tasks inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
                 <input type="hidden" class="company" value="<?= $company['company_id'] ?>" />
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-todo h-3.5 w-3.5">
                     <rect x="3" y="5" width="6" height="6" rx="1"></rect>
@@ -99,7 +106,7 @@ foreach ($companies as $company) {
                     <path d="M16 13H8"></path>
                     <path d="M16 17H8"></path>
                 </svg>
-            </button>
+            </button> -->
         </div>
     </div>
 <?php

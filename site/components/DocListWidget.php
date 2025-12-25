@@ -13,9 +13,6 @@ class DocListWidget extends Widget
 
     public function run()
     {
-        if (!$this->documents && $this->company) {
-            $this->documents = Document::find()->where(['company_id' => $this->company->id])->all();
-        }
         if (!$this->documents) {
             $this->documents = [];
         }

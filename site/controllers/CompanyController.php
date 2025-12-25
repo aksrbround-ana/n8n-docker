@@ -11,9 +11,11 @@ use app\models\Accountant;
 use app\models\CompanyActivities;
 use app\models\Customer;
 use app\components\CompanyNotesWidget;
+use app\models\Document;
 use app\models\TaxCalendar;
 use app\models\Reminder;
 use app\models\Task;
+use app\models\TaskDocument;
 
 class CompanyController extends BaseController
 {
@@ -93,6 +95,9 @@ class CompanyController extends BaseController
             $activity = CompanyActivities::findOne(['id' => $company->activity_id]);
             $taskQuery = Task::find()
                 ->where(['company_id' => $company->id]);
+            if ($accountant->rule !== 'ceo') {
+                $taskQuery->andWhere(['accountant_id' => $accountant->id]);
+            }
             $taskCount = $taskQuery->count();
             $tasks = $taskQuery
                 ->orderBy('due_date ASC')
@@ -101,6 +106,19 @@ class CompanyController extends BaseController
                 ->andWhere(['!=', 'status', 'done'])
                 ->andWhere(['<', 'due_date', date('Y-m-d')])
                 ->count();
+            $documentsQuery = Document::find()
+                ->from(['d' => Document::tableName()])
+                ->where(['d.company_id' => $id]);
+            if ($accountant->rule !== 'ceo') {
+                $documentsQuery
+                    ->leftJoin(['td' => TaskDocument::tableName()], 'td.document_id = d.id')
+                    ->leftJoin(['t' => Task::tableName()], 't.id = td.task_id')
+                    ->andWhere(['t.accountant_id' => $accountant->id]);
+            }
+            $documents = $documentsQuery
+                ->orderBy('d.created_at DESC')
+                ->all();
+            $documentsCount = $documentsQuery->count();
             $data = [
                 'user' => $accountant,
                 'company' => $company,
@@ -109,6 +127,8 @@ class CompanyController extends BaseController
                 'taskCount' => $taskCount,
                 'tasks' => $tasks,
                 'tasksOverdue' => $tasksOverdue,
+                'documents' => $documents,
+                'documentsCount' => $documentsCount,
             ];
 
             return $this->renderPage($data, 'profile');

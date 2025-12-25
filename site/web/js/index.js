@@ -254,7 +254,7 @@ $(document).on('click', 'div span.ptm-logout', function (e) {
   });
 });
 
-$(document).on('click', '#user-card-mini', function () {
+$(document).on('click', '#user-card-mini, #user-menu .user-menu-item', function () {
   $('#user-menu').toggle();
   userMenuResize();
 })
@@ -451,6 +451,9 @@ $(document).on('change', '#doc-status-select', function (e) {
       if (response.status === 'success') {
         $('#doc-status-block').html(response.data);
         $('#doc-activity-block').replaceWith(response.activity);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
         showError('Ошибка', response.message);
       }

@@ -12,7 +12,7 @@ use app\services\DictionaryService;
             </div>
         </div>
         <div role="separator" aria-orientation="horizontal" class="-mx-1 my-1 h-px bg-muted"></div>
-        <div role="menuitem" class="go-to-link relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground cursor-pointer" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-link="/accountant/profile/">
+        <div role="menuitem" class="go-to-link user-menu-item relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground cursor-pointer" tabindex="-1" data-orientation="vertical" data-radix-collection-item="" data-link="/accountant/profile/">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user mr-2 h-4 w-4">
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
@@ -20,7 +20,7 @@ use app\services\DictionaryService;
             <?= DictionaryService::getWord('profile', $user->lang) ?>
         </div>
         <div role="separator" aria-orientation="horizontal" class="-mx-1 my-1 h-px bg-muted"></div>
-        <div role="menuitem" class="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground text-destructive cursor-pointer" tabindex="-1" data-orientation="vertical" data-radix-collection-item="">
+        <div role="menuitem" class="user-menu-item relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground text-destructive cursor-pointer" tabindex="-1" data-orientation="vertical" data-radix-collection-item="">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out mr-2 h-4 w-4">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
