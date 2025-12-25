@@ -96,15 +96,22 @@ function loadPage(url, data = {}, saveHistory = false) {
   }
   data.token = token;
   let itemHistory = { url: url, data: data };
+  let pageHistory;
   if (saveHistory) {
-    let pageHistory = localStorage.getItem('pageHistory');
+    pageHistory = localStorage.getItem('pageHistory');
     pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
-    pageHistory.push(itemHistory);
-    localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+    if (pageHistory.length > 0) {
+      let lastPage = pageHistory[pageHistory.length - 1];
+      if (lastPage.url !== itemHistory.url || JSON.stringify(lastPage.data) !== JSON.stringify(itemHistory.data)) {
+        pageHistory.push(itemHistory);
+      }
+    } else {
+      pageHistory.push(itemHistory);
+    }
   } else {
-    let pageHistory = [itemHistory];
-    localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+    pageHistory = [itemHistory];
   }
+  localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
   $.ajax({
     url: url,
     type: 'POST',
@@ -484,6 +491,33 @@ $(document).on('click', '#doc-send-comment', function (e) {
 
 $(document).on('click', '#upload-docs', function (e) {
   loadPage('/document/upload', {}, true);
+  return false;
+});
+
+$(document).on('click', '#save-user', function (e) {
+  const form = $(this).closest('form');
+  const formData = form.serializeArray();
+  let data = {};
+  formData.forEach(item => {
+    data[item.name] = item.value;
+  });
+  let user = getUser();
+  data.token = user.token;
+  $.ajax({
+    url: form.attr('action'),
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        loadPage('/accountant/profile', {}, false);
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function () {
+      alert('Произошла ошибка при сохранении данных пользователя.');
+    }
+  });
   return false;
 });
 
