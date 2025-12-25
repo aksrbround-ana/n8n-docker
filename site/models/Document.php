@@ -41,7 +41,7 @@ class Document extends \yii\db\ActiveRecord
     const OCR_STATUS_DONE = 'done';
     const OCR_STATUS_NONE = 'none';
 
-    public $statuses = [
+    public static $statuses = [
         'uploaded' =>  self::STATUS_UPLOADED,
         'checked' =>  self::STATUS_CHECKED,
         'needsRevision' =>  self::STATUS_NEEDS_REVISION,
@@ -107,7 +107,7 @@ class Document extends \yii\db\ActiveRecord
         if (!$this->isNewRecord) {
             $oldDocument = Document::findOne(['id' => $this->id]);
             if ($oldDocument && $oldDocument->status !== $this->status) {
-                $stepName = DocumentStep::$steps[$this->status] ?? null;
+                $stepName = self::$steps[$this->status] ?? null;
                 if ($stepName) {
                     $step = DocumentStep::findOne(['name' => $stepName]);
                     if ($step) {

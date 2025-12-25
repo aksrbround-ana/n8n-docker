@@ -451,6 +451,9 @@ $(document).on('change', '#doc-status-select', function (e) {
       if (response.status === 'success') {
         $('#doc-status-block').html(response.data);
         $('#doc-activity-block').replaceWith(response.activity);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
         showError('Ошибка', response.message);
       }

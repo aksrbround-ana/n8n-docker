@@ -15,15 +15,6 @@ use Yii;
  */
 class DocumentStep extends \yii\db\ActiveRecord
 {
-    const STEP_UPLOADED = 'uploaded';
-    const STEP_CHECKED = 'checked';
-    const STEP_NEEDS_REVISION = 'needs_revision';
-
-    public static $steps = [
-        'uploaded' =>  self::STEP_UPLOADED,
-        'checked' =>  self::STEP_CHECKED,
-        'needsRevision' =>  self::STEP_NEEDS_REVISION,
-    ];
 
     /**
      * {@inheritdoc}

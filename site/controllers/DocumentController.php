@@ -143,7 +143,7 @@ class DocumentController extends BaseController
         if ($accountant->isValid()) {
             $docId = $request->post('id');
             $newStatus = $request->post('status');
-            $newStatus = DocumentStep::$steps[$newStatus] ?? $newStatus;
+            $newStatus = Document::$steps[$newStatus] ?? $newStatus;
             $document = Document::findOne(['id' => $docId]);
             if ($document) {
                 $document->status = $newStatus;
@@ -163,6 +163,7 @@ class DocumentController extends BaseController
                                 'user' => $accountant,
                                 'document' => $document,
                             ]),
+                            'errors' => $document->getErrors(),
                         ];
                     return $response;
                 } else {
