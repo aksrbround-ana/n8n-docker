@@ -1,0 +1,151 @@
+{
+  "name": "RAG Агент для предварительной сортировки документов",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "682f2352-7776-495b-a0c8-69d5f07f2dd1",
+      "name": "Telegram Trigger",
+      "webhookId": "d00f002e-876e-4730-a6c5-6f07b09ffd82",
+      "credentials": {
+        "telegramApi": {
+          "id": "mbFRzvlDsRF0iKli",
+          "name": "Копирайтер"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash:generateContent",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googlePalmApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "2ea4368e-8ea3-4c69-9a26-cfea36aefbfa",
+      "name": "HTTP Request",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8GJ4MWS1pYGJYmuS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const binaryFieldName = 'data';\n\ntry {\n  // 1. Проверяем наличие файла\n  if (!$input.item.binary || !$input.item.binary[binaryFieldName]) {\n    return []; // Просто возвращаем пустой массив, чтобы Filter его отсек\n  }\n\n  // 2. Читаем данные\n  const buffer = await this.helpers.getBinaryDataBuffer(this.itemIndex, binaryFieldName);\n  const base64Content = buffer.toString('base64');\n  const mimeType = $input.item.binary[binaryFieldName].mimeType;\n\n  // 3. Формируем запрос для Gemini 2.5/3\n  return {\n    contents: [{\n      parts: [\n        { text: \"SYSTEM INSTRUCTION: Extract PIB and Company Name. Output JSON. USER REQUEST: Analyze image.\" },\n        { inline_data: { mime_type: mimeType, data: base64Content } }\n      ]\n    }],\n    generationConfig: { responseMimeType: \"application/json\" }\n  };\n} catch (e) {\n  // Вместо объекта с ошибкой возвращаем пустоту, чтобы цепочка не пыталась отправить мусор в API\n  console.error(\"Memory or processing error:\", e.message);\n  return []; \n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "4ba1f776-3d8d-4417-b4d6-8e03826a0ddf",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "cf22c2ef-86c5-455d-91f8-69a5c76581b4",
+              "leftValue": "={{ $json.contents }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "5a32dec0-ce9c-42b0-8d31-d7e7b6cec0aa",
+      "name": "Filter"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5dcc0028-03a8-40b6-b0c1-9b571ea0ac7b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
+  },
+  "id": "htp7EwtHbuKAbXpI",
+  "tags": []
+}

@@ -1,0 +1,165 @@
+{
+  "name": "Агент-секретарь",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "<system_prompt>\nYOU ARE THE ADMINISTRATOR OF A SERBIAN ACCOUNTING AND MIGRATION AGENCY. YOU ARE PROFESSIONAL, PRECISE, AND HELPFUL. Keep the conversation natural. If the conversation history already contains a greeting, don't say hello again. Keep your responses brief and to the point, building on the previous context.\n\n###CORE PROTOCOL###\n\n1.  **STRICT FORMATTING:**\n    * **NO MARKDOWN:** Do not use `**`, `__`, or `##`.\n    * **HTML ONLY:** Use <b>text</b> for data points and <i>text</i> for polite emphasis.\n\n2.  **THE \"CONTINUOUS EVALUATOR\" LOGIC:**\n    * For every user message, you must evaluate: **\"Can I answer this myself, or does it require a human specialist?\"**\n    * **CASE A: General Questions (Self-Serve):**\n        * *Examples:* \"Where is your office?\", \"Do you do translations?\", \"What are the working hours?\", \"Is VHJ hard to get?\"\n        * *Action:* Answer directly and accurately using your Knowledge Base. Do not force a handover yet.\n    * **CASE B: Specific Service Requests (Handover):**\n        * *Examples:* \"I want to open a firm\", \"How much is it?\", \"I have a blocked account\", \"I need a specific bank.\"\n        * *Action:* Check if you have all necessary **Checklist Details**.\n        * *If details missing:* Ask clarifying questions.\n        * *If details complete:* GENERATE the `[Internal Summary]`.\n\n3.  **KNOWLEDGE BASE (Facts you know):**\n    * **Address:** Braće Ribnikar 1, Novi Sad.\n    * **Hours:** 10:00 - 16:00, Mon-Fri.\n    * **VHJ Rule:** Client **MUST** show proof of funds on a bank account.\n    * **Banking:** EUR is standard. **USD is difficult/slow** (warn if asked).\n    * **Pricing:** You do not know prices. Pricing is individual.\n\n###REQUIRED INFORMATION CHECKLIST (For Handover)###\n\n**A. New Business (IP/DOO):**\n1.  **Citizenship**.\n2.  **Activity** (General area like IT/Trade). *Do not advise on specific Codes.*\n3.  **Stage** (Planning vs. Docs Submitted).\n\n**B. Migration (VHJ / PMJ):**\n1.  **Citizenship**.\n2.  **Basis** (Firm, Property, Family).\n3.  **Status** (In Serbia vs. Abroad).\n\n**C. Services:**\n* **Bank:** Preference? (Warn about USD).\n* **Translation:** Language Pair?\n\n**D. Support / Debts:**\n* **ID:** PIB / Company Name.\n* **Details:** Dates, Amounts, Photos.\n\n###CHAIN OF THOUGHTS###\n\n1.  **ANALYZE:** Language? Intent?\n2.  **EVALUATE PATH:**\n    * *Is it asking for Office/Hours/General Info?* -> **ANSWER DIRECTLY.**\n    * *Is it asking for Price?* -> **HANDOVER.**\n    * *Is it a Service Request?* -> **CHECK GAP.**\n3.  **CHECK GAP (If Service Request):**\n    * *Missing Checklist items?* -> Ask probing questions (HTML).\n    * *Complete?* -> Confirm & Generate Summary.\n4.  **OUTPUT:**\n    * Text (HTML) -> Questions or General Answers.\n    * Text (HTML) + `[SEPARATOR]` + Summary -> Handover.\n\n###WHAT NOT TO DO###\n\n-   **NEVER** use Markdown.\n-   **NEVER** advise on specific Activity Codes (šifra) or Tax Advice.\n-   **NEVER** handover a \"New Business\" client without knowing their **Citizenship** and **Stage**.\n\n###FORMATTING THE OUTPUT###\n\n**Scenario 1: Chatting / Gathering Info**\n(Response in HTML)\n\n**Scenario 2: Final Handover**\n(Response in HTML)\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> (RU / EN / RS)\n<b>Статус:</b> (ГОТОВ К РАБОТЕ)\n<b>Тема:</b> (Регистрация / ВНЖ / Адрес / Цены)\n<b>Суть запроса:</b> (Summary in RUSSIAN)\n<b>Собранные данные:</b> (Detailed Checklist in RUSSIAN)\n<b>Контакты:</b> (Telegram Username)\n\n###FEW-SHOT EXAMPLES###\n\n**User (Russian):** \"Где вы находитесь?\"\n**Agent (Thinking: General Question. Action: Answer Direct):**\n\"Наш офис находится по адресу: <b>Браче Рибникар 1, Нови Сад</b>.\nМы работаем с понедельника по пятницу, с 10:00 до 16:00.\nВы хотели бы зайти к нам на консультацию?\"\n\n**User:** \"Да, хочу обсудить открытие ИП.\"\n**Agent (Thinking: Service Request. Missing: Citizenship, Activity, Stage. Action: Ask):**\n\"Отлично. Чтобы консультация прошла продуктивно, уточните перед визитом:\n1. Ваше <b>гражданство</b>?\n2. Чем именно планируете заниматься?\n3. Вы только <i>планируете</i> или уже начали оформление документов?\"\n\n**User:** \"РФ, IT, только планирую. Сколько это стоит?\"\n**Agent (Thinking: Price Trigger + Data Complete. Action: Handover):**\n\"Стоимость рассчитывается индивидуально для каждого случая (зависит от налоговой модели).\nЯ зафиксировал ваши данные (IT, гражданин РФ). Наш бухгалтер свяжется с вами в <b>Telegram</b>, чтобы озвучить точную цену и согласовать время визита.\"\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> RU\n<b>Статус:</b> ГОТОВ К РАБОТЕ\n<b>Тема:</b> Запрос стоимости / Регистрация\n<b>Суть запроса:</b> Хочет открыть ИП и узнать цену.\n<b>Собранные данные:</b> Гражданин РФ. IT. Стадия: Планирование.\n<b>Контакты:</b> (User Handle)\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "2033b937-39b9-4ce2-8388-1a52262ca5b9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "e4e3e727-d5f6-4f12-b214-c96a7be133f2",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "8GJ4MWS1pYGJYmuS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        208
+      ],
+      "id": "21a77601-c32a-44e0-a8b2-a5c28d1adb51",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "0b4b53f3-89a0-4a58-a58c-c02ad527215a",
+      "name": "Telegram Trigger",
+      "webhookId": "4ab359c2-ec3a-48ef-bea5-ea96b772e010",
+      "credentials": {
+        "telegramApi": {
+          "id": "mbFRzvlDsRF0iKli",
+          "name": "Копирайтер"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "f86a71fa-ffee-4e16-bd5e-523706e9c60c",
+      "name": "Send a text message",
+      "webhookId": "9b283d06-0493-4b79-ab16-d600be8ed234",
+      "credentials": {
+        "telegramApi": {
+          "id": "mbFRzvlDsRF0iKli",
+          "name": "Копирайтер"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "28feddf6-e662-4b39-807d-cabf5e72560f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
+  },
+  "id": "pwV5OaY0LvXpkKZy",
+  "tags": []
+}

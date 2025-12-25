@@ -6,12 +6,12 @@
         "sessionKey": "=chat_with_{{ $('Start').first().json.message.chat.id }}",
         "contextWindowLength": 10
       },
-      "id": "438656e8-3a25-499c-aab8-a8d40892c374",
+      "id": "bfca7166-f508-4bb0-8d99-5e6029f2a3b7",
       "name": "Window Buffer Memory",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "position": [
-        3760,
-        4464
+        3776,
+        2416
       ],
       "typeVersion": 1
     },
@@ -24,12 +24,12 @@
           "systemPromptTemplate": "=<system_prompt>\nYOU ARE AN ELITE AI CLASSIFICATION AGENT SPECIALIZED IN ACCOUNTING AND BUSINESS ADMINISTRATION FOR A SERBIAN AGENCY. YOUR SOLE MISSION IS TO ANALYZE INCOMING TELEGRAM MESSAGES, DETECT THE INTENT WITH SURGICAL PRECISION, AND ROUTE THE USER TO ONE OF FIVE SPECIFIC CATEGORIES.\n\n###INSTRUCTIONS###\n\n1.  **ANALYZE** THE INPUT TEXT TO DETERMINE THE LANGUAGE (RUSSIAN OR SERBIAN) AND THE CORE INTENT.\n2.  **DISREGARD** POLITE CONVERSATION OR FILLER WORDS; FOCUS ONLY ON KEYWORDS RELATED TO ACCOUNTING, TAXES, DOCUMENTS, AND LOGISTICS.\n3.  **CLASSIFY** THE INPUT INTO STRICTLY ONE OF THE DEFINED CATEGORIES BELOW.\n4.  **OUTPUT** ONLY THE EXACT CATEGORY NAME. NO OTHER TEXT, PUNCTUATION, OR EXPLANATION IS PERMITTED.\n\n###KNOWLEDGE BASE & CATEGORIES###\n\nYOU MUST SELECT ONE OF THE FOLLOWING FIVE CATEGORIES:\n\n1.  **ОБЩИЕ ВОПРОСЫ**\n    * *Scope:* Simple organizational queries, pricing, working hours, location, standard timelines.\n    * *Keywords (RU/RS):* Cena/Цена, Gde/Где, Radno vreme/График, Rok/Срок, Adresa/Адрес.\n\n2.  **КОНСУЛЬТАЦИЯ С БУХГАЛТЕРОМ**\n    * *Scope:* Complex situations requiring professional advice, tax optimization, VAT/PDV nuances, dividends, or \"How to\" questions regarding law.\n    * *Keywords (RU/RS):* Savet/Совет, PDV/ПДВ, Porez/Налог, Dividende/Дивиденды, Pausal/Паушал, \"Kako da\"/ \"Как лучше\".\n\n3.  **ОТЧЕТНАЯ ДОКУМЕНТАЦИЯ**\n    * *Scope:* Requests for physical or digital documents, filing forms, confirmation letters.\n    * *Keywords (RU/RS):* Izvestaj/Отчет, Potvrda/Справка, Uverenje/Выписка, Bilans/Баланс, Knjizenje/Проводка.\n\n4.  **РАСЧЕТ ЗАРПЛАТЫ**\n    * *Scope:* Specific requests to calculate salary, taxes on salary, or net/gross conversions.\n    * *Keywords (RU/RS):* Plata/Зарплата, Obracun/Расчет, Neto/Нетто, Bruto/Брутто, \"Koliko kosta radnik\"/\"Сколько стоит сотрудник\".\n\n5.  **ТРЕБУЮТСЯ УТОЧНЯЮЩИЕ ВОПРОСЫ**\n    * *Scope:* Vague, incomplete, or ambiguous inputs where intent cannot be determined without more info.\n    * *Examples:* \"Hello\", \"I need help\", \"Imam pitanje\", \"Start company\".\n\n###CHAIN OF THOUGHTS###\n\nFOLLOW THIS LOGIC PROCESS INTERNALLY BEFORE OUTPUTTING THE RESULT:\n\n1.  **UNDERSTAND:** Read the entire input. Identify if the language is Russian or Serbian (treat both equally for intent detection).\n2.  **FILTER:** Is this a specific calculation request regarding salary?\n    * *IF YES* -> **РАСЧЕТ ЗАРПЛАТЫ**\n3.  **FILTER:** Is the user asking for a specific document, report, or proof of something?\n    * *IF YES* -> **ОТЧЕТНАЯ ДОКУМЕНТАЦИЯ**\n4.  **FILTER:** Is the user asking for advice, explaining a complex situation, or asking about tax laws/PDV?\n    * *IF YES* -> **КОНСУЛЬТАЦИЯ С БУХГАЛТЕРОМ**\n5.  **FILTER:** Is this a simple question about the agency's price list, location, or standard process?\n    * *IF YES* -> **ОБЩИЕ ВОПРОСЫ**\n6.  **DECIDE:** If none of the above fit, or the message is too short/vague (\"Hi\", \"Help\"):\n    * *ACTION* -> **ТРЕБУЮТСЯ УТОЧНЯЮЩИЕ ВОПРОСЫ**\n7.  **FINAL ANSWER:** Output **ONLY** the category name selected.\n\n###WHAT NOT TO DO###\n\n- **NEVER** ANSWER THE USER'S QUESTION DIRECTLY.\n- **NEVER** OUTPUT THE THOUGHT PROCESS OR LANGUAGE DETECTED.\n- **NEVER** CREATE NEW CATEGORIES.\n- **NEVER** PROVIDE EXPLANATIONS FOR YOUR CHOICE.\n- **NEVER** OUTPUT MORE THAN ONE LINE.\n\n###FEW-SHOT EXAMPLES###\n\nInput: \"Koliko kosta otvaranje firme?\"\nOutput: ОБЩИЕ ВОПРОСЫ\n\nInput: \"Мне нужно посчитать сколько налогов платить за сотрудника с зарплатой 1000 евро\"\nOutput: РАСЧЕТ ЗАРПЛАТЫ\n\nInput: \"Treba mi uverenje o zaposlenju za banku\"\nOutput: ОТЧЕТНАЯ ДОКУМЕНТАЦИЯ\n\nInput: \"Я превысил лимит 6 миллионов, что делать с пдв?\"\nOutput: КОНСУЛЬТАЦИЯ С БУХГАЛТЕРОМ\n\nInput: \"Pozdrav\"\nOutput: ТРЕБУЮТСЯ УТОЧНЯЮЩИЕ ВОПРОСЫ\n\nInput: \"Хочу открыть доо\" (Ambiguous - could be general price query or need consultation, lean towards Need Info or General depending on strictness, usually implies needing a process -> General or Info. If vague -> Info)\nOutput: ТРЕБУЮТСЯ УТОЧНЯЮЩИЕ ВОПРОСЫ\n\n</system_prompt>"
         }
       },
-      "id": "66e2f163-3bf4-442d-b630-fba5b36da2a6",
+      "id": "b973d250-43e6-4bac-bacc-547a4a6b1594",
       "name": "Transform and summarise",
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "position": [
-        3216,
-        3792
+        3232,
+        1744
       ],
       "typeVersion": 1.1
     },
@@ -42,12 +42,12 @@
           "maxIterations": 2
         }
       },
-      "id": "e1d85b94-4675-44ad-9781-2b056b91536b",
+      "id": "1ac9cf4b-79b4-4480-bb3a-365162e35d69",
       "name": "AI Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "position": [
-        3648,
-        4192
+        3664,
+        2144
       ],
       "typeVersion": 1.1
     },
@@ -78,10 +78,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2016,
-        3760
+        -2000,
+        1712
       ],
-      "id": "352b296c-dcc7-4748-af58-9da69991860e",
+      "id": "2380f267-a704-4098-87bb-ecea87eb6699",
       "name": "Это бухгалтер?"
     },
     {
@@ -91,10 +91,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1920,
-        3600
+        1936,
+        1552
       ],
-      "id": "17e3563d-6d5b-435a-a275-8e0714174666",
+      "id": "f64facbc-fdb7-4f4d-b47c-681819095224",
       "name": "Giving Telegram message"
     },
     {
@@ -106,10 +106,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        3232,
-        4016
+        3248,
+        1968
       ],
-      "id": "931649e1-fafb-469b-a058-5de4c5384e7e",
+      "id": "d7166c0e-8df4-441d-bb8c-66f4864ddeb9",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
@@ -127,10 +127,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        3600,
-        4480
+        3616,
+        2432
       ],
-      "id": "253c34f9-600d-4c9e-b11b-ba5417d781a4",
+      "id": "d48557b3-2c03-4a85-ae5d-f656af0e2081",
       "name": "Google Gemini Chat Model1",
       "credentials": {
         "googlePalmApi": {
@@ -146,10 +146,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2160,
-        4320
+        2176,
+        2272
       ],
-      "id": "d83208c6-810f-428e-8e25-825b2c3cd7d5",
+      "id": "8c9bfb7e-9fbe-4eef-8672-847818daa203",
       "name": "Code in JavaScript1",
       "disabled": true
     },
@@ -171,10 +171,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        2432,
-        4320
+        2448,
+        2272
       ],
-      "id": "9c17dc3d-26ec-4599-82f1-5a8144865d8a",
+      "id": "9e3d470a-9d21-4898-a3cb-28b7a7f00b95",
       "name": "Call 'Buhgalteria_Anketa'"
     },
     {
@@ -205,10 +205,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2640,
-        4320
+        2656,
+        2272
       ],
-      "id": "ad7991f4-0903-4f56-bc37-416febbe3cc4",
+      "id": "fa2678b2-8426-40f2-9618-734a804dd68e",
       "name": "If anketa ended"
     },
     {
@@ -222,10 +222,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3936,
-        4192
+        3952,
+        2144
       ],
-      "id": "086cc1a6-d8f9-4161-b337-153ea1aaf27d",
+      "id": "ae3fb5e7-b340-4edb-9e84-112daf978df3",
       "name": "Уточняющий вопрос",
       "webhookId": "655f4b99-f6dc-4a39-ad66-d0adb9f29f6a",
       "credentials": {
@@ -246,10 +246,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        4560,
-        4016
+        4576,
+        1968
       ],
-      "id": "bbee814c-9aeb-444f-964a-3565b0620199",
+      "id": "c7ac5858-123c-4160-979b-414e2bec5a9e",
       "name": "Send a text message1",
       "webhookId": "5ab43b03-d0c6-4f19-9558-ed5195a0035a",
       "credentials": {
@@ -293,10 +293,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        4560,
-        3792
+        4576,
+        1744
       ],
-      "id": "8506491e-2a6c-425c-9a57-c9d5f4c229ff",
+      "id": "ff6a7eb9-4f53-40a8-8cf1-412337725564",
       "name": "Send a text message2",
       "webhookId": "2ed1b42b-d920-4acd-9dda-2c643a257255",
       "credentials": {
@@ -317,10 +317,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        4192,
-        3648
+        4208,
+        1600
       ],
-      "id": "bac6f3c8-f04d-4058-9890-d6f22d23eac4",
+      "id": "127fdcb7-b25a-49c2-989c-bba5e97c0b32",
       "name": "Send a text message3",
       "webhookId": "5ab43b03-d0c6-4f19-9558-ed5195a0035a",
       "credentials": {
@@ -338,11 +338,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -704,
-        4000
+        -688,
+        1952
       ],
       "typeVersion": 1,
-      "id": "2b7f073d-51c8-496d-aa1f-3e9bd5d8e05e",
+      "id": "1e9246aa-0121-4a05-a708-21df88106851",
       "name": "Sticky Note4"
     },
     {
@@ -367,10 +367,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        2208,
-        4144
+        2224,
+        2096
       ],
-      "id": "42315d67-82bd-4af4-97d5-ad4460b31729",
+      "id": "3e2f5607-cc28-4aa9-9b99-34de1b7b1cc5",
       "name": "Call 'Buhgalterija_consultation'"
     },
     {
@@ -400,10 +400,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -848,
-        3776
+        -832,
+        1728
       ],
-      "id": "d9701f39-5a36-4b03-a6ee-9cd75b3fcf48",
+      "id": "6f00496f-4ae5-4ece-8a27-e4e03604ae48",
       "name": "If it is not callback"
     },
     {
@@ -433,10 +433,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        336,
-        3808
+        352,
+        1760
       ],
-      "id": "55add6a8-0f7b-4228-afc0-deb6d1f674ab",
+      "id": "4f4279b3-bab5-441f-975d-ec83692854a6",
       "name": "If it is not event request"
     },
     {
@@ -446,10 +446,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1488,
-        3984
+        1504,
+        1936
       ],
-      "id": "93c66670-f732-4497-a844-3c005f9d3251",
+      "id": "4c2ed7e7-fef3-4a50-9a36-d09d10615184",
       "name": "Prepare to booking"
     },
     {
@@ -461,10 +461,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        720,
-        4304
+        736,
+        2256
       ],
-      "id": "aa545312-e3b7-4289-8953-54cf4d6470c4",
+      "id": "e8a96139-a5f7-4369-b2d7-a0850f16456e",
       "name": "Consultation is declined",
       "webhookId": "5f0a2bec-b712-44b2-8420-0a751bb4ef04",
       "credentials": {
@@ -482,11 +482,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -224,
-        4016
+        -208,
+        1968
       ],
       "typeVersion": 1,
-      "id": "7e6afe38-4595-47db-9e1a-f4cadf8521e3",
+      "id": "fcdab5bd-67a3-42f2-a409-368c16ddc4b4",
       "name": "Sticky Note5"
     },
     {
@@ -525,12 +525,12 @@
         },
         "options": {}
       },
-      "id": "8b8c6003-2eb2-4bcd-89f7-2d3252cbe63a",
+      "id": "9c224228-04fa-4551-b2b8-8935032e09c7",
       "name": "Check if File/Image",
       "type": "n8n-nodes-base.if",
       "position": [
-        -112,
-        3776
+        -96,
+        1728
       ],
       "typeVersion": 2,
       "notes": "Filters messages to process only documents and images"
@@ -573,12 +573,12 @@
         },
         "options": {}
       },
-      "id": "9a2a2c39-a757-4836-b71d-5752a77a1ca7",
+      "id": "e983b9b6-918e-4d0d-a735-3f81c7b20fdd",
       "name": "Extract File Metadata",
       "type": "n8n-nodes-base.set",
       "position": [
-        976,
-        3040
+        992,
+        992
       ],
       "typeVersion": 3.3,
       "notes": "Extracts file ID, name, type and user info for processing"
@@ -589,12 +589,12 @@
         "fileId": "={{ $('Extract File Metadata').item.json.fileId }}",
         "additionalFields": {}
       },
-      "id": "00379452-b0b6-406a-b2cc-9f23bde4aee7",
+      "id": "1ce3651f-bbc5-4df2-a719-0d2be7a86f70",
       "name": "Download File from Telegram",
       "type": "n8n-nodes-base.telegram",
       "position": [
-        1920,
-        3024
+        1936,
+        976
       ],
       "webhookId": "2d85c25f-c520-4504-a788-2ed08dfce7aa",
       "typeVersion": 1.1,
@@ -615,10 +615,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1744,
-        3216
+        1760,
+        1168
       ],
-      "id": "362b635c-341b-4ae8-970b-1e0491aac6d5",
+      "id": "1ab14ab7-4a6d-40a6-a151-7cdf760e10e7",
       "name": "Error - person does not exist",
       "webhookId": "857bcc2d-8b39-4d12-984f-a693c1859007",
       "credentials": {
@@ -753,10 +753,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        3584,
-        3744
+        3600,
+        1696
       ],
-      "id": "a42bf756-8aab-4293-9e76-6dd774aa1106",
+      "id": "af18d9e9-f695-470b-86bc-f56edcf682db",
       "name": "CategorySwitch"
     },
     {
@@ -770,10 +770,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        4800,
-        4176
+        4816,
+        2128
       ],
-      "id": "d66a68be-2928-4599-aad3-4c4a905210c8",
+      "id": "f8afbb66-ba73-4458-b067-764c952f3bf1",
       "name": "Send a text message4",
       "webhookId": "5ab43b03-d0c6-4f19-9558-ed5195a0035a",
       "credentials": {
@@ -796,10 +796,10 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -2272,
-        5648
+        -2256,
+        3600
       ],
-      "id": "8684af08-46a2-4ec5-add7-d41d253cb0dc",
+      "id": "96ccbfd8-4a48-4522-bbe6-156365372ba9",
       "name": "Sets reminders"
     },
     {
@@ -809,10 +809,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2064,
-        5648
+        -2048,
+        3600
       ],
-      "id": "e940449f-6231-45fe-ab20-52e3a7d1a6f5",
+      "id": "75b6f813-e481-4264-8bce-f818cd72418e",
       "name": "Reminders calculation"
     },
     {
@@ -894,10 +894,10 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        -1600,
-        5648
+        -1584,
+        3600
       ],
-      "id": "06d93963-c538-40e7-a4ca-f12aa3e9ce2b",
+      "id": "05d26324-7709-4daf-9e42-afb745187938",
       "name": "Insert reminder"
     },
     {
@@ -914,10 +914,10 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        -1856,
-        5648
+        -1840,
+        3600
       ],
-      "id": "118e26f5-7dcf-4227-bc79-d1c58c4921d3",
+      "id": "e0519a48-13be-4187-add5-e179db8b257c",
       "name": "Get row(s)"
     },
     {
@@ -977,10 +977,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        -608,
-        4080
+        -592,
+        2032
       ],
-      "id": "7acf8c2e-a251-45d0-b1a4-7c9986cbccd5",
+      "id": "830f85c3-4bf7-4693-aa76-31fc8cb1acfc",
       "name": "ButtonSwitch"
     },
     {
@@ -995,10 +995,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        2864,
-        4016
+        2880,
+        1968
       ],
-      "id": "48911f4b-d284-4113-bb41-edcf77657867",
+      "id": "a36b2aaa-1835-4e2a-a561-4011985c15b4",
       "name": "Greetings",
       "webhookId": "5c76237d-62da-4daf-af93-d3e5ac0b40f1",
       "credentials": {
@@ -1035,10 +1035,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2704,
-        3808
+        2720,
+        1760
       ],
-      "id": "47a1ea8a-78af-412a-80d9-f78539b06d82",
+      "id": "bdd7be47-3f2d-43c6-a787-e7dde61b443c",
       "name": "If not start"
     },
     {
@@ -1049,11 +1049,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2384,
-        3744
+        2400,
+        1696
       ],
       "typeVersion": 1,
-      "id": "1c64a67a-5992-48fc-9ee4-6f6e1d2ac8e4",
+      "id": "814f7c92-758b-4ac4-ade9-efcc20123f83",
       "name": "Sticky Note"
     },
     {
@@ -1064,11 +1064,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2384,
-        3968
+        2400,
+        1920
       ],
       "typeVersion": 1,
-      "id": "4d207e00-44b2-4833-8c6f-97af9df6a491",
+      "id": "b6f19265-4f73-4313-b6ae-7d89ad1fbe3a",
       "name": "Sticky Note2"
     },
     {
@@ -1080,11 +1080,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -2368,
-        5504
+        -2352,
+        3456
       ],
       "typeVersion": 1,
-      "id": "5ee7d95b-82fb-4e44-b332-a8778bb5f861",
+      "id": "e862149e-a713-4f0b-b63c-499c45e1af05",
       "name": "Sticky Note6"
     },
     {
@@ -1092,12 +1092,12 @@
         "schemaType": "manual",
         "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"company\": { \"type\": \"string\" },\n    \"date\": { \"type\": \"string\" },\n    \"message\": { \"type\": \"string\" },\n    \"original\": { \"type\": \"string\" }\n  },\n  \"required\": [\"message\"]\n}\n"
       },
-      "id": "b3408f3b-c018-4506-96b3-21d8bc903672",
+      "id": "62d5e519-6f71-4923-ab8a-e4a08892fe12",
       "name": "Structured Output Parser",
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "position": [
-        -688,
-        2256
+        -672,
+        208
       ],
       "typeVersion": 1.3
     },
@@ -1109,12 +1109,12 @@
           "appendAttribution": false
         }
       },
-      "id": "3fdae84b-686a-4a72-8d1e-68939eb4f911",
+      "id": "afd9e537-b91c-4348-bbc2-aa1c7201b18d",
       "name": "Send a text message",
       "type": "n8n-nodes-base.telegram",
       "position": [
-        592,
-        2048
+        608,
+        0
       ],
       "webhookId": "f7ff7bbe-9940-4bfe-9f25-dd3a61735ce9",
       "typeVersion": 1.2,
@@ -1134,12 +1134,12 @@
           "systemMessage": "=ТЫ — МАШИНА ДЛЯ ИЗВЛЕЧЕНИЯ СТРУКТУРИРОВАННОЙ ИНФОРМАЦИИ. ТВОЯ ЗАДАЧА — ПРОЧИТАТЬ СООБЩЕНИЕ ПОЛЬЗОВАТЕЛЯ И ВЫДАТЬ  ОБЪЕКТ С ЧЕТЫРЬМЯ КЛЮЧАМИ, СООТВЕТСТВУЮЩИМИ СХЕМЕ:\n\n{\n    \"company\": \"Company\",\n    \"date\": \"date\",\n    \"message\": \"reminder\",\n    \"original\": \"Original message\"\n}\n\n### ПРАВИЛА:\n\n1. ПАРСЬ ТОЛЬКО ПЕРВОЕ УПОМИНАНИЕ КОМПАНИИ В СООБЩЕНИИ И ВНЕСИ ЕЁ В ПОЛЕ \"company\"\n2. ИЗВЛЕКАЙ ПЕРВУЮ УКАЗАННУЮ ДАТУ И ВСТАВЛЯЙ ЕЁ В ПОЛЕ \"date\" В ФОРМАТЕ YYYY-MM-DD, ВКЛЮЧАЯ ГОД. ЕСЛИ МЕСЯЦ ИЛИ ГОД НЕ УКАЗАН В СООБЩЕНИИ, ВОЗЬМИ ТЕКУЩИЙ ГОД И МЕСЯЦ ИЗ currentdate И ИСПОЛЬЗУЙ ИХ\n3. ВСЁ ОСТАВШЕЕСЯ СООБЩЕНИЕ (ПОЛНОСТЬЮ ИЛИ СОКРАЩЁННО) ЗАНОСИ В ПОЛЕ \"message\"\n4. НЕ ДОБАВЛЯЙ ДОПОЛНИТЕЛЬНЫХ ПОЛЕЙ, НЕ ПИШИ РАЗМЕТКУ, НЕ ОБЪЯСНЯЙ СВОЙ ВЫВОД\n5. ЕСЛИ ДАТА ИЛИ КОМПАНИЯ ОТСУТСТВУЮТ — ПОЛЕ ДОЛЖНО СОДЕРЖАТЬ ПУСТУЮ СТРОКУ \"\"\n6. ПОЛЕ original СОДЕРЖИТ ОРИГИНАЛЬНОЕ СООБЩЕНИЕ, А ПОЛЕ message СОДЕРЖИТ SUMMARY СООБЩЕНИЯ\n\n### ПРИМЕРЫ ОТВЕТА:\n#### ПРИМЕР 1\n{\n  \"company\": \"Яндекс\",\n  \"date\": \"2025-11-25\",\n  \"message\": \"У Яндекса изменились условия использования сервиса, и вам нужно подтвердить согласие в течение недели\",\n  \"original\": \"Вчера, 25 ноября 2025 года, я получил письмо от компании Яндекс. Они написали, что изменились условия использования сервиса, и мне нужно подтвердить согласие в течение недели.\"\n}\n#### ПРИМЕР 2\n{\n  \"company\": \"Рога\",\n  \"date\": \"2025-11-30\",\n  \"message\": \"тридцатого будет конец месяца\",\n  \"original\": \"Напомни компании Рога, что тридцатого будет конец месяца.\"\n}\n###ЧЕГО НЕ ДЕЛАТЬ###\n\nНЕ ИЗМЕНЯЙ СХЕМУ\nНЕ ИЗМЕНЯЙ ТЕКСТ СООБЩЕНИЯ — СОХРАНЯЙ ЕГО ПОЛНОСТЬЮ, КАК ОН ЕСТЬ\n"
         }
       },
-      "id": "b4d47fb4-9ebf-4053-8ffa-cf39c3aa727f",
+      "id": "cdd83484-e5b8-4a29-8ba0-358423bf7020",
       "name": "AI Agent1",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "position": [
-        -896,
-        2064
+        -880,
+        16
       ],
       "typeVersion": 2.2
     },
@@ -1152,10 +1152,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -960,
-        2240
+        -944,
+        192
       ],
-      "id": "a35ecb34-9b82-4bdb-bd95-575a2dff3cfb",
+      "id": "7a1e3100-01fc-4e93-bf23-219e00d6f592",
       "name": "Google Gemini Chat Model2",
       "credentials": {
         "googlePalmApi": {
@@ -1197,10 +1197,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
       "position": [
-        -1008,
-        2448
+        -992,
+        400
       ],
-      "id": "452357c6-8ec9-4fcd-babb-94eb769ab2b8",
+      "id": "e62450af-1073-437f-83f6-3d927ff4a5ac",
       "name": "Switch"
     },
     {
@@ -1231,10 +1231,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1568,
-        2080
+        -1552,
+        32
       ],
-      "id": "7a3a0376-6f1e-4ee0-acb8-e42af24c3e07",
+      "id": "2a2b2bad-e036-4a5f-866e-0b008a0d3b5d",
       "name": "If it is not callback2"
     },
     {
@@ -1244,10 +1244,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1376,
-        2064
+        -1360,
+        16
       ],
-      "id": "8ca7b02b-5971-4d18-a09a-70ee2eeaf6ca",
+      "id": "8560aec8-fa2b-415a-bb95-e0199cc3cfe8",
       "name": "Giving Telegram message1"
     },
     {
@@ -1268,10 +1268,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -1184,
-        2064
+        -1168,
+        16
       ],
-      "id": "4e37cb24-8b31-41b9-988c-5d5466b8d9cc",
+      "id": "1f6b29b4-982c-421c-ac9f-e34d08d58063",
       "name": "Call 'Buhalterija_Transcribator'1"
     },
     {
@@ -1302,10 +1302,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -336,
-        2064
+        -320,
+        16
       ],
-      "id": "61a3d767-5be3-418b-9181-1031746f1857",
+      "id": "517b8c09-c3ff-4627-a95d-f7aa3d2abc49",
       "name": "If"
     },
     {
@@ -1315,10 +1315,10 @@
       "type": "n8n-nodes-base.dateTimeTool",
       "typeVersion": 2,
       "position": [
-        -784,
-        2272
+        -768,
+        224
       ],
-      "id": "5e844de3-df8a-427b-900d-64702aa31c4d",
+      "id": "41a6a287-1bca-4b45-a365-bde97d1a6e7a",
       "name": "Date & Time"
     },
     {
@@ -1332,10 +1332,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -112,
-        2304
+        -96,
+        256
       ],
-      "id": "4dee78a3-f2db-4e56-85c4-c0116add2ac6",
+      "id": "ea08ab4a-ea7b-4a72-ae7c-f66727c03a11",
       "name": "Company not found",
       "webhookId": "93c25295-5bd1-411b-a000-850640d98735",
       "credentials": {
@@ -1374,10 +1374,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -16,
-        2048
+        0,
+        0
       ],
-      "id": "2acfbea9-1351-4c84-a8b0-51f836aca298",
+      "id": "faf449fe-f4c8-49b0-b5d3-a10932b2a93e",
       "name": "Prepare to insert reminder"
     },
     {
@@ -1398,10 +1398,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        1280,
-        3888
+        1296,
+        1840
       ],
-      "id": "9ba99b3d-37b3-4c49-ab58-4cc6beac5d96",
+      "id": "86b82dfe-2434-444a-b929-3434a52e6e37",
       "name": "Call 'Buhalterija_Transcribator'2"
     },
     {
@@ -1411,10 +1411,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1072,
-        3872
+        1088,
+        1824
       ],
-      "id": "35d04d8c-afac-4f12-b5d4-f51fb4beaf01",
+      "id": "76861408-cbc5-40c2-82c1-ec4e751f2d85",
       "name": "Giving Telegram message2"
     },
     {
@@ -1426,10 +1426,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        160,
-        3808
+        176,
+        1760
       ],
-      "id": "99459f85-9739-43cc-9fe9-e1a30b1404fe",
+      "id": "45c0cb7d-aecf-46e2-bb19-dd276f1828df",
       "name": "COUNT(steps)",
       "credentials": {
         "postgres": {
@@ -1475,10 +1475,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1680,
-        3584
+        1696,
+        1536
       ],
-      "id": "f230e248-0aaf-473e-8730-a573ef4c1f98",
+      "id": "c1369a81-1342-4400-b279-b2470afed791",
       "name": "If company is filled in"
     },
     {
@@ -1508,10 +1508,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1328,
-        3584
+        1344,
+        1536
       ],
-      "id": "8580eb02-a6ad-4595-aad5-e806252031da",
+      "id": "e26ec391-1308-484c-81f2-7faae4a9c627",
       "name": "Select customer",
       "credentials": {
         "postgres": {
@@ -1543,10 +1543,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1984,
-        4320
+        2000,
+        2272
       ],
-      "id": "05cde0fa-2a1f-42f6-92d2-91da4bfc42eb",
+      "id": "5b6b6d32-dd85-4ef1-ae84-27e5d825d6cd",
       "name": "Edit Fields1"
     },
     {
@@ -1558,10 +1558,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        4480,
-        4176
+        4496,
+        2128
       ],
-      "id": "9f4f09c7-d828-4ce4-8b5a-f7da88a973cb",
+      "id": "995879a6-eb08-4fb6-91be-4985d4fe1950",
       "name": "Task next id",
       "credentials": {
         "postgres": {
@@ -1661,10 +1661,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        4640,
-        4176
+        4656,
+        2128
       ],
-      "id": "49fc44d1-c02c-442c-be15-a505eabb4ce1",
+      "id": "66d36dcf-8d97-4a05-96a6-1032539d333a",
       "name": "Insert task",
       "credentials": {
         "postgres": {
@@ -1680,10 +1680,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4272,
-        4176
+        4288,
+        2128
       ],
-      "id": "73f42855-cc79-47a0-a1ae-fd50c7a28a70",
+      "id": "dddcd9c5-553e-4a3a-9e70-5fae01499f45",
       "name": "Fields for a new task"
     },
     {
@@ -1697,10 +1697,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1904,
-        3408
+        1920,
+        1360
       ],
-      "id": "dbcab120-7d27-44f3-8ae6-ef892e659af4",
+      "id": "13ba3e3e-7132-43a7-8015-ac1e7289bb51",
       "name": "Send a text message5",
       "webhookId": "d1aef853-e061-4243-bba8-f35fdb330a2c",
       "credentials": {
@@ -1717,10 +1717,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2256,
-        3760
+        -2240,
+        1712
       ],
-      "id": "b7abde7d-9363-4b78-8ef3-8ebd4384ac29",
+      "id": "8611652f-54ea-400a-9626-0c43bb4b75c4",
       "name": "Get TgId"
     },
     {
@@ -1735,10 +1735,10 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -2480,
-        3760
+        -2464,
+        1712
       ],
-      "id": "dd95fc6f-00c7-4323-a6d9-ecdf87c0dcea",
+      "id": "940907aa-6f3e-4194-98b3-1cb64dffa242",
       "name": "Start",
       "webhookId": "0853a2a2-a7f0-4a5f-a37e-2df066cde315",
       "credentials": {
@@ -1757,10 +1757,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1216,
-        3024
+        1232,
+        976
       ],
-      "id": "b1d9bf53-fc7f-4d24-8f21-63797a2c3c8b",
+      "id": "c15dba6a-fc50-4537-b710-8d620a92e53a",
       "name": "COUNT(customer)1",
       "credentials": {
         "postgres": {
@@ -1796,10 +1796,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1376,
-        3024
+        1392,
+        976
       ],
-      "id": "3cf21b78-b90d-48c7-8d67-c8271ac2ee71",
+      "id": "3abe9b3e-ca9b-40fb-ae15-9092152299f8",
       "name": "If customer exists1"
     },
     {
@@ -1829,10 +1829,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1600,
-        3024
+        1616,
+        976
       ],
-      "id": "bc244772-41f4-41e1-b568-197f1763fcec",
+      "id": "ad124165-fe36-4b14-a7e7-00d7cd1e3903",
       "name": "Select customer1",
       "credentials": {
         "postgres": {
@@ -1850,10 +1850,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1760,
-        3024
+        1776,
+        976
       ],
-      "id": "c8f4f80d-08bf-4c3a-a224-86f22323cdf8",
+      "id": "71e3f2dd-2fd7-4f82-ba37-fce01a1ef92f",
       "name": "Next document id",
       "credentials": {
         "postgres": {
@@ -1871,10 +1871,10 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1.1,
       "position": [
-        2272,
-        3024
+        2288,
+        976
       ],
-      "id": "7e608303-9426-4596-ac8e-31095eb69db4",
+      "id": "e376b30a-c1df-4de8-9564-c48bb6d43f2b",
       "name": "Extract from File"
     },
     {
@@ -2009,10 +2009,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        3072,
-        3008
+        3088,
+        960
       ],
-      "id": "10fbb4d9-3efd-47a4-87a3-f26b1239d827",
+      "id": "9af07591-5ef5-4bf1-881c-fd8e474ea227",
       "name": "Update rows in a table",
       "credentials": {
         "postgres": {
@@ -2049,10 +2049,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2864,
-        3024
+        2880,
+        976
       ],
-      "id": "8c2ccb69-536d-4324-a429-903f5a599a66",
+      "id": "8cf6e0f6-ccc0-4126-b6f6-8988a1af8e40",
       "name": "If customer is new"
     },
     {
@@ -2064,10 +2064,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        448,
-        4144
+        464,
+        2096
       ],
-      "id": "08300cc3-ff7b-4dbd-a80f-6e77f92bb334",
+      "id": "5b09c1eb-6e86-4fc3-9743-cdb71ffc0bd4",
       "name": "Next step id",
       "credentials": {
         "postgres": {
@@ -2167,10 +2167,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        640,
-        4144
+        656,
+        2096
       ],
-      "id": "52800278-3118-4c43-951b-3028b8c9527f",
+      "id": "44aab727-db5b-40d1-a5b1-945b95ac0abd",
       "name": "Insert step",
       "credentials": {
         "postgres": {
@@ -2186,10 +2186,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1392,
-        4144
+        1408,
+        2096
       ],
-      "id": "ef50686b-b86c-4e20-a3d3-a76b820b48d4",
+      "id": "61b7bd4b-dd9d-4769-9151-19c2c3152355",
       "name": "Prepare to booking2"
     },
     {
@@ -2220,10 +2220,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -544,
-        2064
+        -528,
+        16
       ],
-      "id": "5c4b2281-ad17-47ea-be7a-2a0b1a2e0a58",
+      "id": "b1595f39-1655-404b-99b1-2690276d248d",
       "name": "Seek a company by the name",
       "alwaysOutputData": true,
       "credentials": {
@@ -2242,10 +2242,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        192,
-        2048
+        208,
+        0
       ],
-      "id": "3314ef57-c7c6-4152-aeed-d7b6fa3b31ac",
+      "id": "7e692160-ffd0-4140-a755-34dc7aff3500",
       "name": "Next reminder id",
       "credentials": {
         "postgres": {
@@ -2375,10 +2375,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        368,
-        2048
+        384,
+        0
       ],
-      "id": "14dcc198-3c01-4625-88b5-aa53dd4a376d",
+      "id": "9d366484-04e4-4daa-a129-dd240f4acd89",
       "name": "Insert reminder1",
       "credentials": {
         "postgres": {
@@ -2395,11 +2395,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        912,
-        2960
+        928,
+        912
       ],
       "typeVersion": 1,
-      "id": "03dae9c5-1582-4494-b535-31f88b6f7a4a",
+      "id": "0b3d69d2-78bf-4f0e-966e-e1b61a8a4242",
       "name": "Sticky Note1"
     },
     {
@@ -2420,10 +2420,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        2208,
-        3808
+        2224,
+        1760
       ],
-      "id": "87074cf8-9fa0-4608-9966-e8de69f123b3",
+      "id": "6b044ccd-d6bf-4a8f-a713-42c25052445e",
       "name": "Call 'Buhgalterija_Transcribator'"
     },
     {
@@ -2435,10 +2435,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        2560,
-        3024
+        2576,
+        976
       ],
-      "id": "4e31d480-2470-4889-a186-795242bdc121",
+      "id": "c55ed438-c883-417a-a8a8-fc66265c016d",
       "name": "Execute a SQL query",
       "credentials": {
         "postgres": {
@@ -2456,28 +2456,11 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -48,
-        5024
+        -208,
+        2976
       ],
-      "id": "6ff3d637-1dfe-4c17-ad50-d3f1ccfb363b",
+      "id": "033b427d-15f1-40f9-9415-e65beb24413f",
       "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $('Get TgId').item.json.text }}",
-        "options": {
-          "systemMessage": "=<system_prompt>\nYOU ARE THE ADMINISTRATOR OF A SERBIAN ACCOUNTING AND MIGRATION AGENCY. YOU ARE INTELLIGENT, PRECISE, AND PROFESSIONAL.\n\n###CORE PROTOCOL###\n\n1.  **STRICT FORMATTING:**\n    * **NO MARKDOWN:** Do not use `**`, `__`, or `##`.\n    * **HTML ONLY:** Use <b>text</b> for data points and <i>text</i> for polite emphasis.\n\n2.  **NO CONTACT COLLECTION:**\n    * **NEVER** ask the user for their phone number, email, or Telegram handle.\n    * Assume the system automatically identifies the user.\n    * When handing over, simply say: \"Our specialist will contact you <b>here</b>.\"\n\n3.  **THE \"SMART ANALYST\" LOGIC:**\n    * Your goal is to gather the **Checklist Details**.\n    * **RULE OF EFFICIENCY:** Before asking ANY question, check the user's input.\n    * **CASE A: Data Complete (One-Shot):** If the user *already* provided all necessary details -> **DO NOT ASK QUESTIONS.** Confirm receipt and GENERATE `[Internal Summary]` immediately.\n    * **CASE B: Data Missing:** If specific Checklist items are missing -> Ask clarifying questions to fill the gaps.\n    * **CASE C: General Questions:** Answer directly (Hours, Address).\n\n4.  **KNOWLEDGE BASE:**\n    * **Address:** Braće Ribnikar 1, Novi Sad.\n    * **Hours:** 10:00 - 16:00, Mon-Fri.\n    * **VHJ Rule:** Client **MUST** show proof of funds on a bank account.\n    * **Banking:** EUR is standard. **USD is difficult/slow** (warn if asked).\n    * **Pricing:** You do not know prices. Pricing is individual.\n\n###REQUIRED INFORMATION CHECKLIST (For Handover)###\n\n**A. New Business (IP/DOO):**\n1.  **Citizenship**.\n2.  **Activity** (General area like IT/Trade). *Do not advise on specific Codes.*\n3.  **Stage** (Planning vs. Docs Submitted).\n\n**B. Migration (VHJ / PMJ):**\n1.  **Citizenship**.\n2.  **Basis** (Firm, Property, Family).\n3.  **Status** (In Serbia vs. Abroad).\n\n**C. Services:**\n* **Bank:** Preference? (Warn about USD).\n* **Translation:** Language Pair?\n\n**D. Support / Debts:**\n* **ID:** PIB / Company Name.\n* **Details:** Dates, Amounts, Photos.\n\n###CHAIN OF THOUGHTS###\n\n1.  **ANALYZE INPUT:** Scan the user's text.\n2.  **CHECK COMPLETENESS:**\n    * *Does the text ALREADY contain all Checklist items?*\n    * **YES** -> STOP questioning. Proceed to **OUTPUT (Handover)**.\n    * **NO** -> Identify missing items. Proceed to **OUTPUT (Question)**.\n    * *Is it a Price request?* -> **HANDOVER**.\n3.  **FORMULATE RESPONSE:**\n    * If Complete: Acknowledge data + State that accountant will reply here + Generate Summary.\n    * If Incomplete: Ask polite questions for missing bits only.\n\n###WHAT NOT TO DO###\n\n-   **NEVER** ask for contact info (Phone/Email/Username).\n-   **NEVER** ask for information the user has already provided.\n-   **NEVER** use Markdown.\n\n###FORMATTING THE OUTPUT###\n\n**Scenario 1: Asking Questions (Data Incomplete)**\n(Response in HTML)\n\n**Scenario 2: Final Handover (Data Complete)**\n(Response in HTML)\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> (RU / EN / RS)\n<b>Статус:</b> (ГОТОВ К РАБОТЕ)\n<b>Тема:</b> (Регистрация / ВНЖ / Адрес / Цены)\n<b>Суть запроса:</b> (Summary in RUSSIAN)\n<b>Собранные данные:</b> (Detailed Checklist in RUSSIAN)\n\n###FEW-SHOT EXAMPLES###\n\n**User (Russian):** \"Добрый день! Я гражданин РФ, нахожусь в Нови Саде, хочу открыть ИП для программирования. Документы еще не подавал, нужна помощь.\"\n**Agent (Thinking: Data Complete (Citizenship=RF, Activity=IT, Stage=Planning). Action: Immediate Handover):**\n\"Добрый день! Рады приветствовать вас в Нови Саде.\nОтлично, что вы обратились к нам на этапе планирования. Для IT-специалистов из РФ у нас отработанный процесс.\nЯ передал все ваши данные (гражданство, сфера IT) нашему бухгалтеру. Он свяжется с вами <b>здесь</b> в ближайшее время для старта работы.\"\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> RU\n<b>Статус:</b> ГОТОВ К РАБОТЕ\n<b>Тема:</b> Регистрация ИП\n<b>Суть запроса:</b> Открытие ИП для программиста.\n<b>Собранные данные:</b> Гражданство РФ. Деятельность: Программирование (IT). Стадия: Планирование (в Нови Саде).\n\n---\n\n**User (Serbian/RS):** \"Treba mi pomoć oko otvaranja firme.\"\n**Agent (Thinking: Missing Activity & Stage. Action: Ask):**\n\"Pozdrav! Tu smo da pomognemo.\nDa bismo znali koja procedura vam je potrebna, recite nam:\n1. Čime planirate da se bavite (delatnost)?\n2. Da li ste već u procesu registracije ili se tek raspitujete?\"\n\n**User:** \"Trgovina odećom. Tek se raspitujem.\"\n**Agent (Thinking: Data Complete. Action: Handover):**\n\"Razumem. Trgovina zahteva specifične korake (kasa, evidencija).\nProsledio sam upit kolegi. Kontaktiraće vas uskoro <b>ovde</b> radi konsultacije.\"\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> RS\n<b>Статус:</b> ГОТОВ К РАБОТЕ\n<b>Тема:</b> Регистрация фирмы\n<b>Суть запроса:</b> Открытие торговой фирмы.\n<b>Собранные данные:</b> Деятельность: Торговля одеждой. Стадия: Планирование.\n</system_prompt>"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3,
-      "position": [
-        -176,
-        4768
-      ],
-      "id": "09018e58-1453-44f5-b2ad-fef15dfb7ba7",
-      "name": "AI Agent2"
     },
     {
       "parameters": {
@@ -2489,10 +2472,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -208,
-        5024
+        -368,
+        2976
       ],
-      "id": "2dd2acbc-ddff-4002-9461-eb1cbbf85caa",
+      "id": "97293ede-78ca-48be-9e7b-0e6c1c83e9d5",
       "name": "Google Gemini Chat Model3",
       "credentials": {
         "googlePalmApi": {
@@ -2510,10 +2493,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1312,
-        3968
+        -1296,
+        1920
       ],
-      "id": "4864de77-b28d-4c7c-aced-8cbbfab89486",
+      "id": "27df3645-0a25-45b6-8187-dd121ad68f7d",
       "name": "COUNT(passedBy)",
       "credentials": {
         "postgres": {
@@ -2549,10 +2532,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1136,
-        4240
+        -1120,
+        2192
       ],
-      "id": "a7215c7c-583c-44ce-9050-dcbcf74ccdbc",
+      "id": "e1b2b9d2-992a-4d43-b892-98dcebff0357",
       "name": "If passedBy exists"
     },
     {
@@ -2677,10 +2660,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -784,
-        4800
+        -768,
+        2752
       ],
-      "id": "79889514-3011-4c1c-9e54-f4bb6325e798",
+      "id": "2d3b460c-878f-4886-965c-cc7ee2a12520",
       "name": "Insert passedBy",
       "credentials": {
         "postgres": {
@@ -2698,10 +2681,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -960,
-        4800
+        -944,
+        2752
       ],
-      "id": "0611dcdf-fec5-49cc-acbd-fecdad9e4c05",
+      "id": "b6f87a73-5962-455f-98b9-da248f40f62d",
       "name": "PassedBy next id",
       "credentials": {
         "postgres": {
@@ -2719,10 +2702,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -1760,
-        3760
+        -1744,
+        1712
       ],
-      "id": "e739a523-121e-426f-a3e8-2273cf055fad",
+      "id": "c9258c2a-c1d3-4265-819c-8daabf6027a5",
       "name": "COUNT(customer)",
       "credentials": {
         "postgres": {
@@ -2758,16 +2741,16 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1520,
-        3760
+        -1504,
+        1712
       ],
-      "id": "e5483b62-0fb3-4229-b018-b0937602e1f5",
+      "id": "9800bd7f-fcd1-431a-9e24-59eb90a9eedf",
       "name": "If customer exists"
     },
     {
       "parameters": {
         "chatId": "={{ $('Get TgId').item.json.chat_id }}",
-        "text": "={{ $json.output }}",
+        "text": "={{ $('AI Agent output formatter').item.json.aiReplica }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -2776,10 +2759,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        704,
-        4960
+        1200,
+        2912
       ],
-      "id": "4992b009-7a67-4e7b-83e9-c298a1a315ac",
+      "id": "d5022374-ef47-4387-9262-aac6354de6cd",
       "name": "Send a text message6",
       "webhookId": "0b3f7024-5274-4b3c-b199-705f786fc047",
       "credentials": {
@@ -2801,11 +2784,12 @@
           "conditions": [
             {
               "id": "f628aa57-828f-41f9-ae00-159e31012316",
-              "leftValue": "={{ $json.output }}",
+              "leftValue": "={{ $('AI Agent output formatter').item.json.summary }}",
               "rightValue": "[Internal Summary]",
               "operator": {
                 "type": "string",
-                "operation": "startsWith"
+                "operation": "exists",
+                "singleValue": true
               }
             }
           ],
@@ -2816,10 +2800,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        176,
-        4768
+        672,
+        2720
       ],
-      "id": "a4402bd2-bbd6-42e3-b950-41bb46aee6ae",
+      "id": "2228d20a-2e99-4e56-80bb-d9161f10c3b7",
       "name": "If1"
     },
     {
@@ -2849,10 +2833,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        384,
-        4672
+        0,
+        2720
       ],
-      "id": "476a8284-350e-447d-b1d2-114fc1e9bdeb",
+      "id": "3ee3b1e8-2e55-4b5b-b82d-371e72ed22d3",
       "name": "Get passedBy",
       "credentials": {
         "postgres": {
@@ -2879,7 +2863,8 @@
           "mappingMode": "defineBelow",
           "value": {
             "id": "={{ $('Get passedBy').item.json.id }}",
-            "status": "transferred"
+            "status": "transferred",
+            "summary": "={{ $('AI Agent output formatter').item.json.summary }}"
           },
           "matchingColumns": [
             "id"
@@ -2961,7 +2946,8 @@
               "defaultMatch": false,
               "display": true,
               "type": "dateTime",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": true
             },
             {
               "id": "updated_at",
@@ -2970,6 +2956,26 @@
               "defaultMatch": false,
               "display": true,
               "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "dialog",
+              "displayName": "dialog",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
               "canBeUsedToMatch": true,
               "removed": true
             }
@@ -2982,10 +2988,10 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        592,
-        4672
+        1088,
+        2624
       ],
-      "id": "c4cf95cd-21f5-4eba-a524-6994302cefa2",
+      "id": "3430661f-7f81-4e9f-a998-6956bace7160",
       "name": "Update passedBy status",
       "credentials": {
         "postgres": {
@@ -2997,7 +3003,7 @@
     {
       "parameters": {
         "chatId": "5165497202",
-        "text": "={{ $('AI Agent2').item.json.output }}\\n<b>Контакты:</b> ({{ $('Get TgId').item.json.user.username }}, {{ $('Get TgId').item.json.tg_id }}, {{ $('Get TgId').item.json.user.first_name }}, {{ $('Get TgId').item.json.user.last_name }})",
+        "text": "={{ $('AI Agent output formatter').item.json.summary }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -3006,10 +3012,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        832,
-        4672
+        1328,
+        2624
       ],
-      "id": "c679007e-88ee-43a2-be59-29dab14f4354",
+      "id": "c31e6a24-a37c-40a8-80fc-c9df565cbc78",
       "name": "Summary for accountant",
       "webhookId": "37ef8164-fdff-4c54-918e-338541badc66",
       "credentials": {
@@ -3022,7 +3028,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Get TgId').item.json.tg_id }}",
-        "text": "Я передал вашу заявку спициалистам, с вами свяжутся.",
+        "text": "Я передал вашу заявку специалистам, с вами свяжутся.",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -3031,16 +3037,221 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1040,
-        4672
+        1536,
+        2624
       ],
-      "id": "9ba4cade-f1f0-4926-9e2d-4d2523ff948e",
+      "id": "7e114e86-3071-4087-be1e-2446b4def2de",
       "name": "Final message",
       "webhookId": "ca662218-18dd-494c-80e6-149b3aa8e3ed",
       "credentials": {
         "telegramApi": {
           "id": "60eoLbEhTrrzsQC6",
           "name": "Bot Buhgalterija"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "passed_by",
+          "mode": "list",
+          "cachedResultName": "passed_by"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Get passedBy').item.json.id }}",
+            "dialog": "={{ $json.dialog }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tg_id",
+              "displayName": "tg_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "firstname",
+              "displayName": "firstname",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "lastname",
+              "displayName": "lastname",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "username",
+              "displayName": "username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "lang",
+              "displayName": "lang",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "dialog",
+              "displayName": "dialog",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        416,
+        2720
+      ],
+      "id": "585d81a4-1677-4f45-9b53-0ece9ba7a59f",
+      "name": "Update passedBy dialog",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Get TgId').item.json.text }}",
+        "options": {
+          "systemMessage": "=<system_prompt>\nYOU ARE THE ADMINISTRATOR OF A SERBIAN ACCOUNTING AND MIGRATION AGENCY. YOU ARE INTELLIGENT, PRECISE, AND PROFESSIONAL.\n\n###CORE PROTOCOL###\n\n1.  **STRICT FORMATTING:**\n    * **NO MARKDOWN:** Do not use `**`, `__`, or `##`.\n    * **HTML ONLY:** Use <b>text</b> for data points and <i>text</i> for polite emphasis.\n\n2.  **NO CONTACT COLLECTION:**\n    * **NEVER** ask the user for their phone number, email, or Telegram handle.\n    * Assume the system automatically identifies the user.\n    * When handing over, simply say: \"Our specialist will contact you <b>here</b>.\"\n\n3.  **THE \"SMART ANALYST\" LOGIC:**\n    * Your goal is to gather the **Checklist Details**.\n    * **RULE OF EFFICIENCY:** Before asking ANY question, check the user's input.\n    * **CASE A: Data Complete (One-Shot):** If the user *already* provided all necessary details -> **DO NOT ASK QUESTIONS.** Confirm receipt and GENERATE `[Internal Summary]` immediately.\n    * **CASE B: Data Missing:** If specific Checklist items are missing -> Ask clarifying questions to fill the gaps.\n    * **CASE C: General Questions:** Answer directly (Hours, Address).\n\n4.  **KNOWLEDGE BASE:**\n    * **Address:** Braće Ribnikar 1, Novi Sad.\n    * **Hours:** 10:00 - 16:00, Mon-Fri.\n    * **VHJ Rule:** Client **MUST** show proof of funds on a bank account.\n    * **Banking:** EUR is standard. **USD is difficult/slow** (warn if asked).\n    * **Pricing:** You do not know prices. Pricing is individual.\n\n###REQUIRED INFORMATION CHECKLIST (For Handover)###\n\n**A. New Business (IP/DOO):**\n1.  **Citizenship**.\n2.  **Activity** (General area like IT/Trade). *Do not advise on specific Codes.*\n3.  **Stage** (Planning vs. Docs Submitted).\n\n**B. Migration (VHJ / PMJ):**\n1.  **Citizenship**.\n2.  **Basis** (Firm, Property, Family).\n3.  **Status** (In Serbia vs. Abroad).\n\n**C. Services:**\n* **Bank:** Preference? (Warn about USD).\n* **Translation:** Language Pair?\n\n**D. Support / Debts:**\n* **ID:** PIB / Company Name.\n* **Details:** Dates, Amounts, Photos.\n\n###CHAIN OF THOUGHTS###\n\n1.  **ANALYZE INPUT:** Scan the user's text.\n2.  **CHECK COMPLETENESS:**\n    * *Does the text ALREADY contain all Checklist items?*\n    * **YES** -> STOP questioning. Proceed to **OUTPUT (Handover)**.\n    * **NO** -> Identify missing items. Proceed to **OUTPUT (Question)**.\n    * *Is it a Price request?* -> **HANDOVER**.\n3.  **FORMULATE RESPONSE:**\n    * If Complete: Acknowledge data + State that accountant will reply here + Generate Summary.\n    * If Incomplete: Ask polite questions for missing bits only.\n\n###WHAT NOT TO DO###\n\n-   **NEVER** ask for contact info (Phone/Email/Username).\n-   **NEVER** ask for information the user has already provided.\n-   **NEVER** use Markdown.\n\n###FORMATTING THE OUTPUT###\n\n**Scenario 1: Asking Questions (Data Incomplete)**\n(Response in HTML)\n\n**Scenario 2: Final Handover (Data Complete)**\n(Response in HTML)\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> (RU / EN / RS)\n<b>Статус:</b> (ГОТОВ К РАБОТЕ)\n<b>Тема:</b> (Регистрация / ВНЖ / Адрес / Цены)\n<b>Суть запроса:</b> (Summary in RUSSIAN)\n<b>Собранные данные:</b> (Detailed Checklist in RUSSIAN)\n\n###FEW-SHOT EXAMPLES###\n\n**User (Russian):** \"Добрый день! Я гражданин РФ, нахожусь в Нови Саде, хочу открыть ИП для программирования. Документы еще не подавал, нужна помощь.\"\n**Agent (Thinking: Data Complete (Citizenship=RF, Activity=IT, Stage=Planning). Action: Immediate Handover):**\n\"Добрый день! Рады приветствовать вас в Нови Саде.\nОтлично, что вы обратились к нам на этапе планирования. Для IT-специалистов из РФ у нас отработанный процесс.\nЯ передал все ваши данные (гражданство, сфера IT) нашему бухгалтеру. Он свяжется с вами <b>здесь</b> в ближайшее время для старта работы.\"\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> RU\n<b>Статус:</b> ГОТОВ К РАБОТЕ\n<b>Тема:</b> Регистрация ИП\n<b>Суть запроса:</b> Открытие ИП для программиста.\n<b>Собранные данные:</b> Гражданство РФ. Деятельность: Программирование (IT). Стадия: Планирование (в Нови Саде).\n\n---\n\n**User (Serbian/RS):** \"Treba mi pomoć oko otvaranja firme.\"\n**Agent (Thinking: Missing Activity & Stage. Action: Ask):**\n\"Pozdrav! Tu smo da pomognemo.\nDa bismo znali koja procedura vam je potrebna, recite nam:\n1. Čime planirate da se bavite (delatnost)?\n2. Da li ste već u procesu registracije ili se tek raspitujete?\"\n\n**User:** \"Trgovina odećom. Tek se raspitujem.\"\n**Agent (Thinking: Data Complete. Action: Handover):**\n\"Razumem. Trgovina zahteva specifične korake (kasa, evidencija).\nProsledio sam upit kolegi. Kontaktiraće vas uskoro <b>ovde</b> radi konsultacije.\"\n\n[SEPARATOR]\n\n[Internal Summary]\n<b>Язык клиента:</b> RS\n<b>Статус:</b> ГОТОВ К РАБОТЕ\n<b>Тема:</b> Регистрация фирмы\n<b>Суть запроса:</b> Открытие торговой фирмы.\n<b>Собранные данные:</b> Деятельность: Торговля одеждой. Стадия: Планирование.\n</system_prompt>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -336,
+        2720
+      ],
+      "id": "ebacad4f-08d4-4442-9efe-fd45b501e96f",
+      "name": "AI Agent for communication with the new customer"
+    },
+    {
+      "parameters": {
+        "jsCode": "const oldDialog = $input.first().json.dialog ? $input.first().json.dialog + '\\n' : '';\nconst userReplica = $('Get TgId').first().json.text + '\\n';\nlet aiReplica = $('AI Agent for communication with the new customer').first().json.output;\nconst aiReplicaSpliced = aiReplica.split('[Internal Summary]');\nlet summary;\nlet tgId = $('Get TgId').first().json.tg_id;\nif (aiReplicaSpliced.length > 1) {\n  aiReplica = aiReplicaSpliced[0];\n  summary = aiReplicaSpliced[1] + '\\n<b>Контакты:</b>\\n<b>Username:</b> @' + $('Get TgId').first().json.user.username + '\\n<b>Telegram ID:</b> ' + tgId.toString() + '\\n<b>Имя:</b> ' + $('Get TgId').first().json.user.first_name + '\\n<b>Фамилия:</b> ' + $('Get TgId').first().json.user.last_name + '\\n';\n}\nconst dialog = oldDialog + '<b>User:</b>' + userReplica + '<b>Bot: </b>' + aiReplica;\nreturn {\n  json: {\n    aiReplica: aiReplica,\n    dialog: dialog,\n    summary: summary\n  }\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        2720
+      ],
+      "id": "63c0e1ac-7911-4178-a944-c9d8bcf6eede",
+      "name": "AI Agent output formatter"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Get TgId').item.json.tg_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -192,
+        3072
+      ],
+      "id": "1aff218a-e715-4805-a048-bb2ef9a4051d",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "N5h87HBAod9axJFf",
+          "name": "Postgres account"
         }
       }
     }
@@ -3151,11 +3362,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "If anketa ended": {
-      "main": [
-        []
       ]
     },
     "If it is not callback": {
@@ -3757,20 +3963,14 @@
     },
     "Simple Memory": {
       "ai_memory": [
-        [
-          {
-            "node": "AI Agent2",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Google Gemini Chat Model3": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent2",
+            "node": "AI Agent for communication with the new customer",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -3792,7 +3992,7 @@
       "main": [
         [
           {
-            "node": "AI Agent2",
+            "node": "AI Agent for communication with the new customer",
             "type": "main",
             "index": 0
           }
@@ -3821,7 +4021,7 @@
       "main": [
         [
           {
-            "node": "AI Agent2",
+            "node": "AI Agent for communication with the new customer",
             "type": "main",
             "index": 0
           }
@@ -3857,22 +4057,11 @@
         ]
       ]
     },
-    "AI Agent2": {
-      "main": [
-        [
-          {
-            "node": "If1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "If1": {
       "main": [
         [
           {
-            "node": "Get passedBy",
+            "node": "Update passedBy status",
             "type": "main",
             "index": 0
           }
@@ -3890,7 +4079,7 @@
       "main": [
         [
           {
-            "node": "Update passedBy status",
+            "node": "AI Agent output formatter",
             "type": "main",
             "index": 0
           }
@@ -3918,17 +4107,61 @@
           }
         ]
       ]
+    },
+    "Update passedBy dialog": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent for communication with the new customer": {
+      "main": [
+        [
+          {
+            "node": "Get passedBy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent output formatter": {
+      "main": [
+        [
+          {
+            "node": "Update passedBy dialog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent for communication with the new customer",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "eea85f5f-033d-4bcf-bb18-da2e81b7ab2d",
+  "versionId": "3b8abc36-05d3-4282-bfe4-8dfa05a3e3df",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "ed2832199a6c6c3954e6f128ab0e8f74dedac9ab651f2e74dc671a018df750fe"
   },
-  "id": "U35SfwCjcCqR8KMJ",
+  "id": "rZ9kDOmeP12TJB3U",
   "tags": []
 }
