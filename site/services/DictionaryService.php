@@ -57,6 +57,13 @@ class DictionaryService
             // Auth
             'login' =>  'Войти',
             'password' =>  'Пароль',
+            'oldPassword' =>  'Старый пароль',
+            'newPassword' =>  'Новый пароль',
+            'confirmPassword' =>  'Подтвердите пароль',
+            'rememberMe' =>  'Запомнить меня',
+            'forgotPassword' =>  'Забыли пароль?',
+            'resetPassword' =>  'Сбросить пароль',
+            'resetPasswordInstructions' =>  'Введите ваш адрес электронной почты, чтобы сбросить пароль.',
 
             // Common
             'search' =>  'Поиск',
@@ -297,6 +304,13 @@ class DictionaryService
             // Auth
             'login' =>  'Prijava',
             'password' =>  'Lozinka',
+            'oldPassword' =>  'Stara lozinka',
+            'newPassword' =>  'Nova lozinka',
+            'confirmPassword' =>  'Potvrdi lozinku',
+            'rememberMe' =>  'Zapamti me',
+            'forgotPassword' =>  'Zaboravili ste lozinku?',
+            'resetPassword' =>  'Resetuj lozinku',
+            'resetPasswordInstructions' =>  'Unesite vašu email adresu da biste resetovali lozinku.',
 
             // Common
             'search' =>  'Pretraga',
