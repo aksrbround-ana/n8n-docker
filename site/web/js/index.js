@@ -524,6 +524,31 @@ $(document).on('click', '#save-user', function (e) {
   return false;
 });
 
+$(document).on('change', '#tax-calendar-month', function (e) {
+  let month = $(this).val();
+  let user = getUser();
+  let data = {
+    token: user.token,
+  };
+  $.ajax({
+    url: '/settings/tax-calendar/' + month,
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#tax-calendar-table tbody').html(response.data);
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Ошибка', e.message);
+    }
+  });
+  return false;
+});
+
+
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------

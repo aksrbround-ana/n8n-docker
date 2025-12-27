@@ -23,6 +23,10 @@ use app\components\SettingsTemplatesWidget;
         </div>
         <?= SettingsCalendarWidget::widget([
             'user' => $user,
+            'taxCalendar' => $taxCalendar,
+            'month' => $month,
+            'year' => $year,
+            'monthList' => $monthList
         ]) ?>
     </div>
 </div>
