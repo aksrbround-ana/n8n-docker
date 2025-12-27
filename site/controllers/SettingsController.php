@@ -1,24 +1,87 @@
 <?php
 
 namespace app\controllers;
+
+use app\components\SettingsCalendarBodyWidget;
 use app\models\Accountant;
+use app\models\TaxCalendar;
+use yii\db\Query;
+
 class SettingsController extends BaseController
 {
-    public function actionPage()
+    public function actionPage($month = null)
     {
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
-        $data = [
-            'user' => $accountant,
-        ];
-        return $this->renderPage($data);
+        if ($accountant->isValid()) {
+            if (!$month) {
+                $month = date('Y-m');
+            }
+            $firstDay = date('Y-m-01', strtotime($month));
+            $lastDay = date('Y-m-t', strtotime($month));
+            $taxCalendar = TaxCalendar::find()
+                ->where(['between', 'input_date', $firstDay, $lastDay])
+                ->orderBy(["input_date" => SORT_ASC, 'activity_type' => SORT_ASC])
+                ->all();
+            $monthsQuery = (new Query())
+                ->select(['month' => 'EXTRACT(MONTH FROM input_date)', 'year' => 'EXTRACT(YEAR FROM input_date)'])
+                ->distinct()
+                ->from(TaxCalendar::tableName())
+                ->orderBy(['year' => SORT_DESC, 'month' => SORT_DESC]);
+            $monthsRaw = $monthsQuery->all();
+            $monthList = [];
+            foreach ($monthsRaw as $value) {
+                if ($value['month'] < 10) {
+                    $value['month'] = '0' . $value['month'];
+                }
+                $monthList[] = $value['year'] . '-' . $value['month'];
+            }
+            $data = [
+                'user' => $accountant,
+                'taxCalendar' => $taxCalendar,
+                'month' => date('m', strtotime($month)),
+                'year' => date('Y', strtotime($month)),
+                'monthList' => $monthList,
+            ];
+            return $this->renderPage($data);
+        } else {
+            return $this->renderLogout();
+        }
     }
 
-    public function actionIndex()
+    public function actionTaxCalendar($month = null)
     {
-        return $this->render('index');
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            if (!$month) {
+                $month = date('Y-m');
+            }
+            $firstDay = date('Y-m-01', strtotime($month));
+            $lastDay = date('Y-m-t', strtotime($month));
+            $taxCalendar = TaxCalendar::find()
+                ->where(['between', 'input_date', $firstDay, $lastDay])
+                ->orderBy(["input_date" => SORT_ASC, 'activity_type' => SORT_ASC])
+                ->all();
+            $data = [
+                'user' => $accountant,
+                'taxCalendar' => $taxCalendar,
+            ];
+            $html = SettingsCalendarBodyWidget::widget($data);
+            $response = \Yii::$app->response;
+            $response->format = \yii\web\Response::FORMAT_JSON;
+            // $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'data' => $html,
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
     }
-
 }

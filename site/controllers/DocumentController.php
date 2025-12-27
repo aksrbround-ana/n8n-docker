@@ -149,9 +149,9 @@ class DocumentController extends BaseController
                 $document->status = $newStatus;
                 $query = new Query();
                 $res = $query->createCommand()->update(Document::tableName(), ['status' => $newStatus], ['id' => $docId])->execute();
+                $response->format = Response::FORMAT_JSON;
                 if ($res) {
                     $document->addActivity($accountant->id, $newStatus);
-                    $response->format = Response::FORMAT_JSON;
                     $response->data =
                         [
                             'status' => 'success',
@@ -167,7 +167,6 @@ class DocumentController extends BaseController
                         ];
                     return $response;
                 } else {
-                    $response->format = Response::FORMAT_JSON;
                     $response->data =
                         [
                             'status' => 'error',
