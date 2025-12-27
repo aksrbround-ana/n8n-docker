@@ -38,4 +38,23 @@ class BaseController extends Controller
         ];
         return $response;
     }
+
+    protected function getN8nWebhookBaseUrl()
+    {
+        return getenv('N8N_WEBHOOK_BASE_URL');
+    }
+
+    protected function makeN8nWebhookCall($path, $data)
+    {
+        $url = $this->getN8nWebhookBaseUrl() . $path;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+        ]);
+        $response = curl_exec($ch);
+        return $response;
+    }
 }

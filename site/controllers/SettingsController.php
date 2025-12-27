@@ -74,12 +74,37 @@ class SettingsController extends BaseController
             $html = SettingsCalendarBodyWidget::widget($data);
             $response = \Yii::$app->response;
             $response->format = \yii\web\Response::FORMAT_JSON;
-            // $response->headers->set('Content-Type', 'text/html; charset=UTF-8');
             $response->data = [
                 'status' => 'success',
                 'data' => $html,
             ];
             return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionTaxCalendarPageParse()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $page = $request->post('page');
+            $data = [
+                'page' => $page,
+            ];
+            $out = $this->makeN8nWebhookCall('tax-calendar-page', $data);
+            if ($out && isset($out['status']) && $out['status'] == 'success') {
+                $html = SettingsCalendarBodyWidget::widget($data);
+                $response = \Yii::$app->response;
+                $response->format = \yii\web\Response::FORMAT_JSON;
+                $response->data = [
+                    'status' => 'success',
+                    'data' => $html,
+                ];
+                return $response;
+            }
         } else {
             return $this->renderLogout();
         }

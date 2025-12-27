@@ -14,7 +14,7 @@ use app\services\DictionaryService;
                         <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
                     </svg>
                 </div>
-                <h3 class="font-semibold tracking-tight text-base"><?= DictionaryService::getWord('taxCalendar', $user->lang) ?>. <?= ucfirst(DictionaryService::getWord(DictionaryService::$months[$month - 1], $user->lang)) . ' ' . $year ?></h3>
+                <h3 class="font-semibold tracking-tight text-base"><?= DictionaryService::getWord('taxCalendar', $user->lang) ?> <?php //= ucfirst(DictionaryService::getWord(DictionaryService::$months[$month - 1], $user->lang)) . ' ' . $year ?></h3>
                 <select id="tax-calendar-month" class="ml-auto">
                     <?php
                     foreach ($monthList as $monthRaw) {
@@ -26,27 +26,17 @@ use app\services\DictionaryService;
                     }
                     ?>
                 </select>
+                <div class="">
+                    <input type="text" id="tax-calendar-page-url" class="input input-sm input-bordered border rounded-md" placeholder="Url" style="width: 100%;" />
+                    <button id="tax-calendar-page-parse" class="btn btn-sm btn-primary" style="width: 100%;"><?= DictionaryService::getWord('loadTaxCalendarPage', $user->lang) ?></button>
+                </div>
             </div>
         </div>
-        <table id="tax-calendar-table" class="w-full table-auto">
-            <thead>
-                <tr class="border-t bg-muted/50">
-                    <!-- <th class="p-6 text-left text-sm font-semibold tracking-tight">ID</th> -->
-                    <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('actionDate', $user->lang)  ?></th>
-                    <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderDate', $user->lang) ?></th>
-                    <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('activityType', $user->lang) ?></th>
-                    <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderText', $user->lang) ?></th>
-                    <th class="p-6 text-left text-sm font-semibold tracking-tight"></th>
-                </tr>
-            </thead>
-            <tbody>
                 <?= 
                 SettingsCalendarBodyWidget::widget([
                     'taxCalendar' => $taxCalendar,
                     'user' => $user,
                 ]);
                 ?>
-            </tbody>
-        </table>
     </div>
 </div>

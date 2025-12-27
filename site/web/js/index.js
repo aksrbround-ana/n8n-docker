@@ -536,7 +536,7 @@ $(document).on('change', '#tax-calendar-month', function (e) {
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        $('#tax-calendar-table tbody').html(response.data);
+        $('#tax-calendar-table').replaceWith(response.data);
       } else {
         showError('Ошибка', response.message);
       }
@@ -548,6 +548,30 @@ $(document).on('change', '#tax-calendar-month', function (e) {
   return false;
 });
 
+$(document).on('click', '#tax-calendar-page-parse', function (e) {
+  let page = $('#tax-calendar-page-url').val();
+  let user = getUser();
+  let data = {
+    token: user.token,
+    page: page
+  };
+  $.ajax({
+    url: '/settings/tax-calendar-page-parse/',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#tax-calendar-table').replaceWith(response.data);
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Ошибка', e.message);
+    }
+  });
+  return false;
+});
 
 // ----------------------------------------------------
 //                Resize Debounce

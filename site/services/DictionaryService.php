@@ -263,6 +263,7 @@ class DictionaryService
             'activityType' => 'Тип активности',
             'reminderText' => 'Текст напоминания',
             'taxCalendar' => 'Налоговый календарь',
+            'loadTaxCalendarPage' => 'Загрузить страницу налогового календаря',
             'editReminder' => 'Редактировать напоминание',
 
             // OCR
@@ -510,6 +511,7 @@ class DictionaryService
             'activityType' => 'Tip aktivnosti',
             'reminderText' => 'Tekst podsećanja',
             'taxCalendar' => 'Poreski kalendar',
+            'loadTaxCalendarPage' => 'Učitaj stranicu poreskog kalendara',
             'editReminder' => 'Izmeni podsećanje',
 
             // OCR
