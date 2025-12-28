@@ -9,12 +9,15 @@ use Yii;
  *
  * @property int $id
  * @property int|null $company_id
+ * @property int|null $template_id
  * @property string|null $target_month
  * @property string|null $deadline_date
  * @property string|null $reminder_1_date
  * @property string|null $reminder_2_date
  * @property string|null $escalation_date
  * @property string|null $status
+ * @property string|null $type
+ * @property string|null $message
  * @property string|null $last_notified_type
  * @property string|null $updated_at
  *
@@ -51,10 +54,12 @@ class ReminderSchedule extends \yii\db\ActiveRecord
         return [
             [['company_id', 'target_month', 'deadline_date', 'reminder_1_date', 'reminder_2_date', 'escalation_date', 'last_notified_type'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'pending'],
-            [['company_id'], 'default', 'value' => null],
-            [['company_id'], 'integer'],
+            [['company_id', 'template_id'], 'default', 'value' => null],
+            [['company_id', 'template_id'], 'integer'],
             [['target_month', 'deadline_date', 'reminder_1_date', 'reminder_2_date', 'escalation_date', 'updated_at'], 'safe'],
             [['status', 'last_notified_type'], 'string', 'max' => 20],
+            [['type'], 'string', 'max' => 16],
+            [['message'], 'string', 'max' => 512],
             [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::class, 'targetAttribute' => ['company_id' => 'id']],
         ];
     }
@@ -67,12 +72,15 @@ class ReminderSchedule extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'company_id' => 'Company ID',
+            'template_id' => 'Template ID',
             'target_month' => 'Target Month',
             'deadline_date' => 'Deadline Date',
             'reminder_1_date' => 'Reminder 1 Date',
             'reminder_2_date' => 'Reminder 2 Date',
             'escalation_date' => 'Escalation Date',
             'status' => 'Status',
+            'type' => 'Type',
+            'message'=> 'Message',
             'last_notified_type' => 'Last Notified Type',
             'updated_at' => 'Updated At',
         ];
