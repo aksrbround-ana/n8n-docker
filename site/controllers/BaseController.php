@@ -55,6 +55,18 @@ class BaseController extends Controller
             'Content-Type: application/json',
         ]);
         $response = curl_exec($ch);
-        return $response;
+        if ($response) {
+            $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            return [
+                'status' => 'success',
+                'code' => $code,
+                'data' => json_decode($response, true),
+            ];
+        } else {
+            return [
+                'status' => 'error',
+                'message' => curl_error($ch),
+            ];
+        }
     }
 }

@@ -76,6 +76,7 @@ services:
       - POSTGRES_DATA_DB=${DB_DATABASE_DATA:-n8n_data}
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+      - N8N_WEBHOOK_BASE_URL=${N8N_WEBHOOK_BASE_URL}
     volumes:
       - ./site:/var/www/html
     networks:
