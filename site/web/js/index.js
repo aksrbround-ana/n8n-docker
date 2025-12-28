@@ -561,7 +561,12 @@ $(document).on('click', '#tax-calendar-page-parse', function (e) {
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        $('#tax-calendar-table').replaceWith(response.data);
+        $('#tax-calendar-page-url-message').show();
+        $('#tax-calendar-page-url').hide();
+        setTimeout(() => {
+          $('#tax-calendar-page-url-message').hide();
+          $('#tax-calendar-page-url').show();
+        }, 2000);
       } else {
         showError('Ошибка', response.message);
       }

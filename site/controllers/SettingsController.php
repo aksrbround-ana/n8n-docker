@@ -96,12 +96,19 @@ class SettingsController extends BaseController
             ];
             $out = $this->makeN8nWebhookCall('tax-calendar-page', $data);
             if ($out && isset($out['status']) && $out['status'] == 'success') {
-                $html = SettingsCalendarBodyWidget::widget($data);
                 $response = \Yii::$app->response;
                 $response->format = \yii\web\Response::FORMAT_JSON;
                 $response->data = [
                     'status' => 'success',
-                    'data' => $html,
+                    'data' => $out,
+                ];
+                return $response;
+            } else {
+                $response = \Yii::$app->response;
+                $response->format = \yii\web\Response::FORMAT_JSON;
+                $response->data = [
+                    'status' => 'error',
+                    'data' => $out,
                 ];
                 return $response;
             }

@@ -176,21 +176,6 @@ class DictionaryService
             'taskTypeReconciliation' =>  'Сверка',
             'taskTypeOther' =>  'Другое',
 
-            // Other
-            'addComment' => 'Добавить комментарий',
-            'companyInformation' => 'Информация о компании',
-            'activity' => 'Активность',
-            'viewDocument' => 'Просмотр документа',
-            'open' => 'Открыть',
-            'documentInformation' => 'Информация о документе',
-            'fileSize' => 'Размер файла',
-            'company' => 'Компания',
-            'currentStatus' => 'Текущий статус',
-            'by_unknown' => 'Неизвестно',
-            'unknown' => 'Неизвестно',
-            'information' => 'Информация',
-            'noItemsToShow' => 'Нет элементов для отображения',
-
             // Priorities
             'priorityLow' =>  'Низкий',
             'priorityNormal' =>  'Обычный',
@@ -271,6 +256,22 @@ class DictionaryService
             'ocrCategory' => 'Категория',
             'ocr' => 'OCR текст',
             'notRecognized'=>'Не распознано',
+
+            // Other
+            'addComment' => 'Добавить комментарий',
+            'companyInformation' => 'Информация о компании',
+            'activity' => 'Активность',
+            'viewDocument' => 'Просмотр документа',
+            'open' => 'Открыть',
+            'documentInformation' => 'Информация о документе',
+            'fileSize' => 'Размер файла',
+            'company' => 'Компания',
+            'currentStatus' => 'Текущий статус',
+            'by_unknown' => 'Неизвестно',
+            'unknown' => 'Неизвестно',
+            'information' => 'Информация',
+            'noItemsToShow' => 'Нет элементов для отображения',
+            'yourRequestHasBeenSent' => 'Запрос отправлен. Проверьте через пару минут.',
 
         ],
         'rs' =>   [
@@ -424,21 +425,6 @@ class DictionaryService
             'taskTypeReconciliation' =>  'Usaglašavanje',
             'taskTypeOther' =>  'Ostalo',
 
-            // Other
-            'addComment' => 'Dodaj komentar',
-            'companyInformation' => 'Informacije o kompaniji',
-            'activity' => 'Aktivnost',
-            'viewDocument' => 'Pregled dokumenta',
-            'open' => 'Otvori',
-            'documentInformation' => 'Informacije o dokumentu',
-            'fileSize' => 'Veličina fajla',
-            'company' => 'Kompanija',
-            'currentStatus' => 'Trenutni status',
-            'by_unknown' => 'Nepoznato',
-            'unknown' => 'Nepoznato',
-            'information' => 'Informacija',
-            'noItemsToShow' => 'Nema stavki za prikaz',
-
             // Priorities
             'priorityLow' =>  'Nizak',
             'priorityNormal' =>  'Normalan',
@@ -519,6 +505,23 @@ class DictionaryService
             'ocrCategory' => 'Категорија',
             'ocr' => 'OCR текст',
             'notRecognized'=>'Nije prepoznato',
+
+            // Other
+            'addComment' => 'Dodaj komentar',
+            'companyInformation' => 'Informacije o kompaniji',
+            'activity' => 'Aktivnost',
+            'viewDocument' => 'Pregled dokumenta',
+            'open' => 'Otvori',
+            'documentInformation' => 'Informacije o dokumentu',
+            'fileSize' => 'Veličina fajla',
+            'company' => 'Kompanija',
+            'currentStatus' => 'Trenutni status',
+            'by_unknown' => 'Nepoznato',
+            'unknown' => 'Nepoznato',
+            'information' => 'Informacija',
+            'noItemsToShow' => 'Nema stavki za prikaz',
+            'yourRequestHasBeenSent' => 'Vaš zahtev je poslat. Molimo vas da proverite ponovo za nekoliko minuta.',
+
         ],
     ];
 
