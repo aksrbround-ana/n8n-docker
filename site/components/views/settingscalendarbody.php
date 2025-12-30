@@ -22,7 +22,7 @@ use app\services\SvgService;
                 <!-- <td class="p-6 pt-0"><?php //= $item->id 
                                             ?></td> -->
                 <td class="calendar-action-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->input_date)) ?></td>
-                <td class="calendar-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->notification_date)) ?></td>
+                <td class="calendar-date p-6 pt-0"><?= date('Y-m-d', strtotime($item->reminder_1_date)) ?></td>
                 <td class="calendar-activity-type p-6 pt-0"><?= $item->activity_type ?></td>
                 <td class="calendar-text p-6 pt-0"><?= $item->activity_text ?></td>
                 <td class="calendar-activity p-6 pt-0" style="white-space: nowrap;">
