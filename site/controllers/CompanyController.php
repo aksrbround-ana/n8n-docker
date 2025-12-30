@@ -14,6 +14,7 @@ use app\components\CompanyNotesWidget;
 use app\models\Document;
 use app\models\TaxCalendar;
 use app\models\Reminder;
+use app\models\ReminderSchedule;
 use app\models\Task;
 use app\models\TaskDocument;
 
@@ -242,13 +243,16 @@ class CompanyController extends BaseController
             if (!empty($checkedCompanies)) {
                 for ($i = 0; $i < count($checkedCompanies); $i++) {
                     $ps = TaxCalendar::findOne(['id' => $reminderId]);
-                    $reminder = new Reminder();
+                    $reminder = new ReminderSchedule();
                     $reminder->company_id = $checkedCompanies[$i];
                     $reminder->type = 'calendar';
                     $reminder->template_id = $reminderId;
                     $reminder->created_at = date('Y-m-d H:i:s');
                     $reminder->updated_at = date('Y-m-d H:i:s');
-                    $reminder->send_date = date('Y-m-d H:i:s', strtotime($ps->notification_date));
+                    $reminder->reminder_1_date = date('Y-m-d H:i:s', strtotime($ps->reminder_1_date));
+                    $reminder->reminder_2_date = date('Y-m-d H:i:s', strtotime($ps->reminder_2_date));
+                    $reminder->escalation_date = date('Y-m-d H:i:s', strtotime($ps->escalation_date));
+                    $reminder->target_month = date('Y-m', strtotime($ps->target_month));
                     // $reminder->message = $ps->activity_text;
                     $reminder->save();
                 }
