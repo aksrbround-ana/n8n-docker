@@ -2,6 +2,7 @@
 
 use app\models\Document;
 use app\services\DictionaryService;
+use app\services\SvgService;
 use Codeception\Lib\Di;
 
 /**
@@ -31,13 +32,8 @@ use Codeception\Lib\Di;
         ?>
             <tr data-doc-id="<?= $doc->id ?>" class="doc-row border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                    <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 text-destructive">
-                            <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
-                            <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
-                            <path d="M10 9H8"></path>
-                            <path d="M16 13H8"></path>
-                            <path d="M16 17H8"></path>
-                        </svg>
+                    <div class="flex items-center gap-2">
+                        <?= SvgService::svg('document') ?>
                         <div>
                             <p class="font-medium text-sm truncate max-w-[200px]"><?= $doc->filename ?></p>
                             <p class="text-xs text-muted-foreground"><?= Document::getStaticLength($doc->id) ?></p>
@@ -66,11 +62,8 @@ use Codeception\Lib\Di;
                 <!-- <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ольга Сидорова</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">28.10.2024</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r183:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
-                            <circle cx="12" cy="12" r="1"></circle>
-                            <circle cx="19" cy="12" r="1"></circle>
-                            <circle cx="5" cy="12" r="1"></circle>
-                        </svg>
+                    <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r183:" aria-haspopup="menu" aria-expanded="false" data-state="closed">
+                        <?= SvgService::svg('elipsis') ?>
                     </button>
                 </td> -->
             </tr>

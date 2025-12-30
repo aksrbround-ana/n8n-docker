@@ -4,6 +4,7 @@ use app\components\SettingsTopWidget;
 use app\components\SettingsDedlinesWidget;
 use app\components\SettingsCalendarWidget;
 use app\components\SettingsTemplatesWidget;
+use app\services\SvgService;
 
 ?>
 <div class="p-6">
@@ -21,12 +22,19 @@ use app\components\SettingsTemplatesWidget;
 
 
         </div>
-        <?= SettingsCalendarWidget::widget([
-            'user' => $user,
-            'taxCalendar' => $taxCalendar,
-            'month' => $month,
-            'year' => $year,
-            'monthList' => $monthList
-        ]) ?>
+        <?php //= SettingsCalendarWidget::widget([
+        //     'user' => $user,
+        //     'taxCalendar' => $taxCalendar,
+        //     'month' => $month,
+        //     'year' => $year,
+        //     'monthList' => $monthList
+        // ]) 
+        ?>
     </div>
 </div>
+<?php
+// echo '<ul>';
+// foreach (SvgService::svgList() as $name) {
+//     echo '<li>' . $name . ': ' . SvgService::svg($name) . '</li>';
+// }
+// echo '</ul>';
