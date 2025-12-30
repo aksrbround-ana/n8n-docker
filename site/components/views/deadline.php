@@ -1,14 +1,12 @@
 <?php
 
 use app\services\DictionaryService;
+use app\services\SvgService;
+
 ?>
 <div class="bg-card rounded-xl border p-5">
-    <h3 class="font-heading font-semibold text-lg mb-4 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar h-5 w-5 text-primary">
-            <path d="M8 2v4"></path>
-            <path d="M16 2v4"></path>
-            <rect width="18" height="18" x="3" y="4" rx="2"></rect>
-            <path d="M3 10h18"></path>
-        </svg>
+    <h3 class="font-heading font-semibold text-lg mb-4 flex items-center gap-2">
+        <?= SvgService::svg('calendar') ?>
         <?= DictionaryService::getWord('upcomingDeadlines', $user->lang) ?>
     </h3>
     <div class="space-y-3">
@@ -48,11 +46,7 @@ use app\services\DictionaryService;
                     if ($deadline['time_left'] < 0) {
                     ?>
                         <p class="text-sm font-medium flex items-center gap-1 justify-end text-destructive">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" x2="12" y1="8" y2="12"></line>
-                                <line x1="12" x2="12.01" y1="16" y2="16"></line>
-                            </svg>
+                            <?= SvgService::svg('exclamation') ?>
                             <?= -$deadline['time_left'] ?> <?= DictionaryService::getWord('daysOverdue', $user->lang) ?>
                         </p>
                     <?php

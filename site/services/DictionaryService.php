@@ -47,6 +47,7 @@ class DictionaryService
             'documents' =>  'Документы',
             'reports' =>  'Отчёты',
             'settings' =>  'Настройки',
+            'reminders' => 'Напоминания',
             'users' =>  'Пользователи',
 
             // Roles
@@ -245,9 +246,12 @@ class DictionaryService
             // Reminders
             'actionDate' => 'Дата действия',
             'reminderDate' => 'Дата напоминания',
+            'escalationDate' => 'Дата эскалации',
             'activityType' => 'Тип активности',
             'reminderText' => 'Текст напоминания',
+            'reminderType' => 'Тип напоминания',
             'taxCalendar' => 'Налоговый календарь',
+            'regularReminders' => 'Регулярные напоминания',
             'loadTaxCalendarPage' => 'Загрузить страницу налогового календаря',
             'editReminder' => 'Редактировать напоминание',
 
@@ -296,6 +300,7 @@ class DictionaryService
             'documents' =>  'Dokumenti',
             'reports' =>  'Izveštaji',
             'settings' =>  'Podešavanja',
+            'reminders' => 'Podsetnici',
             'users' =>  'Korisnici',
 
             // Roles
@@ -494,9 +499,12 @@ class DictionaryService
             // Reminders
             'actionDate' => 'Datum akcije',
             'reminderDate' => 'Datum podsećanja',
+            'escalationDate' => 'Datum eskalacije',
             'activityType' => 'Tip aktivnosti',
             'reminderText' => 'Tekst podsećanja',
+            'reminderType' => 'Tip podsećanja',
             'taxCalendar' => 'Poreski kalendar',
+            'regularReminders' => 'Obična podsećanja',
             'loadTaxCalendarPage' => 'Učitaj stranicu poreskog kalendara',
             'editReminder' => 'Izmeni podsećanje',
 

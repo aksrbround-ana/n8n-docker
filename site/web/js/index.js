@@ -531,12 +531,15 @@ $(document).on('change', '#tax-calendar-month', function (e) {
     token: user.token,
   };
   $.ajax({
-    url: '/settings/tax-calendar/' + month,
+    url: '/reminder/tax-calendar/' + month,
     type: 'POST',
     data: data,
     success: function (response) {
       if (response.status === 'success') {
         $('#tax-calendar-table').replaceWith(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
         showError('Ошибка', response.message);
       }
@@ -556,7 +559,7 @@ $(document).on('click', '#tax-calendar-page-parse', function (e) {
     page: page
   };
   $.ajax({
-    url: '/settings/tax-calendar-page-parse/',
+    url: '/reminder/tax-calendar-page-parse/',
     type: 'POST',
     data: data,
     success: function (response) {
@@ -567,6 +570,9 @@ $(document).on('click', '#tax-calendar-page-parse', function (e) {
           $('#tax-calendar-page-url-message').hide();
           $('#tax-calendar-page-url').show();
         }, 2000);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
         showError('Ошибка', response.message);
       }
@@ -576,6 +582,69 @@ $(document).on('click', '#tax-calendar-page-parse', function (e) {
     }
   });
   return false;
+});
+
+$(document).on('click', '#reminders-button-list button', function (e) {
+  let user = getUser();
+  let divId = $(this).data('controls');
+  let div = $('#' + divId);
+  let url = $(this).data('link');
+  $('#reminders-button-list > button').attr('data-state', 'inactive');
+  $(this).attr('data-state', 'active');
+  $('#reminders-div-list > div').attr('data-state', 'inactive').hide();
+  div.attr('data-state', 'active').show();
+  let data = {
+    token: user.token,
+  };
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        div.html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Ошибка', e.message);
+    }
+  });
+  return false;
+});
+
+$(document).on('click', '.cancel-reg-reminder-btn', function (e) {
+  let user = getUser();
+  let reminderId = $(this).data('item-id');
+  let data = {
+    token: user.token,
+    id: reminderId
+  }
+  let row = $(this).closest('tr');
+  $.ajax({
+    url: '/reminder/cancel-regular',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $(row).addClass('cancelled-reminder');
+        $(row).find('.cancel-reg-reminder-btn').remove();
+        $(row).find('.reg-reminder-status').text('cancelled');
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Ошибка', e.message);
+    }
+  });
 });
 
 // ----------------------------------------------------
