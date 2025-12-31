@@ -111,3 +111,7 @@ a.desc:after {
 .cancelled-reminder {
     background-color: #f8d7da;    
 }
+
+.align-left {
+    text-align: left;
+}

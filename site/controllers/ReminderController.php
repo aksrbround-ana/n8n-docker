@@ -141,7 +141,10 @@ class ReminderController extends BaseController
                 $month = date('Y-m');
             }
             $data = $this->getDataToPage($accountant, $month);
-            $html = SettingsCalendarWidget::widget($data);
+            $html = SettingsCalendarBodyWidget::widget([
+                'taxCalendar' => $data['taxCalendar'],
+                'user' => $accountant,
+            ]);
             $response = \Yii::$app->response;
             $response->format = \yii\web\Response::FORMAT_JSON;
             $response->data = [

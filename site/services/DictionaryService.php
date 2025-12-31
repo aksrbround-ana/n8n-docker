@@ -276,6 +276,7 @@ class DictionaryService
             'information' => 'Информация',
             'noItemsToShow' => 'Нет элементов для отображения',
             'yourRequestHasBeenSent' => 'Запрос отправлен. Проверьте через пару минут.',
+            'loadMonth' => 'Загрузить месяц',
 
         ],
         'rs' =>   [
@@ -529,6 +530,7 @@ class DictionaryService
             'information' => 'Informacija',
             'noItemsToShow' => 'Nema stavki za prikaz',
             'yourRequestHasBeenSent' => 'Vaš zahtev je poslat. Molimo vas da proverite ponovo za nekoliko minuta.',
+            'loadMonth' => 'Učitaj mesec',
 
         ],
     ];

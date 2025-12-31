@@ -201,7 +201,7 @@ class CompanyController extends BaseController
             $rows = (new Query())
                 ->select(['c.id', 'c.name', 'count(r.id) AS count'])
                 ->from(['c' => 'company'])
-                ->leftJoin(['r' => Reminder::tableName()], 'r.company_id = c.id AND r.type = \'calendar\' AND r.template_id = ' . intval($eventId))
+                ->leftJoin(['r' => ReminderSchedule::tableName()], 'r.company_id = c.id AND r.type = \'calendar\' AND r.template_id = ' . intval($eventId))
                 ->orderBy('c.name ASC')
                 ->groupBy(['c.id', 'c.name']);
 
@@ -233,28 +233,36 @@ class CompanyController extends BaseController
             $uncheckedCompanies = $request->post('uncheked_companies');
             // Удаляем существующие напоминания для этой компании и события
             if (!empty($uncheckedCompanies)) {
-                Reminder::deleteAll([
+                ReminderSchedule::deleteAll([
                     'type' => 'calendar',
                     'template_id' => $reminderId,
                     'company_id' => $uncheckedCompanies,
                 ]);
             }
             // Добавляем новые напоминания
+            $n = 0;
+            $errors = [];
             if (!empty($checkedCompanies)) {
                 for ($i = 0; $i < count($checkedCompanies); $i++) {
                     $ps = TaxCalendar::findOne(['id' => $reminderId]);
                     $reminder = new ReminderSchedule();
-                    $reminder->company_id = $checkedCompanies[$i];
+                    $reminder->company_id = (int)$checkedCompanies[$i];
                     $reminder->type = 'calendar';
                     $reminder->template_id = $reminderId;
-                    $reminder->created_at = date('Y-m-d H:i:s');
+                    // $reminder->created_at = date('Y-m-d H:i:s');
                     $reminder->updated_at = date('Y-m-d H:i:s');
+                    $reminder->deadline_date = date('Y-m-d H:i:s', strtotime($ps->input_date));
                     $reminder->reminder_1_date = date('Y-m-d H:i:s', strtotime($ps->reminder_1_date));
                     $reminder->reminder_2_date = date('Y-m-d H:i:s', strtotime($ps->reminder_2_date));
                     $reminder->escalation_date = date('Y-m-d H:i:s', strtotime($ps->escalation_date));
-                    $reminder->target_month = date('Y-m', strtotime($ps->target_month));
+                    $reminder->target_month = date('Y-m-01', strtotime($ps->target_month));
                     // $reminder->message = $ps->activity_text;
-                    $reminder->save();
+                    $r = $reminder->save();
+                    if (!$r) {
+                        $errors[] = $reminder->getErrors();
+                    } else {
+                        $n++;
+                    }
                 }
             }
             $response = \Yii::$app->response;
@@ -264,6 +272,8 @@ class CompanyController extends BaseController
                 'status' => 'success',
                 'code' => 200,
                 'message' => 'Reminders updated successfully.',
+                'n' => $n,
+                'errors' => $errors,
             ];
             return $response;
         } else {
