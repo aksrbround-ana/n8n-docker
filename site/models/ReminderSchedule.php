@@ -60,7 +60,7 @@ class ReminderSchedule extends \yii\db\ActiveRecord
             [['status', 'last_notified_type'], 'string', 'max' => 20],
             [['type'], 'string', 'max' => 16],
             [['message'], 'string', 'max' => 512],
-            [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::class, 'targetAttribute' => ['company_id' => 'id']],
+            [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::class, 'targetAttribute' => ['company_id' => 'id']],
         ];
     }
 
