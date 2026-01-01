@@ -45,6 +45,7 @@ class CompanyController extends BaseController
             ->leftJoin(['ca' => 'company_activities'], 'ca.id = c.activity_id')
             // ->leftJoin(['t' => 'task'], 't.company_id = c.id')
             // ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id')
+            ->orderBy(['c.name' => SORT_ASC]);
         ;
         $companies = $companiesQuery->all();
         foreach ($companies as &$company) {
