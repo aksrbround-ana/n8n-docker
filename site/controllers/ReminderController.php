@@ -21,12 +21,6 @@ class ReminderController extends BaseController
 
     private function getDataToPage(Accountant $accountant, $month)
     {
-        $firstDay = date('Y-m-01', strtotime($month));
-        $lastDay = date('Y-m-t', strtotime($month));
-        $taxCalendar = TaxCalendar::find()
-            ->where(['between', 'input_date', $firstDay, $lastDay])
-            ->orderBy(["input_date" => SORT_ASC, 'activity_type' => SORT_ASC])
-            ->all();
         $monthsQuery = (new Query())
             ->select(['month' => 'EXTRACT(MONTH FROM input_date)', 'year' => 'EXTRACT(YEAR FROM input_date)'])
             ->distinct()
@@ -40,6 +34,15 @@ class ReminderController extends BaseController
             }
             $monthList[] = $value['year'] . '-' . $value['month'];
         }
+        if (!in_array($month, $monthList) && count($monthList) > 0) {
+            $month = $monthList[0];
+        }
+        $firstDay = date('Y-m-01', strtotime($month));
+        $lastDay = date('Y-m-t', strtotime($month));
+        $taxCalendar = TaxCalendar::find()
+            ->where(['between', 'input_date', $firstDay, $lastDay])
+            ->orderBy(["input_date" => SORT_ASC, 'activity_type' => SORT_ASC])
+            ->all();
         $data = [
             'user' => $accountant,
             'taxCalendar' => $taxCalendar,
@@ -141,6 +144,30 @@ class ReminderController extends BaseController
                 $month = date('Y-m');
             }
             $data = $this->getDataToPage($accountant, $month);
+            $html = SettingsCalendarWidget::widget($data);
+            $response = \Yii::$app->response;
+            $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = [
+                'status' => 'success',
+                'data' => $html,
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionTaxCalendarTable($month = null)
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            if (!$month) {
+                $month = date('Y-m');
+            }
+            $data = $this->getDataToPage($accountant, $month);
             $html = SettingsCalendarBodyWidget::widget([
                 'taxCalendar' => $data['taxCalendar'],
                 'user' => $accountant,
@@ -157,32 +184,28 @@ class ReminderController extends BaseController
         }
     }
 
-    public function actionTaxCalendarPageParse()
+    public function actionTaxCalendarMonthLoad()
     {
         $request = \Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         if ($accountant->isValid()) {
-            $page = $request->post('page');
+            $response = \Yii::$app->response;
+            $response->format = \yii\web\Response::FORMAT_JSON;
+            list($year, $month) = explode('-', $request->post('month'));
             $data = [
-                'page' => $page,
+                'year' => $year,
+                'month' => $month,
             ];
-            $out = $this->makeN8nWebhookCall('tax-calendar-page', $data);
-            if ($out && isset($out['status']) && $out['status'] == 'success') {
-                $response = \Yii::$app->response;
-                $response->format = \yii\web\Response::FORMAT_JSON;
+            $out = $this->makeN8nWebhookCall('tax-calendar-month-load', $data);
+            if ($out && isset($out['status']) && $out['status'] == 'success' && $out['code'] == 200) {
                 $response->data = [
                     'status' => 'success',
                     'data' => $out,
                 ];
                 return $response;
             } else {
-                $response = \Yii::$app->response;
-                $response->format = \yii\web\Response::FORMAT_JSON;
-                $response->data = [
-                    'status' => 'error',
-                    'data' => $out,
-                ];
+                $response->data = $out;
                 return $response;
             }
         } else {
