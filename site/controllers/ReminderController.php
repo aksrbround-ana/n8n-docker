@@ -8,6 +8,7 @@ use app\models\TaxCalendar;
 use app\components\SettingsCalendarWidget;
 use app\components\SettingsCalendarBodyWidget;
 use app\models\Company;
+use app\models\ReminderRegular;
 use app\models\ReminderSchedule;
 use yii\db\QueryBuilder;
 
@@ -78,12 +79,9 @@ class ReminderController extends BaseController
             $firstDay = date('Y-m-01');
             $lastDay = date('Y-m-t');
             $reminders = (new Query)
-                ->select(['r.*', 'c.name'])
-                ->from(['r' => ReminderSchedule::tableName()])
-                ->leftJoin(['c' => Company::tableName()], 'r.company_id = c.id')
-                ->where(['>=', 'r.deadline_date', $firstDay])
-                ->andWhere(['<=', 'r.deadline_date', $lastDay])
-                ->orderBy('r.deadline_date')
+                ->select(['r.*'])
+                ->from(['r' => ReminderRegular::tableName()])
+                ->orderBy('r.deadline_day')
                 ->all();
             $data = [
                 'user' => $accountant,
@@ -94,6 +92,24 @@ class ReminderController extends BaseController
                 ],
             ];
             return $this->renderPage($data, 'reg');
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionRegReminderCreate() {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $response = \Yii::$app->response;
+            $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = [
+                'status' => 'success',
+                'message' => 'Reminder created successfully',
+            ];
+            return $response;
         } else {
             return $this->renderLogout();
         }

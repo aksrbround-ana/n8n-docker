@@ -8,13 +8,11 @@ use app\services\SvgService;
     <thead>
         <tr class="border-t bg-muted/50">
             <th class="p-6 text-left text-sm font-semibold tracking-tight">ID</th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('company', $user->lang)  ?></th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderType', $user->lang)  ?></th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderDate', $user->lang) ?> 1</th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderDate', $user->lang) ?> 2</th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('escalationDate', $user->lang) ?></th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('status', $user->lang) ?></th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('reminderText', $user->lang) ?></th>
+            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('deadline_day', $user->lang)  ?></th>
+            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('type_ru', $user->lang)  ?></th>
+            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('type_rs', $user->lang) ?></th>
+            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('text_ru', $user->lang) ?></th>
+            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('text_rs', $user->lang) ?></th>
             <th class="p-6 text-left text-sm font-semibold tracking-tight"></th>
         </tr>
     </thead>

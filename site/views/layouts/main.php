@@ -4,6 +4,7 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
+use app\components\ModalCreateRegReminderWidget;
 use app\components\ModalEditCalendarWidget;
 use app\components\ModalWindowWidget;
 
@@ -47,6 +48,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <?= ModalEditCalendarWidget::widget([
         'user' => Yii::$app->view->params['accountant'],
         'token' => Yii::$app->view->params['token'],
+    ]) ?>
+    <?= ModalCreateRegReminderWidget::widget([
+        'user' => Yii::$app->view->params['accountant'],
     ]) ?>
 </body>
 

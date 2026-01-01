@@ -179,15 +179,17 @@ function putLangDependentWords() {
   let lang = user ? user?.lang : 'rs';
   $('.edit-calendar-btn').attr('title', dictionaryLookup('edit', lang));
   $('.delete-calendar-btn').attr('title', dictionaryLookup('delete', lang));
-  $('.cancel-btn').text(dictionaryLookup('cancel', lang));
-  $('#do-edit-reminder').text(dictionaryLookup('save', lang));
-  $('#do-action-reminder').text(dictionaryLookup('save', lang));
-  $('#do-action-btn').text(dictionaryLookup('save', lang));
+  $('.btn-cancel').text(dictionaryLookup('cancel', lang));
+  $('.btn-save').text(dictionaryLookup('save', lang));
 }
 
 //------------------------------------------------------------------
 //                Handlers
 //------------------------------------------------------------------
+
+$(document).on('load', function () {
+  putLangDependentWords();
+});
 
 document.addEventListener('DOMContentLoaded', function () {
   loadContent();
