@@ -531,7 +531,7 @@ $(document).on('change', '#tax-calendar-month', function (e) {
     token: user.token,
   };
   $.ajax({
-    url: '/reminder/tax-calendar/' + month,
+    url: '/reminder/tax-calendar-table/' + month,
     type: 'POST',
     data: data,
     success: function (response) {
@@ -551,24 +551,22 @@ $(document).on('change', '#tax-calendar-month', function (e) {
   return false;
 });
 
-$(document).on('click', '#tax-calendar-page-parse', function (e) {
-  let page = $('#tax-calendar-page-url').val();
+$(document).on('click', '#tax-calendar-month-load', function (e) {
+  let month = $('#tax-calendar-month_to_load').val();
   let user = getUser();
   let data = {
     token: user.token,
-    page: page
+    month: month
   };
   $.ajax({
-    url: '/reminder/tax-calendar-page-parse/',
+    url: '/reminder/tax-calendar-month-load/',
     type: 'POST',
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        $('#tax-calendar-page-url-message').show();
-        $('#tax-calendar-page-url').hide();
+        $('#tax-calendar-load-message').show();
         setTimeout(() => {
-          $('#tax-calendar-page-url-message').hide();
-          $('#tax-calendar-page-url').show();
+          $('#tax-calendar-load-message').hide();
         }, 2000);
       } else if (response.status === 'logout') {
         clearUser();

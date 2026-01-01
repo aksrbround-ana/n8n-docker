@@ -87,6 +87,7 @@ $config = [
                 'GET <controller:\w+>/<action:\w+>' => '<controller>/<action>',
 
                 'POST reminder/tax-calendar/<month:[\w\-]+>' => 'reminder/tax-calendar',
+                'POST reminder/tax-calendar-table/<month:[\w\-]+>' => 'reminder/tax-calendar-table',
                 'POST <controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 'POST <controller:\w+>/<action:\w+>/<status:[\w\-]+>' => '<controller>/<action>',
                 'POST <controller:\w+>/<action:\w+>' => '<controller>/<action>',

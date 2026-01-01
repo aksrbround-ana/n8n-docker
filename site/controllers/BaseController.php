@@ -56,12 +56,20 @@ class BaseController extends Controller
         ]);
         $response = curl_exec($ch);
         if ($response) {
+            $response = json_decode($response, true);
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            return [
-                'status' => 'success',
+            $finalResponse = [
+                'status' => $code == 200 ? 'success' : 'error',
                 'code' => $code,
-                'data' => json_decode($response, true),
             ];
+            if (isset($response['message'])) {
+                $finalResponse['message'] = $response['message'];
+            }
+            if (isset($response['hint'])) {
+                $finalResponse['hint'] = $response['hint'];
+            }
+            $finalResponse['data'] = $response;
+            return $finalResponse;
         } else {
             return [
                 'status' => 'error',
