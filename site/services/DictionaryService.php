@@ -254,6 +254,12 @@ class DictionaryService
             'regularReminders' => 'Регулярные напоминания',
             'loadTaxCalendarPage' => 'Загрузить страницу налогового календаря',
             'editReminder' => 'Редактировать напоминание',
+            'deadline_day' => 'День срока',
+            'createReminder' => 'Создать напоминание',
+            'type_ru' => 'Тип (RU)',
+            'type_rs' => 'Тип (RS)',
+            'text_ru' => 'Текст (RU)',
+            'text_rs' => 'Текст (RS)',
 
             // OCR
             'ocrSummary' => 'Резюме',
@@ -508,6 +514,12 @@ class DictionaryService
             'regularReminders' => 'Obična podsećanja',
             'loadTaxCalendarPage' => 'Učitaj stranicu poreskog kalendara',
             'editReminder' => 'Izmeni podsećanje',
+            'deadline_day' => 'Dan roka',
+            'createReminder' => 'Kreiraj podsećanje',
+            'type_ru' => 'Tip_ru',
+            'type_rs' => 'Tip_rs',
+            'text_ru' => 'Tekst_ru',
+            'text_rs' => 'Tekst_rs',
 
             // OCR
             'ocrSummary' => 'Резюме',

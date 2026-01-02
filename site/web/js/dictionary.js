@@ -174,7 +174,9 @@ const translations = {
     //Other
     information: 'Информация',
     noItemsToShow: 'Нет элементов для отображения',
+    'createReminder': 'Создать напоминание',
   },
+
   rs: {
     // Navigation
     dashboard: 'Početna',
@@ -350,6 +352,7 @@ const translations = {
     //Other
     information: 'Informacija',
     noItemsToShow: 'Nema stavki za prikaz',
+    'createReminder': 'Kreiraj podsećanje',
   },
 }
 function dictionaryLookup(word, lang) {

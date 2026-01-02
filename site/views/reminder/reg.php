@@ -9,10 +9,14 @@ use app\services\SvgService;
     <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow cursor-pointer">
         <div class="flex flex-col space-y-1.5 p-6 pb-3">
             <div class="flex items-center gap-3 grid grid-cols-3">
-                <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <?= SvgService::svg('bell') ?>
+                <div class="">
+                    <h3 class="font-semibold tracking-tight text-base"><?= DictionaryService::getWord('reminders', $user->lang) ?></h3>
                 </div>
-                <h3 class="font-semibold tracking-tight text-base"><?= DictionaryService::getWord('reminders', $user->lang) ?></h3>
+                <div class="">
+                </div>
+                <div class="">
+                    <button id="reg-reminder-create" class="btn btn-sm ml-2 p-3 rounded-md bg-primary border border-input font-medium inline-flex items-center justify-center text-sm text-primary-foreground whitespace-nowrap m3" style="float: right;"><?= DictionaryService::getWord('createReminder', $user->lang) ?></button>
+                </div>
             </div>
         </div>
         <?= RegRemindersTableWidget::widget([

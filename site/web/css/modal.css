@@ -30,7 +30,6 @@
 /* 2. Стили для самого окна */
 .modal-window {
     background: #fff;
-    width: 500px;
     max-width: 90%;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -42,6 +41,14 @@
     transform: translateY(-20px);
     /* Исходная позиция: чуть выше центра */
     transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-regular {
+    width: 500px;
+}
+
+.modal-big {
+    width: 1000px;
 }
 
 /* Состояние "Открыто" для окна (через родителя) */
@@ -99,7 +106,14 @@ button.modal-close-btn:hover {
     padding: 20px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.modal-regular .modal-body {
     height: 300px;
+}
+
+.modal-big .modal-body {
+    height: 400px;
 }
 
 .modal-footer {
