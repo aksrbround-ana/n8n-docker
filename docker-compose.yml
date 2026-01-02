@@ -105,9 +105,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      embedding-service:
+        condition: service_started
 
   embedding-service:
     build: ./embedding-service
+    container_name: embedding-service
     networks:
       - web
     ports:
