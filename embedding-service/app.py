@@ -5,7 +5,8 @@ import logging
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+# Используем модель с размерностью 768
+model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
 logging.info("Model loaded successfully")
 
 @app.route('/embed', methods=['POST'])
@@ -34,7 +35,7 @@ def embed():
         
         embeddings = model.encode(texts, convert_to_numpy=True)
         
-        logging.info(f"Generated {len(embeddings)} embeddings")
+        logging.info(f"Generated {len(embeddings)} embeddings, dimension: {embeddings.shape[1]}")
         
         if len(texts) == 1:
             return jsonify({'embedding': embeddings[0].tolist()})
@@ -47,4 +48,8 @@ def embed():
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'ok', 'model': 'paraphrase-multilingual-MiniLM-L12-v2'})
+    return jsonify({
+        'status': 'ok', 
+        'model': 'paraphrase-multilingual-mpnet-base-v2',
+        'dimension': 768
+    })

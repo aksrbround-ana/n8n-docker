@@ -64,6 +64,7 @@ services:
 
   embedding-service:
     build: ./embedding-service
+    container_name: embedding-service
     networks:
       - web
     ports:
