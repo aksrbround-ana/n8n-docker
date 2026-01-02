@@ -5,7 +5,6 @@ import logging
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Загрузка модели при старте
 model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 logging.info("Model loaded successfully")
 
@@ -13,9 +12,12 @@ logging.info("Model loaded successfully")
 def embed():
     try:
         data = request.json
+        logging.info(f"Received request with {len(data) if isinstance(data, list) else 1} items")
         
-        # Поддержка одного текста или массива
-        if isinstance(data, dict):
+        # Поддержка разных форматов
+        if isinstance(data, list):
+            texts = [item.get('text', '') for item in data]
+        elif isinstance(data, dict):
             if 'text' in data:
                 texts = [data['text']]
             elif 'texts' in data:
@@ -25,10 +27,15 @@ def embed():
         else:
             return jsonify({'error': 'Invalid input format'}), 400
         
-        # Генерация embeddings
+        texts = [t for t in texts if t]
+        
+        if not texts:
+            return jsonify({'error': 'No valid texts provided'}), 400
+        
         embeddings = model.encode(texts, convert_to_numpy=True)
         
-        # Возврат результата
+        logging.info(f"Generated {len(embeddings)} embeddings")
+        
         if len(texts) == 1:
             return jsonify({'embedding': embeddings[0].tolist()})
         else:
@@ -41,6 +48,3 @@ def embed():
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({'status': 'ok', 'model': 'paraphrase-multilingual-MiniLM-L12-v2'})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
