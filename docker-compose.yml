@@ -108,6 +108,8 @@ services:
 
   embedding-service:
     build: ./embedding-service
+    networks:
+      - web
     ports:
       - "5000:5000"
 
