@@ -3,7 +3,11 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Установка зависимостей
-RUN pip install --no-cache-dir flask sentence-transformers torch --extra-index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir \
+    flask \
+    gunicorn \
+    sentence-transformers \
+    torch --extra-index-url https://download.pytorch.org/whl/cpu
 
 COPY app.py .
 
@@ -12,4 +16,5 @@ RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTr
 
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+# Используем Gunicorn вместо Flask dev server
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "app:app"]
