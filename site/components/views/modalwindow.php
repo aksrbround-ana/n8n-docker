@@ -3,7 +3,7 @@
 use app\services\DictionaryService;
 ?>
 <div id="modal-overlay" class="modal-overlay">
-  <div class="modal-window">
+  <div class="modal-window modal-regular">
     
     <div class="modal-header">
       <h3 class="modal-title">Header</h3>

@@ -584,6 +584,106 @@ $(document).on('click', '#tax-calendar-month-load', function (e) {
   return false;
 });
 
+let regReminderModal = null;
+$(document).on('click', '#reg-reminder-create', function (e) {
+  let user = getUser();
+  let data = {
+    token: user.token,
+  };
+  $.ajax({
+    url: '/reminder/reg-reminder-create/',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        let title = dictionaryLookup('createReminder', user.lang);
+        regReminderModal = new Modal('modal-create-reg-reminder', title, 'reminder');
+        regReminderModal.setContent(response.data);
+        regReminderModal.open();
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Ошибка', e.message);
+    }
+  });
+  return false;
+});
+
+$(document).on('click', '.edit-reg-reminder-btn', function (e) {
+  let user = getUser();
+  let id = $(this).data('item-id');
+  let data = {
+    token: user.token,
+    id: id
+  };
+  $.ajax({
+    url: '/reminder/reg-reminder-update/',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        let title = dictionaryLookup('createReminder', user.lang);
+        regReminderModal = new Modal('modal-create-reg-reminder', title, 'reminder');
+        regReminderModal.setContent(response.data);
+        regReminderModal.open();
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Ошибка', e.message);
+    }
+  });
+  return false;
+});
+
+$(document).on('click', '#save-reg-reminder', function (e) {
+  let user = getUser();
+  let modalBody  = $(this).closest('.modal-window').find('.modal-body');
+  let data = {
+    token: user.token,
+    id: $(modalBody).find('input[name="reminderId"]').val(),
+    deadLine: $(modalBody).find('input[name="deadlineDay"]').val(),
+    type_ru: $(modalBody).find('input[name="type_ru"]').val(),
+    type_rs: $(modalBody).find('input[name="type_rs"]').val(),
+    text_ru: $(modalBody).find('input[name="text_ru"]').val(),
+    text_rs: $(modalBody).find('input[name="text_rs"]').val(),
+  };
+  $.ajax({
+    url: '/reminder/reg-reminder-save/',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        if (response.action === 'created') {
+          $('#reg-reminder-table-body').append(response.data);
+        } else if (response.action === 'updated') {
+          let row = $('#reg-reminder-row-' + response.reminder.id);
+          $(row).replaceWith(response.data);
+        }
+        regReminderModal.close();
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Ошибка', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Ошибка', e.message);
+    }
+  });
+  return false;
+});
+
 $(document).on('click', '#reminders-button-list button', function (e) {
   let user = getUser();
   let divId = $(this).data('controls');
@@ -631,9 +731,7 @@ $(document).on('click', '.cancel-reg-reminder-btn', function (e) {
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        $(row).addClass('cancelled-reminder');
-        $(row).find('.cancel-reg-reminder-btn').remove();
-        $(row).find('.reg-reminder-status').text('cancelled');
+        $(row).remove();
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();

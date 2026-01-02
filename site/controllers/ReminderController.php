@@ -7,10 +7,9 @@ use app\models\Accountant;
 use app\models\TaxCalendar;
 use app\components\SettingsCalendarWidget;
 use app\components\SettingsCalendarBodyWidget;
-use app\models\Company;
+use \app\components\ReminderCreateUpdateContentWidget;
 use app\models\ReminderRegular;
 use app\models\ReminderSchedule;
-use yii\db\QueryBuilder;
 
 class ReminderController extends BaseController
 {
@@ -97,19 +96,109 @@ class ReminderController extends BaseController
         }
     }
 
-    public function actionRegReminderCreate() {
+    public function actionRegReminderCreate()
+    {
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         if ($accountant->isValid()) {
+            $reminder = new ReminderRegular();
+            $html = ReminderCreateUpdateContentWidget::widget([
+                'user' => $accountant,
+                'reminder' => $reminder,
+            ]);
             $response = \Yii::$app->response;
             $response->format = \yii\web\Response::FORMAT_JSON;
             $response->data = [
                 'status' => 'success',
                 'message' => 'Reminder created successfully',
+                'data' => $html,
             ];
             return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionRegReminderUpdate()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $reminder = ReminderRegular::findOne($id);
+            if (!$reminder) {
+                $reminder = new ReminderRegular();
+            }
+            $html = ReminderCreateUpdateContentWidget::widget([
+                'user' => $accountant,
+                'reminder' => $reminder,
+            ]);
+            $response = \Yii::$app->response;
+            $response->format = \yii\web\Response::FORMAT_JSON;
+            $response->data = [
+                'status' => 'success',
+                'message' => 'Reminder updated successfully',
+                'data' => $html,
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionRegReminderSave()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $data = [
+                'id' => $request->post('id'),
+                'deadline_day' => $request->post('deadLine'),
+                'type_ru' => $request->post('type_ru'),
+                'type_rs' => $request->post('type_rs'),
+                'text_ru' => $request->post('text_ru'),
+                'text_rs' => $request->post('text_rs'),
+            ];
+            if ($data['id']) {
+                $reminder = ReminderRegular::findOne($data['id']);
+            } else {
+                $reminder = new ReminderRegular();
+            }
+            $reminder->load($data, '');
+            $reminder->save();
+            $response = \Yii::$app->response;
+            $response->format = \yii\web\Response::FORMAT_JSON;
+            if ($reminder->hasErrors()) {
+                $response->data = [
+                    'status' => 'error',
+                    'message' => 'Validation errors',
+                    'errors' => $reminder->getErrors(),
+                    // 'recievedData' => $request->post(),
+                    // 'sentData' => $data,
+                    // 'reminder' => $reminder,
+                ];
+                return $response;
+            } else {
+                $response->data = [
+                    'status' => 'success',
+                    'recievedData' => $request->post(),
+                    // 'sentData' => $data,
+                    'action' => $data['id'] ? 'updated' : 'created',
+                    'reminder' => $reminder->toArray(),
+                    'data' => $this->renderPartial('reminderrow', [
+                        'user' => $accountant,
+                        'item' => $reminder,
+                        'class' => ['reg-reminder-btn'],
+                    ]),
+                ];
+                return $response;
+            }
         } else {
             return $this->renderLogout();
         }
@@ -123,16 +212,13 @@ class ReminderController extends BaseController
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         if ($accountant->isValid()) {
             $id = $request->post('id');
-            $reminder = ReminderSchedule::findOne($id);
+            $reminder = ReminderRegular::findOne($id);
             if ($reminder) {
-                $r = (new Query())->createCommand()->update(ReminderSchedule::tableName(), ['status' => 'cancelled'], ['id' => $id])->execute();
-                // $reminder->status = 'cancelled';
-                // $reminder->save();
+                $reminder->delete();
                 $response = \Yii::$app->response;
                 $response->format = \yii\web\Response::FORMAT_JSON;
                 $response->data = [
                     'status' => 'success',
-                    'r' => $r,
                 ];
                 return $response;
             } else {

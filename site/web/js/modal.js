@@ -31,6 +31,11 @@ class Modal {
         this.modal.addEventListener('click', this.onOverlayClick);
     }
 
+    setContent(htmlContent) {
+        const body = this.modal.querySelector('.modal-body');
+        body.innerHTML = htmlContent;
+    }
+
     open(clickedElement) {
         this.currentRow = clickedElement; // Сохраняем строку в память класса
         this.modal.classList.add('open');
