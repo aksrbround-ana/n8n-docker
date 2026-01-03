@@ -2,7 +2,6 @@
 
 namespace app\components;
 
-use app\models\TaxCalendar;
 use yii\base\Widget;
 
 class SettingsCalendarBodyWidget extends Widget

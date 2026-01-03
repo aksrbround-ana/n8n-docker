@@ -2,9 +2,7 @@
 
 namespace app\components;
 
-use app\models\Company;
 use app\models\CompanyNotes;
-use app\models\Document;
 use yii\base\Widget;
 
 class CompanyNotesWidget extends Widget

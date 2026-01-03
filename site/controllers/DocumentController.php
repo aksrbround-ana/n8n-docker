@@ -6,7 +6,6 @@ use yii\web\Response;
 use yii\db\Query;
 use app\models\Accountant;
 use app\models\Document;
-use app\models\DocumentStep;
 use app\components\DocViewActivityWidget;
 use app\models\DocumentComment;
 use app\models\Task;

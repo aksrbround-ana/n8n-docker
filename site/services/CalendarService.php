@@ -2,9 +2,6 @@
 
 namespace app\services;
 
-use Yii;
-use app\models\Accountant;
-
 class CalendarService
 {
     const getHolidaysUrl = 'https://date.nager.at/api/v3/PublicHolidays/{{year}}/RS';
