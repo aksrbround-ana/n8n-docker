@@ -1,4 +1,8 @@
 
+let companyListModal;
+let companyList = [];
+let editReminderModal;
+
 function setUser(user) {
   localStorage.setItem('user', JSON.stringify(user));
 }
@@ -181,6 +185,77 @@ function putLangDependentWords() {
   $('.delete-calendar-btn').attr('title', dictionaryLookup('delete', lang));
   $('.btn-cancel').text(dictionaryLookup('cancel', lang));
   $('.btn-save').text(dictionaryLookup('save', lang));
+}
+
+function loadCompanyListModal(id, url, trFunction) {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: {
+      token: token,
+      id: id
+    },
+    success: function (response) {
+      if (response.status === 'success') {
+        $(companyListModal.modal).find('.modal-body ul').empty();
+        let ul = $(companyListModal.modal).find('.modal-body tbody');
+        for (let i = 0; i < response.data.list.length; i++) {
+          let tr = trFunction(response.data.list[i]);
+          ul.append(tr);
+        }
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Load error', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Load error', e);
+    },
+    type: 'json'
+  })
+}
+
+function removeReminder(id) {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  if (confirm('Are you sure you want to delete this calendar row?')) {
+    $.ajax({
+      url: '/company/delete-calendar-reminder',
+      type: 'POST',
+      data: {
+        token: token,
+        id: id
+      },
+      success: function (response) {
+        if (response.status === 'success') {
+          $('#tax-calendar-table').find('tr[data-item-id="' + id + '"]').remove();
+        } else if (response.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          showError('Delete error', response.message);
+        }
+      },
+      error: function (e) {
+        showError('Delete error', e);
+      },
+      type: 'json'
+    })
+  }
+}
+
+function makeCompanyListTr(listItem) {
+  return '<tr><td><label for="company_ps_reminder_' + listItem.id + '">' + listItem.name + '</label></td>' +
+    '<td><input id="company_ps_reminder_' + listItem.id + '" type="checkbox" value="' + listItem.id + '"' + (listItem.count > 0 ? ' checked' : '') + ' /></td></tr>';
+}
+
+function makeCompanyListRegReminderTr(listItem) {
+  return '<tr><td><label for="company_reg_reminder_' + listItem.id + '">' + listItem.name + '</label></td>' +
+    '<td><input id="company_reg_reminder_' + listItem.id + '" type="checkbox" value="' + listItem.id + '"' + (listItem.count > 0 ? ' checked' : '') + ' /></td></tr>';
 }
 
 //------------------------------------------------------------------
@@ -747,48 +822,127 @@ $(document).on('click', '.cancel-reg-reminder-btn', function (e) {
   }
 });
 
-$(document).on('click', '.company-reg-reminder-btn', function (e) {
-  let user = getUser();
-  let reminderId = $(this).data('item-id');
-  let data = {
-    token: user.token,
-    id: reminderId
-  };
-  $.ajax({
-    url: '/company/list-to-regular',
-    type: 'POST',
-    data: data,
-    success: function (response) {
-      if (response.status === 'success') {
-        regReminderModal.open();
-        regReminderModal.setFormValues(response.data);
-      } else if (response.status === 'logout') {
-        clearUser();
-        loadContent();
-      } else {
-        showError('Ошибка', response.message);
-      }
-    },
-    error: function (e) {
-      showError('Ошибка', e.message);
-    }
-  });
+$(document).on('click', 'button.company-tax-reminder-btn', function (e) {
+  let id = $(this).data('item-id');
+  const title = $(this).closest('tr').find('.calendar-text').text();
+  companyListModal = new Modal('modal-overlay', title);
+  companyListModal.setDoUrl('/company/update-calendar-reminders/');
+  loadCompanyListModal(id, '/company/list-to-calendar', makeCompanyListTr);
+  companyListModal.open(this);
 });
 
-function makeCompanyListRegReminderTr(listItem) {
-    return '<tr><td><label for="company_reg_reminder_' + listItem.id + '">' + listItem.name + '</label></td>' +
-        '<td><input id="company_reg_reminder_' + listItem.id + '" type="checkbox" value="' + listItem.id + '"' + (listItem.count > 0 ? ' checked' : '') + ' /></td></tr>';
-}
-
-$(document).on('click', '.company-reg-reminder-btn', function (e) {
+$(document).on('click', 'button.company-reg-reminder-btn', function (e) {
   let user = getUser();
-  let token = user ? user?.token : '';
   let id = $(this).data('item-id');
   let title = dictionaryLookup('regularReminders', user.lang);
   companyListModal = new Modal('modal-overlay', title);
   companyListModal.setDoUrl('/company/update-list-to-regular/');
   loadCompanyListModal(id, '/company/list-to-regular', makeCompanyListRegReminderTr);
   companyListModal.open(this);
+});
+
+$(document).on('click', 'button.edit-calendar-btn', function (e) {
+  let id = $(this).data('item-id');
+  const user = getUser();
+  let title = dictionaryLookup('editReminder', user?.lang || 'ru');
+  editReminderModal = new Modal('modal-edit-reminder', title, 'edit-reminder');
+  let text = $('#tax-calendar-table').find('tr[data-item-id="' + id + '"] td.calendar-text').text();
+  $(editReminderModal.modal).find('.modal-body').empty().append('<textarea class="edit-reminder-text" style="height: 100%;width: 100%;">' + text + '</textarea>');
+  editReminderModal.open(id);
+});
+
+$(document).on('click', 'button.delete-calendar-btn', function (e) {
+  removeReminder($(this).data('item-id'));
+});
+
+$(document).on('click', '#do-edit-reminder', function (e) {
+  const reminder_id = editReminderModal?.currentRow;
+  if (reminder_id) {
+    let user = getUser();
+    let token = user ? user?.token : '';
+    let text = $(editReminderModal.modal).find('.edit-reminder-text').val();
+    $.ajax({
+      url: '/company/update-reminder-details',
+      type: 'POST',
+      data: {
+        token: token,
+        id: reminder_id,
+        text: text
+      },
+      success: function (response) {
+        if (response.status === 'success') {
+          $('#tax-calendar-table').find('tr[data-item-id="' + reminder_id + '"] td.calendar-text').text(text);
+        } else if (response.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          showError('Update error', response.message);
+        }
+      },
+      error: function (e) {
+        showError('Update error', e);
+      },
+      type: 'json'
+    });
+  }
+  editReminderModal.close();
+});
+
+$(document).on('click', '#do-action-btn', function (e) {
+  let reminder_id = $(this).data('item-id');
+  if (!reminder_id) {
+    const row = $(this).closest('tr');
+    if (row) {
+      reminder_id = $(row).data('item-id');
+    }
+  }
+  if (!reminder_id) {
+    const row = companyListModal.currentRow;
+    if (row) {
+      reminder_id = $(row).data('item-id');
+    }
+  }
+  if (!reminder_id) {
+    return;
+  }
+  const checkedCompanies = [];
+  $(companyListModal.modal).find('tbody input[type="checkbox"]:checked').each(function () {
+    checkedCompanies.push($(this).val());
+  });
+  const unchekedCompanies = [];
+  $(companyListModal.modal).find('tbody input[type="checkbox"]').not(':checked').each(function () {
+    unchekedCompanies.push($(this).val());
+  });
+  let user = getUser();
+  let token = user ? user?.token : '';
+  let doActionUrl = $(companyListModal.modal).find('#do-action-url').val();
+  if (doActionUrl) {
+    $.ajax({
+      url: doActionUrl,
+      type: 'POST',
+      data: {
+        token: token,
+        reminder_id: reminder_id,
+        checked_companies: checkedCompanies,
+        uncheked_companies: unchekedCompanies
+      },
+      success: function (response) {
+        if (response.status === 'success') {
+          // Обновление прошло успешно
+        } else if (response.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          showError('Update error', response.message);
+        }
+      },
+      error: function (e) {
+        showError('Update error', e);
+      },
+      type: 'json'
+    });
+  }
+  companyListModal.close();
 });
 
 // ----------------------------------------------------
