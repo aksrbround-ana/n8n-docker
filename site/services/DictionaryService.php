@@ -555,4 +555,25 @@ class DictionaryService
     {
         return self::$dictionary[$lang][$key] ?? $key;
     }
+
+    public static function getDictionaryJsFile($sort = false): string
+    {
+        $file = [];
+        $file[] = 'const translations = {';
+        foreach (self::$dictionary as $lang => $dictionary) {
+            $file[] = "    {$lang}: {";
+            if ($sort) {
+                ksort($dictionary);
+            }
+            foreach ($dictionary as $key => $value) {
+                $file[] = "        {$key}: '{$value}',";
+            }
+            $file[] = '    },';
+        }
+        $file[] = '};';
+        $file[] = 'function dictionaryLookup(word, lang) {';
+        $file[] = '    return translations[lang][word] || word;';
+        $file[] = '};';
+        return implode("\n", $file);
+    }
 }
