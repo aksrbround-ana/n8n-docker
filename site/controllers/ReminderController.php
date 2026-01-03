@@ -5,11 +5,10 @@ namespace app\controllers;
 use yii\db\Query;
 use app\models\Accountant;
 use app\models\TaxCalendar;
+use app\models\ReminderRegular;
 use app\components\SettingsCalendarWidget;
 use app\components\SettingsCalendarBodyWidget;
-use \app\components\ReminderCreateUpdateContentWidget;
-use app\models\ReminderRegular;
-use app\models\ReminderSchedule;
+use app\components\ReminderCreateUpdateContentWidget;
 
 class ReminderController extends BaseController
 {

@@ -57,6 +57,7 @@ const translations = {
     workloadDistribution: 'Загрузка бухгалтеров',
 
     // Companies
+    company: 'Компания',
     companyName: 'Название компании',
     pib: 'ПИБ',
     city: 'Город',
@@ -174,7 +175,9 @@ const translations = {
     //Other
     information: 'Информация',
     noItemsToShow: 'Нет элементов для отображения',
-    'createReminder': 'Создать напоминание',
+    createReminder: 'Создать напоминание',
+    reminder: 'Напоминание',
+    regularReminders: 'Регулярные напоминания',
   },
 
   rs: {
@@ -235,6 +238,7 @@ const translations = {
     workloadDistribution: 'Opterećenje knjigovođa',
 
     // Companies
+    company: 'Kompanija',
     companyName: 'Naziv kompanije',
     pib: 'PIB',
     city: 'Grad',
@@ -352,7 +356,9 @@ const translations = {
     //Other
     information: 'Informacija',
     noItemsToShow: 'Nema stavki za prikaz',
-    'createReminder': 'Kreiraj podsećanje',
+    createReminder: 'Kreiraj podsećanje',
+    reminder: 'Podsećanje',
+    regularReminders: 'Redovna podsećanja',
   },
 }
 function dictionaryLookup(word, lang) {

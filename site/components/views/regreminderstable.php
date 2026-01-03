@@ -29,6 +29,9 @@ use app\services\SvgService;
                 <td class="p-6 pt-0"><?= $item['text_ru'] ?></td>
                 <td class="p-6 pt-0"><?= $item['text_rs'] ?></td>
                 <td class="reg-reminder-activity p-6 pt-0" style="white-space: nowrap;">
+                    <button class="company-reg-reminder-btn inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 mt-4" data-item-id="<?= $item['id'] ?>" title="<?= DictionaryService::getWord('companies', $user->lang) ?>">
+                        <?= SvgService::svg('taskList') ?>
+                    </button>
                     <button class="edit-reg-reminder-btn inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 mt-4" data-item-id="<?= $item['id'] ?>" title="<?= DictionaryService::getWord('edit', $user->lang) ?>">
                         <?= SvgService::svg('edit') ?>
                     </button>

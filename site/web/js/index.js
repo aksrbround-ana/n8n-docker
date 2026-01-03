@@ -647,7 +647,7 @@ $(document).on('click', '.edit-reg-reminder-btn', function (e) {
 
 $(document).on('click', '#save-reg-reminder', function (e) {
   let user = getUser();
-  let modalBody  = $(this).closest('.modal-window').find('.modal-body');
+  let modalBody = $(this).closest('.modal-window').find('.modal-body');
   let data = {
     token: user.token,
     id: $(modalBody).find('input[name="reminderId"]').val(),
@@ -718,20 +718,50 @@ $(document).on('click', '#reminders-button-list button', function (e) {
 });
 
 $(document).on('click', '.cancel-reg-reminder-btn', function (e) {
+  if (confirm('Are you sure you want to delete this reminder?')) {
+    let user = getUser();
+    let reminderId = $(this).data('item-id');
+    let data = {
+      token: user.token,
+      id: reminderId
+    }
+    let row = $(this).closest('tr');
+    $.ajax({
+      url: '/reminder/cancel-regular',
+      type: 'POST',
+      data: data,
+      success: function (response) {
+        if (response.status === 'success') {
+          $(row).remove();
+        } else if (response.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          showError('Ошибка', response.message);
+        }
+      },
+      error: function (e) {
+        showError('Ошибка', e.message);
+      }
+    });
+  }
+});
+
+$(document).on('click', '.company-reg-reminder-btn', function (e) {
   let user = getUser();
   let reminderId = $(this).data('item-id');
   let data = {
     token: user.token,
     id: reminderId
-  }
-  let row = $(this).closest('tr');
+  };
   $.ajax({
-    url: '/reminder/cancel-regular',
+    url: '/company/list-to-regular',
     type: 'POST',
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        $(row).remove();
+        regReminderModal.open();
+        regReminderModal.setFormValues(response.data);
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();
@@ -743,6 +773,22 @@ $(document).on('click', '.cancel-reg-reminder-btn', function (e) {
       showError('Ошибка', e.message);
     }
   });
+});
+
+function makeCompanyListRegReminderTr(listItem) {
+    return '<tr><td><label for="company_reg_reminder_' + listItem.id + '">' + listItem.name + '</label></td>' +
+        '<td><input id="company_reg_reminder_' + listItem.id + '" type="checkbox" value="' + listItem.id + '"' + (listItem.count > 0 ? ' checked' : '') + ' /></td></tr>';
+}
+
+$(document).on('click', '.company-reg-reminder-btn', function (e) {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  let id = $(this).data('item-id');
+  let title = dictionaryLookup('regularReminders', user.lang);
+  companyListModal = new Modal('modal-overlay', title);
+  companyListModal.setDoUrl('/company/update-list-to-regular/');
+  loadCompanyListModal(id, '/company/list-to-regular', makeCompanyListRegReminderTr);
+  companyListModal.open(this);
 });
 
 // ----------------------------------------------------

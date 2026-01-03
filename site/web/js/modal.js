@@ -5,12 +5,14 @@
 // ================================================================
 class Modal {
     constructor(modalId = 'modal-overlay', headerText = '', type = 'calendar') {
+        let user = getUser();
         this.modal = document.getElementById(modalId);
         this.currentRow = null; // Здесь будем хранить нажатую строку <tr>
+        this.doButtonUrl = null;
 
         $(this.modal).find('.modal-header h3').text(headerText);
         if (type === 'calendar') {
-            $(this.modal).find('.modal-body').empty().append('<table><thead><tr><th>Company</th><th>Reminder</th></tr></thead><tbody></tbody></table>');
+            $(this.modal).find('.modal-body').empty().append('<table><thead><tr><th>' + dictionaryLookup('company', user.lang) + '</th><th>' + dictionaryLookup('reminder', user.lang) + '</th></tr></thead><tbody></tbody></table>');
         }
 
         this.close = this.close.bind(this);
@@ -29,6 +31,11 @@ class Modal {
 
         // 2. Закрытие по клику на оверлей
         this.modal.addEventListener('click', this.onOverlayClick);
+    }
+
+    setDoUrl(url) {
+        this.doButtonUrl = url;
+        $(this.modal).find('#do-action-url').val(url);
     }
 
     setContent(htmlContent) {
@@ -72,11 +79,16 @@ let companyListModal;
 let companyList = [];
 let editReminderModal;
 
-function loadCompanyListModal(id) {
+function makeCompanyListTr(listItem) {
+    return '<tr><td><label for="company_ps_reminder_' + listItem.id + '">' + listItem.name + '</label></td>' +
+        '<td><input id="company_ps_reminder_' + listItem.id + '" type="checkbox" value="' + listItem.id + '"' + (listItem.count > 0 ? ' checked' : '') + ' /></td></tr>';
+}
+
+function loadCompanyListModal(id, url, trFunction) {
     let user = getUser();
     let token = user ? user?.token : '';
     $.ajax({
-        url: '/company/list-to-calendar',
+        url: url,
         type: 'POST',
         data: {
             token: token,
@@ -84,12 +96,10 @@ function loadCompanyListModal(id) {
         },
         success: function (response) {
             if (response.status === 'success') {
-                // companyListModal = new Modal('modal-company-list', 'Список компаний');
                 $(companyListModal.modal).find('.modal-body ul').empty();
                 let ul = $(companyListModal.modal).find('.modal-body tbody');
                 for (let i = 0; i < response.data.list.length; i++) {
-                    let tr = '<tr><td><label for="company_ps_reminder_' + response.data.list[i].id + '">' + response.data.list[i].name + '</label></td>' +
-                        '<td><input id="company_ps_reminder_' + response.data.list[i].id + '" type="checkbox" value="' + response.data.list[i].id + '"' + (response.data.list[i].count > 0 ? ' checked' : '') + ' /></td></tr>';
+                    let tr = trFunction(response.data.list[i]);
                     ul.append(tr);
                 }
             } else if (response.status === 'logout') {
@@ -104,7 +114,6 @@ function loadCompanyListModal(id) {
         },
         type: 'json'
     })
-
 }
 
 function removeReminder(id) {
@@ -164,9 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             companyListModal = new Modal('modal-overlay', title);
             const id = $(row).data('item-id');
-            loadCompanyListModal(id);
+            loadCompanyListModal(id, '/company/list-to-calendar', makeCompanyListTr);
 
             if (row) {
+                companyListModal.setDoUrl('/company/update-calendar-reminders/');
                 // Передаем саму строку в метод open
                 companyListModal.open(row);
             }
@@ -196,8 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 let user = getUser();
                 let token = user ? user?.token : '';
 
+                let doActionUrl = $(companyListModal.modal).find('#do-action-url').val();
+
                 $.ajax({
-                    url: '/company/update-calendar-reminders',
+                    url: doActionUrl || '/company/update-calendar-reminders',
                     type: 'POST',
                     data: {
                         token: token,
