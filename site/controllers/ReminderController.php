@@ -178,16 +178,12 @@ class ReminderController extends BaseController
                     'status' => 'error',
                     'message' => 'Validation errors',
                     'errors' => $reminder->getErrors(),
-                    // 'recievedData' => $request->post(),
-                    // 'sentData' => $data,
-                    // 'reminder' => $reminder,
                 ];
                 return $response;
             } else {
                 $response->data = [
                     'status' => 'success',
                     'recievedData' => $request->post(),
-                    // 'sentData' => $data,
                     'action' => $data['id'] ? 'updated' : 'created',
                     'reminder' => $reminder->toArray(),
                     'data' => $this->renderPartial('reminderrow', [

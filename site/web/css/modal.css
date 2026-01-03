@@ -147,7 +147,3 @@ button.modal-close-btn:hover {
 body.no-scroll {
     overflow: hidden;
 }
-
-.open-modal-btn {
-    cursor: pointer;
-}
