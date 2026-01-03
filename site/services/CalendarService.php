@@ -9,15 +9,20 @@ class CalendarService
 {
     const getHolidaysUrl = 'https://date.nager.at/api/v3/PublicHolidays/{{year}}/RS';
 
+    private static $serbianHolidays;
+
     public static function getSerbianHolidays()
     {
-        $year = date('Y');
-        $url = str_replace('{{year}}', $year, self::getHolidaysUrl);
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl);
-        return json_decode($response, true);
+        if (!self::$serbianHolidays) {
+            $year = date('Y');
+            $url = str_replace('{{year}}', $year, self::getHolidaysUrl);
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($curl);
+            self::$serbianHolidays = json_decode($response, true);
+        }
+        return self::$serbianHolidays;
     }
 
     public static function getClosestWorkingDay($date)
