@@ -14,11 +14,12 @@ use app\models\Document;
 use app\models\TaxCalendar;
 use app\models\Reminder;
 use app\models\ReminderSchedule;
+use app\models\ReminderRegular;
 use app\models\Task;
 use app\models\TaskDocument;
-use app\models\ReminderRegular;
 use app\models\ReminderRegularCompany;
 use app\components\CompanyNotesWidget;
+use app\services\CalendarService;
 
 class CompanyController extends BaseController
 {
@@ -271,11 +272,14 @@ class CompanyController extends BaseController
                     'reminder_id' => $reminderId,
                     'company_id' => $uncheckedCompanies,
                 ]);
+                ReminderSchedule::deleteAll([
+                    'type' => 'regular',
+                    'template_id' => $reminderId,
+                    'company_id' => $uncheckedCompanies,
+                ]);
             }
             // Добавляем новые напоминания
-            $n = 0;
             $errors = [];
-            $reminders = [];
             if (!empty($checkedCompanies)) {
                 for ($i = 0; $i < count($checkedCompanies); $i++) {
                     $searchQuery = ReminderRegularCompany::find()
@@ -287,16 +291,36 @@ class CompanyController extends BaseController
                     if ($existingReminder > 0) {
                         continue;
                     }
-                    $reminder = new ReminderRegularCompany();
-                    $reminder->company_id = (int)$checkedCompanies[$i];
-                    $reminder->reminder_id = $reminderId;
-                    $r = $reminder->save();
-                    // if (!$r) {
-                    $errors[] = $reminder->getErrors();
-                    $reminders[] = $reminder;
-                    // } else {
-                    $n++;
-                    // }
+                    $reminderCompany = new ReminderRegularCompany();
+                    $reminderCompany->company_id = (int)$checkedCompanies[$i];
+                    $reminderCompany->reminder_id = $reminderId;
+                    if ($reminderCompany->save()) {
+                        $reminderRegular = ReminderRegular::findOne(['id' => $reminderId]);
+                        if ($reminderRegular) {
+                            $deadlineDate = date('Y-m-') . str_pad($reminderRegular->deadline_day, 2, '0', STR_PAD_LEFT);
+                            $escalationDate = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($deadlineDate . ' -1 day')));
+                            $reminder_2_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($escalationDate . ' -1 day')));
+                            $reminder_1_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminder_2_date . ' -1 day')));
+                            $reminderSchedule = new ReminderSchedule();
+                            $reminderSchedule->company_id = (int)$checkedCompanies[$i];
+                            $reminderSchedule->type = 'regular';
+                            $reminderSchedule->template_id = $reminderId;
+                            $reminderSchedule->updated_at = date('Y-m-d H:i:s');
+                            $reminderSchedule->deadline_date = $deadlineDate;
+                            $reminderSchedule->reminder_1_date = $reminder_1_date;
+                            $reminderSchedule->reminder_2_date = $reminder_2_date;
+                            $reminderSchedule->escalation_date = $escalationDate;
+                            $reminderSchedule->target_month = date('Y-m-01', time());
+                            $reminderSchedule->status = ReminderSchedule::STATUS_PENDING;
+                            $reminderSchedule->save();
+                            if ($reminderSchedule->hasErrors()) {
+                                $errors[] = $reminderSchedule->getErrors();
+                            }
+                        }
+                    }
+                    if ($reminderCompany->hasErrors()) {
+                        $errors[] = $reminderCompany->getErrors();
+                    }
                 }
             }
             $response = \Yii::$app->response;
@@ -306,10 +330,10 @@ class CompanyController extends BaseController
                 'status' => 'success',
                 'code' => 200,
                 'message' => 'Reminders updated successfully.',
-                'n' => $n,
-                'errors' => $errors,
-                'reminders' => $reminders,
             ];
+            if ($errors) {
+                $response->data['errors'] = $errors;
+            }
             return $response;
         } else {
             return $this->renderLogout();

@@ -256,8 +256,8 @@ class DictionaryService
             'editReminder' => 'Редактировать напоминание',
             'deadline_day' => 'День срока',
             'createReminder' => 'Создать напоминание',
-            'type_ru' => 'Тип (RU)',
-            'type_rs' => 'Тип (RS)',
+            'type_ru' => 'Тема (RU)',
+            'type_rs' => 'Тема (RS)',
             'text_ru' => 'Текст (RU)',
             'text_rs' => 'Текст (RS)',
 
@@ -516,10 +516,10 @@ class DictionaryService
             'editReminder' => 'Izmeni podsećanje',
             'deadline_day' => 'Dan roka',
             'createReminder' => 'Kreiraj podsećanje',
-            'type_ru' => 'Tip_ru',
-            'type_rs' => 'Tip_rs',
-            'text_ru' => 'Tekst_ru',
-            'text_rs' => 'Tekst_rs',
+            'type_ru' => 'Тема (RU)',
+            'type_rs' => 'Тема (RS)',
+            'text_ru' => 'Tekst (RU)',
+            'text_rs' => 'Tekst (RS)',
 
             // OCR
             'ocrSummary' => 'Резюме',
