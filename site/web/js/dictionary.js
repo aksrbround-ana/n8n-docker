@@ -175,7 +175,7 @@ const translations = {
     //Other
     information: 'Информация',
     noItemsToShow: 'Нет элементов для отображения',
-    createReminder: 'Создать напоминание',
+    createReminder: 'Создать регулярное напоминание',
     reminder: 'Напоминание',
     regularReminders: 'Регулярные напоминания',
   },
@@ -356,7 +356,7 @@ const translations = {
     //Other
     information: 'Informacija',
     noItemsToShow: 'Nema stavki za prikaz',
-    createReminder: 'Kreiraj podsećanje',
+    createReminder: 'Kreiraj stalno podsećanje',
     reminder: 'Podsećanje',
     regularReminders: 'Redovna podsećanja',
   },
