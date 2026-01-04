@@ -9,6 +9,7 @@ use app\models\ReminderRegular;
 use app\components\SettingsCalendarWidget;
 use app\components\SettingsCalendarBodyWidget;
 use app\components\ReminderCreateUpdateContentWidget;
+use app\components\RegReminderTableRowWidget;
 
 class ReminderController extends BaseController
 {
@@ -186,9 +187,9 @@ class ReminderController extends BaseController
                     'recievedData' => $request->post(),
                     'action' => $data['id'] ? 'updated' : 'created',
                     'reminder' => $reminder->toArray(),
-                    'data' => $this->renderPartial('reminderrow', [
+                    'data' => RegReminderTableRowWidget::widget([
                         'user' => $accountant,
-                        'item' => $reminder,
+                        'reminder' => $reminder,
                         'class' => ['reg-reminder-btn'],
                     ]),
                 ];
