@@ -945,6 +945,11 @@ $(document).on('click', '#do-action-btn', function (e) {
   companyListModal.close();
 });
 
+$(document).on('click', '.accordeon-item', function (e) {
+  const table = $(this).next('.accordeon-table');
+  table.fadeToggle();
+});
+
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------
