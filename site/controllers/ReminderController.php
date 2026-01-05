@@ -10,6 +10,9 @@ use app\components\SettingsCalendarWidget;
 use app\components\SettingsCalendarBodyWidget;
 use app\components\ReminderCreateUpdateContentWidget;
 use app\components\RegReminderTableRowWidget;
+use app\models\ReminderSchedule;
+use app\models\ReminderRegularCompany;
+use app\services\CalendarService;
 
 class ReminderController extends BaseController
 {
@@ -309,5 +312,180 @@ class ReminderController extends BaseController
         } else {
             return $this->renderLogout();
         }
+    }
+
+    public function actionStopReminder()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $reminder_id = $request->post('reminder_id');
+            $schedule_id = $request->post('schedule_id');
+            $company_id = $request->post('company_id');
+            $reminder = ReminderSchedule::findOne([
+                'id' => $schedule_id,
+                'template_id' => $reminder_id,
+                'company_id' => $company_id,
+            ]);
+            if ($reminder) {
+                $reminder->status = 'stopped';
+                $reminder->save();
+                $response->data = [
+                    'status' => 'success',
+                    'message' => 'Reminder stopped successfully',
+                ];
+            } else {
+                $response->data = [
+                    'status' => 'error',
+                    'message' => 'Reminder not found',
+                ];
+            }
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
+    }
+
+    public function actionToggleReminderActivity()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $reminder_id = $request->post('reminder_id');
+            $schedule_id = $request->post('schedule_id');
+            $company_id = $request->post('company_id');
+            $is_active = $request->post('is_active');
+            if ($is_active) {
+                // Activate reminder
+                $reminder = ReminderRegular::findOne($reminder_id);
+                if (!$reminder) {
+                    $response->data = [
+                        'status' => 'error',
+                        'message' => 'Reminder template not found',
+                    ];
+                    return $response;
+                }
+                $reminderCompany = ReminderRegularCompany::findOne([
+                    'company_id' => $company_id,
+                    'reminder_id' => $reminder_id,
+                ]);
+                if (!$reminderCompany) {
+                    $reminderCompany = new ReminderRegularCompany();
+                    $reminderCompany->company_id = $company_id;
+                    $reminderCompany->reminder_id = $reminder_id;
+                    $reminderCompany->save();
+                }
+                $reminderSchedule = new ReminderSchedule();
+                $reminderSchedule->deadline_date = date('Y-m-d', strtotime(date('Y-m-01') . ' + ' . ($reminder->deadline_day - 1) . ' days'));
+                $reminderSchedule->escalation_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminderSchedule->deadline_date . ' - 1 day')));
+                $reminderSchedule->reminder_2_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminderSchedule->escalation_date . ' - 1 day')));
+                $reminderSchedule->reminder_1_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminderSchedule->reminder_2_date . ' - 1 day')));
+                $reminderSchedule->template_id = $reminder_id;
+                $reminderSchedule->company_id = $company_id;
+                $reminderSchedule->type = ReminderSchedule::TYPE_REGULAR;
+                $reminderSchedule->target_month = date('Y-m') . '-01';
+                $reminderSchedule->status = 'pending';
+                $reminderSchedule->save();
+                $response->data = [
+                    'status' => 'success',
+                    'message' => 'Reminder activated successfully',
+                    'id' => $reminderSchedule->id,
+                ];
+            } else {
+                // Deactivate reminder
+                $reminderCompany = ReminderRegularCompany::findOne([
+                    'company_id' => $company_id,
+                    'reminder_id' => $reminder_id,
+                ]);
+                if ($reminderCompany) {
+                    $reminderCompany->delete();
+                }
+                ReminderSchedule::deleteAll([
+                    'template_id' => $reminder_id,
+                    'company_id' => $company_id,
+                    'type' => ReminderSchedule::TYPE_REGULAR,
+                ]);
+                $response->data = [
+                    'status' => 'success',
+                    'message' => 'Reminder deactivated successfully',
+                ];
+            }
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
+    }
+
+    public function actionToggleTaxActivity()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $reminder_id = $request->post('reminder_id');
+            $schedule_id = $request->post('schedule_id');
+            $company_id = $request->post('company_id');
+            $is_active = $request->post('is_active');
+            if ($is_active) {
+                $reminder = TaxCalendar::findOne($reminder_id);
+                if (!$reminder) {
+                    $response->data = [
+                        'status' => 'error',
+                        'message' => 'Reminder template not found',
+                    ];
+                    return $response;
+                }
+                $reminderSchedule = new ReminderSchedule();
+                $reminderSchedule->deadline_date = $reminder->input_date;
+                $reminderSchedule->escalation_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminderSchedule->deadline_date . ' - 1 day')));
+                $reminderSchedule->reminder_2_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminderSchedule->escalation_date . ' - 1 day')));
+                $reminderSchedule->reminder_1_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminderSchedule->reminder_2_date . ' - 1 day')));
+                $reminderSchedule->template_id = $reminder_id;
+                $reminderSchedule->company_id = $company_id;
+                $reminderSchedule->type = ReminderSchedule::TYPE_TAX_CALENDAR;
+                $reminderSchedule->target_month = date('Y-m') . '-01';
+                $reminderSchedule->status = 'pending';
+                $reminderSchedule->save();
+                $response->data = [
+                    'status' => 'success',
+                    'message' => 'Reminder activated successfully',
+                    'id' => $reminderSchedule->id,
+                ];
+            } else {
+                $reminderSchedule = ReminderSchedule::findOne($schedule_id);
+                if ($reminderSchedule) {
+                    $reminderSchedule->delete();
+                    $response->data = [
+                        'status' => 'success',
+                        'message' => 'Reminder deactivated successfully',
+                    ];
+                } else {
+                    $response->data = [
+                        'status' => 'error',
+                        'message' => 'Reminder not found',
+                    ];
+                }
+            }
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
     }
 }

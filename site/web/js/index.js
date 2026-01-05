@@ -950,6 +950,122 @@ $(document).on('click', '.accordeon-item', function (e) {
   table.fadeToggle();
 });
 
+$(document).on('click', 'button.stop-reminder-btn', function (e) {
+  const button = $(this);
+  const user = getUser();
+  const reminderId = $(this).attr('data-rm-id');
+  const scheduleId = $(this).attr('data-sc-id');
+  const companyId = $(this).attr('data-co-id');
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+    reminder_id: reminderId,
+    schedule_id: scheduleId,
+    company_id: companyId
+  };
+  $.ajax({
+    url: '/reminder/stop-reminder',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $(button).closest('tr').find('div.stopped-reminder').removeClass('hidden');
+        $(button).addClass('hidden');
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Update error', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Update error', e);
+    },
+    type: 'json'
+  });
+});
+
+$(document).on('click', 'input.reminder-activity', function (e) {
+  const input = $(this);
+  const user = getUser();
+  const reminderId = $(this).data('rm-id');
+  const scheduleId = $(this).data('sc-id');
+  const companyId = $(this).data('co-id');
+  const isActive = $(this).is(':checked') ? 1 : 0;
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+    reminder_id: reminderId,
+    schedule_id: scheduleId,
+    company_id: companyId,
+    is_active: isActive
+  };
+  $.ajax({
+    url: '/reminder/toggle-reminder-activity',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        const id = response.id ?? '';
+        $(input).attr('data-sc-id', id);
+        const td = $(input).closest('tr').find('td').last();
+        $(td).children().addClass('hidden');
+        if (id) {
+          $(td).find('button.stop-reminder-btn').attr('data-sc-id', id).removeClass('hidden');
+        } else {
+          $(td).find('div.not-assigned-reminder').removeClass('hidden');
+        }
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Update error', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Update error', e);
+    },
+    type: 'json'
+  });
+});
+
+$(document).on('click', 'input.tax-activity', function (e) {
+  const input = $(this);
+  const user = getUser();
+  const reminderId = $(this).attr('data-rm-id');
+  const scheduleId = $(this).attr('data-sc-id');
+  const companyId = $(this).attr('data-co-id');
+  const isActive = $(this).is(':checked') ? 1 : 0;
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+    reminder_id: reminderId,
+    schedule_id: scheduleId,
+    company_id: companyId,
+    is_active: isActive
+  };
+  $.ajax({
+    url: '/reminder/toggle-tax-activity',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        const id = response.id ?? '';
+        $(input).attr('data-sc-id', id);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Update error', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Update error', e);
+    },
+    type: 'json'
+  });
+});
+
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------

@@ -22,20 +22,26 @@ use app\services\SvgService;
         <?php
         foreach ($regReminders as $reminder) {
             $checked = $reminder['schedule_id'] ? ' checked' : '';
-            $status = '';
+            $statusLastNotified = '';
             switch ($reminder['last_notified_type']) {
                 case 'first':
-                    $status = DictionaryService::getWord('firstReminder', $user->lang);
+                    $statusLastNotified = DictionaryService::getWord('firstReminder', $user->lang);
                     break;
                 case 'second':
-                    $status = DictionaryService::getWord('secondReminder', $user->lang);
+                    $statusLastNotified = DictionaryService::getWord('secondReminder', $user->lang);
                     break;
                 case 'escalation':
-                    $status = DictionaryService::getWord('escalation', $user->lang);
+                    $statusLastNotified = DictionaryService::getWord('escalation', $user->lang);
                     break;
                 default:
-                    $status = DictionaryService::getWord('pending', $user->lang);
+                    $statusLastNotified = DictionaryService::getWord('pending', $user->lang);
             }
+            $status = $reminder['status'] ?? 'notAssigned';
+            $buttonVisibility = [
+                'stopBtn' => $status == 'pending' ? '' : ' hidden',
+                'stoppedBtn' => $status == 'cancelled' ? '' : ' hidden',
+                'notAssignedBtn' => $status == 'notAssigned' ? '' : ' hidden',
+            ];
         ?>
             <tr data-tax-id="<?= $reminder['reminder_id'] ?>" class="tax-row border-b hover:bg-secondary/30 transition-colors cursor-pointer">
                 <td class="p-4 align-middle">
@@ -50,12 +56,14 @@ use app\services\SvgService;
                 <td class="p-4 align-middle">
                     <input class="reminder-activity" type="checkbox" <?= $checked ?> data-rm-id="<?= $reminder['reminder_id'] ?>" data-sc-id="<?= $reminder['schedule_id'] ?>" data-co-id="<?= $reminder['company_id'] ?>" data-type="rr">
                 </td>
-                <td class="p-4 align-middle text-sm"><?= $status ?></td>
+                <td class="p-4 align-middle text-sm"><?= $statusLastNotified ?></td>
                 <td class="p-4 align-middle">
-                    <button data-rm-id="<?= $reminder['reminder_id'] ?>" data-sc-id="<?= $reminder['schedule_id'] ?>" data-co-id="<?= $reminder['company_id'] ?>" data-type="rs" class="stop-reminder-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                    <button data-rm-id="<?= $reminder['reminder_id'] ?>" data-sc-id="<?= $reminder['schedule_id'] ?>" data-co-id="<?= $reminder['company_id'] ?>" data-type="rs" class="stop-reminder-btn<?= $buttonVisibility['stopBtn'] ?> inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
                         <?= SvgService::svg('stop') ?>
                         <?= DictionaryService::getWord('stop', $user->lang) ?>
                     </button>
+                    <div class="stopped-reminder<?= $buttonVisibility['stoppedBtn'] ?> inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background h-10 px-4 py-2"><?= DictionaryService::getWord('stopped', $user->lang) ?></div>
+                    <div class="not-assigned-reminder<?= $buttonVisibility['notAssignedBtn'] ?> inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background h-10 px-4 py-2"><?= DictionaryService::getWord('notAssigned', $user->lang) ?></div>
                 </td>
             </tr>
         <?php

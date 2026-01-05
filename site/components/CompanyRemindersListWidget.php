@@ -27,7 +27,6 @@ class CompanyRemindersListWidget extends Widget
             ReminderSchedule::tableName() . '.company_id = ' . $this->company->id,
             ReminderSchedule::tableName() . '.type = \'' . ReminderSchedule::TYPE_REGULAR . '\'',
             ReminderSchedule::tableName() . '.target_month = \'' . date('Y-m') . '-01\'',
-            ReminderSchedule::tableName() . '.status = \'' . ReminderSchedule::STATUS_PENDING . '\'',
         ];
         $regularRemindersQuery = (new Query())
             ->select([
@@ -41,6 +40,7 @@ class CompanyRemindersListWidget extends Widget
                 ReminderRegular::tableName() . '.deadline_day',
                 ReminderSchedule::tableName() . '.deadline_date',
                 ReminderSchedule::tableName() . '.last_notified_type',
+                ReminderSchedule::tableName() . '.status',
                 'company_id' => new Expression($this->company->id),
                 'type' => new Expression('\'rr\''),
             ])
@@ -63,6 +63,7 @@ class CompanyRemindersListWidget extends Widget
             ->from(TaxCalendar::tableName())
             ->leftJoin(ReminderSchedule::tableName(), ReminderSchedule::tableName() . '.template_id = ' . TaxCalendar::tableName() . '.id')
             ->leftJoin(Company::tableName(), Company::tableName() . '.id = ' . ReminderSchedule::tableName() . '.company_id')
+            ->where([TaxCalendar::tableName() . '.target_month' => date('Y-m') . '-01'])
             ->orderBy([ReminderSchedule::tableName() . '.deadline_date' => SORT_ASC]);
         return $this->render('companyreminderslist', [
             'user' => $this->user,
