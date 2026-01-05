@@ -17,6 +17,16 @@ $config = [
     'sourceLanguage' => 'ru-RU',
 
     'components' => [
+        'pusher' => [
+            'class' => 'Pusher\Pusher',
+            'auth_key' => getenv('PUSHER_KEY'),
+            'secret' => getenv('PUSHER_SECRET'),
+            'app_id' => getenv('PUSHER_ID'),
+            'options' => [
+                'cluster' => 'eu',
+                'useTLS' => true,
+            ],
+        ],
         'request' => [
             'cookieValidationKey' => '567893-946589-985497-927359',
             'enableCsrfValidation' => false,
