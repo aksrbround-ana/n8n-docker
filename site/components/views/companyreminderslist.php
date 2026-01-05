@@ -1,5 +1,6 @@
 <?php
 
+use app\models\ReminderSchedule;
 use app\services\DictionaryService;
 use app\services\SvgService;
 ?>
@@ -36,11 +37,11 @@ use app\services\SvgService;
                 default:
                     $statusLastNotified = DictionaryService::getWord('pending', $user->lang);
             }
-            $status = $reminder['status'] ?? 'notAssigned';
+            $status = $reminder['status'] ?? ReminderSchedule::STATUS_NOT_ASSIGNED;
             $buttonVisibility = [
-                'stopBtn' => $status == 'pending' ? '' : ' hidden',
-                'stoppedBtn' => $status == 'cancelled' ? '' : ' hidden',
-                'notAssignedBtn' => $status == 'notAssigned' ? '' : ' hidden',
+                'stopBtn' => $status == ReminderSchedule::STATUS_PENDING ? '' : ' hidden',
+                'stoppedBtn' => $status == ReminderSchedule::STATUS_STOPPED ? '' : ' hidden',
+                'notAssignedBtn' => $status == ReminderSchedule::STATUS_NOT_ASSIGNED ? '' : ' hidden',
             ];
         ?>
             <tr data-tax-id="<?= $reminder['reminder_id'] ?>" class="tax-row border-b hover:bg-secondary/30 transition-colors cursor-pointer">

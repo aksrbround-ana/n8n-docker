@@ -30,6 +30,7 @@ class ReminderSchedule extends \yii\db\ActiveRecord
     const STATUS_COMPLETED = 'completed';
     const STATUS_STOPPED = 'stopped';
     const STATUS_ESCALATED = 'escalated';
+    const STATUS_NOT_ASSIGNED = 'notAssigned';
 
     const TYPE_TAX_CALENDAR = 'calendar';
     const TYPE_REGULAR = 'regular';
@@ -40,6 +41,7 @@ class ReminderSchedule extends \yii\db\ActiveRecord
         self::STATUS_COMPLETED,
         self::STATUS_STOPPED,
         self::STATUS_ESCALATED,
+        self::STATUS_NOT_ASSIGNED,
     ];
 
     /**
