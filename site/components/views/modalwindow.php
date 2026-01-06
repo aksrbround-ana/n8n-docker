@@ -4,7 +4,7 @@ use app\services\DictionaryService;
 ?>
 <div id="modal-overlay" class="modal-overlay">
   <div class="modal-window modal-regular">
-    
+    <input type="hidden" id="do-action-url" value="" />
     <div class="modal-header">
       <h3 class="modal-title">Header</h3>
       <button class="modal-close-btn">&times;</button>

@@ -28,14 +28,20 @@ class ReminderSchedule extends \yii\db\ActiveRecord
 
     const STATUS_PENDING = 'pending';
     const STATUS_COMPLETED = 'completed';
-    const STATUS_CANCELED = 'cancelled';
+    const STATUS_STOPPED = 'stopped';
     const STATUS_ESCALATED = 'escalated';
+    const STATUS_NOT_ASSIGNED = 'notAssigned';
+
+    const TYPE_TAX_CALENDAR = 'calendar';
+    const TYPE_REGULAR = 'regular';
+    const TYPE_CUSTOM = 'custom';
 
     public static $statuses = [
         self::STATUS_PENDING,
         self::STATUS_COMPLETED,
-        self::STATUS_CANCELED,
+        self::STATUS_STOPPED,
         self::STATUS_ESCALATED,
+        self::STATUS_NOT_ASSIGNED,
     ];
 
     /**

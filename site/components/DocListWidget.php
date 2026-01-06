@@ -2,7 +2,6 @@
 
 namespace app\components;
 
-use app\models\Document;
 use yii\base\Widget;
 
 class DocListWidget extends Widget

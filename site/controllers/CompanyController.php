@@ -10,13 +10,16 @@ use app\models\Company;
 use app\models\Accountant;
 use app\models\CompanyActivities;
 use app\models\Customer;
-use app\components\CompanyNotesWidget;
 use app\models\Document;
 use app\models\TaxCalendar;
 use app\models\Reminder;
 use app\models\ReminderSchedule;
+use app\models\ReminderRegular;
 use app\models\Task;
 use app\models\TaskDocument;
+use app\models\ReminderRegularCompany;
+use app\components\CompanyNotesWidget;
+use app\services\CalendarService;
 
 class CompanyController extends BaseController
 {
@@ -45,8 +48,7 @@ class CompanyController extends BaseController
             ->leftJoin(['ca' => 'company_activities'], 'ca.id = c.activity_id')
             // ->leftJoin(['t' => 'task'], 't.company_id = c.id')
             // ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id')
-            ->orderBy(['c.name' => SORT_ASC]);
-        ;
+            ->orderBy(['c.name' => SORT_ASC]);;
         $companies = $companiesQuery->all();
         foreach ($companies as &$company) {
             $openTasks = Task::find()
@@ -223,6 +225,121 @@ class CompanyController extends BaseController
         }
     }
 
+    public function actionListToRegular()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $query = (new Query)
+                ->select(['c.id', 'c.name', 'count(rrc.id) as count'])
+                ->from(['c' => Company::tableName()])
+                ->leftJoin(['rrc' => ReminderRegularCompany::tableName()], 'rrc.company_id = c.id and rrc.reminder_id = :id', [':id' => $id])
+                ->groupBy(['c.id', 'c.name'])
+                ->orderBy('c.name');
+
+            $companies = $query->all();
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'code' => 200,
+                'data' => [
+                    'list' => $companies,
+                    'query' => $query->createCommand()->getRawSql(),
+                ]
+            ];
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionUpdateListToRegular()
+    {
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $reminderId = $request->post('reminder_id');
+            $checkedCompanies = $request->post('checked_companies');
+            $uncheckedCompanies = $request->post('uncheked_companies');
+            // Удаляем существующие напоминания для этой компании и события
+            if (!empty($uncheckedCompanies)) {
+                ReminderRegularCompany::deleteAll([
+                    'reminder_id' => $reminderId,
+                    'company_id' => $uncheckedCompanies,
+                ]);
+                ReminderSchedule::deleteAll([
+                    'type' => 'regular',
+                    'template_id' => $reminderId,
+                    'company_id' => $uncheckedCompanies,
+                ]);
+            }
+            // Добавляем новые напоминания
+            $errors = [];
+            if (!empty($checkedCompanies)) {
+                for ($i = 0; $i < count($checkedCompanies); $i++) {
+                    $searchQuery = ReminderRegularCompany::find()
+                        ->where([
+                            'reminder_id' => $reminderId,
+                            'company_id' => (int)$checkedCompanies[$i],
+                        ]);
+                    $existingReminder = $searchQuery->count();
+                    if ($existingReminder > 0) {
+                        continue;
+                    }
+                    $reminderCompany = new ReminderRegularCompany();
+                    $reminderCompany->company_id = (int)$checkedCompanies[$i];
+                    $reminderCompany->reminder_id = $reminderId;
+                    if ($reminderCompany->save()) {
+                        $reminderRegular = ReminderRegular::findOne(['id' => $reminderId]);
+                        if ($reminderRegular) {
+                            $deadlineDate = date('Y-m-') . str_pad($reminderRegular->deadline_day, 2, '0', STR_PAD_LEFT);
+                            $escalationDate = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($deadlineDate . ' -1 day')));
+                            $reminder_2_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($escalationDate . ' -1 day')));
+                            $reminder_1_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminder_2_date . ' -1 day')));
+                            $reminderSchedule = new ReminderSchedule();
+                            $reminderSchedule->company_id = (int)$checkedCompanies[$i];
+                            $reminderSchedule->type = 'regular';
+                            $reminderSchedule->template_id = $reminderId;
+                            $reminderSchedule->updated_at = date('Y-m-d H:i:s');
+                            $reminderSchedule->deadline_date = $deadlineDate;
+                            $reminderSchedule->reminder_1_date = $reminder_1_date;
+                            $reminderSchedule->reminder_2_date = $reminder_2_date;
+                            $reminderSchedule->escalation_date = $escalationDate;
+                            $reminderSchedule->target_month = date('Y-m-01', time());
+                            $reminderSchedule->status = ReminderSchedule::STATUS_PENDING;
+                            $reminderSchedule->save();
+                            if ($reminderSchedule->hasErrors()) {
+                                $errors[] = $reminderSchedule->getErrors();
+                            }
+                        }
+                    }
+                    if ($reminderCompany->hasErrors()) {
+                        $errors[] = $reminderCompany->getErrors();
+                    }
+                }
+            }
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'code' => 200,
+                'message' => 'Reminders updated successfully.',
+            ];
+            if ($errors) {
+                $response->data['errors'] = $errors;
+            }
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
     public function actionUpdateCalendarReminders()
     {
         $request = \Yii::$app->request;
@@ -246,6 +363,16 @@ class CompanyController extends BaseController
             if (!empty($checkedCompanies)) {
                 for ($i = 0; $i < count($checkedCompanies); $i++) {
                     $ps = TaxCalendar::findOne(['id' => $reminderId]);
+                    $searchQuery = ReminderSchedule::find()
+                        ->where([
+                            'type' => 'calendar',
+                            'template_id' => $reminderId,
+                            'company_id' => (int)$checkedCompanies[$i],
+                        ]);
+                    $existingReminder = $searchQuery->count();
+                    if ($existingReminder > 0) {
+                        continue;
+                    }
                     $reminder = new ReminderSchedule();
                     $reminder->company_id = (int)$checkedCompanies[$i];
                     $reminder->type = 'calendar';

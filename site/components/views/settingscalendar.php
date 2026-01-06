@@ -5,7 +5,7 @@ use app\services\DictionaryService;
 
 ?>
 <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
-    <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
         <div class="flex flex-col space-y-1.5 p-6 pb-3">
             <div class="flex items-center gap-3 grid grid-cols-3">
                 <div class="ml-auto align-left">
