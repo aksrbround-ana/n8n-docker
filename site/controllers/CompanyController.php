@@ -3,22 +3,24 @@
 namespace app\controllers;
 
 use Yii;
-use \yii\db\Query;
+use yii\db\Query;
 use yii\web\Response;
+use app\components\CompanyListWidget;
+use app\components\CompanyNotesWidget;
 use app\controllers\BaseController;
-use app\models\Company;
 use app\models\Accountant;
+use app\models\Company;
+use app\models\CompanyAccountant;
 use app\models\CompanyActivities;
 use app\models\Customer;
 use app\models\Document;
-use app\models\TaxCalendar;
 use app\models\Reminder;
-use app\models\ReminderSchedule;
 use app\models\ReminderRegular;
+use app\models\ReminderRegularCompany;
+use app\models\ReminderSchedule;
 use app\models\Task;
 use app\models\TaskDocument;
-use app\models\ReminderRegularCompany;
-use app\components\CompanyNotesWidget;
+use app\models\TaxCalendar;
 use app\services\CalendarService;
 
 class CompanyController extends BaseController
@@ -30,44 +32,86 @@ class CompanyController extends BaseController
         'statusInactive',
     ];
 
-    protected function getDataForPage($accountant, $status = null)
+    protected function getDataForPage($accountant, $status = null, $filters = [])
     {
+        $select = [
+            'c.id AS company_id',
+            'c.name AS company_name',
+            'ct.name AS company_type',
+            'ca.name AS company_activity',
+            'c.is_pdv',
+            'c.pib',
+            'c.status AS company_status',
+            'COUNT("to".id) AS overdue',
+            'COUNT("tp".id) AS openTasks',
+        ];
+        $sort = $filters['sort'] ?? 'name';
         $companiesQuery = (new Query())
-            ->select([
-                'c.id AS company_id',
-                'c.name AS company_name',
-                'ct.name AS company_type',
-                'ca.name AS company_activity',
-                'c.is_pdv',
-                'c.pib',
-                'c.status AS company_status'
-            ])
+            ->select($select)
             ->distinct()
             ->from(['c' => 'company'])
             ->leftJoin(['ct' => 'company_type'], 'ct.id = c.type_id')
             ->leftJoin(['ca' => 'company_activities'], 'ca.id = c.activity_id')
-            // ->leftJoin(['t' => 'task'], 't.company_id = c.id')
-            // ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id')
-            ->orderBy(['c.name' => SORT_ASC]);;
-        $companies = $companiesQuery->all();
-        foreach ($companies as &$company) {
-            $openTasks = Task::find()
-                ->where(['company_id' => $company['company_id']])
-                ->andWhere(['!=', 'status', '\'done\''])
-                ->count();
-            $company['openTasks'] = $openTasks;
-            $overdueTasks = Task::find()
-                ->where(['company_id' => $company['company_id']])
-                ->andWhere(['!=', 'status', 'done'])
-                ->andWhere(['<', 'due_date', date('Y-m-d')])
-                ->count();
+            ->leftJoin(['tp' => Task::tableName()], '"tp".company_id = c.id AND "tp".status = \'inProgress\'')
+            ->leftJoin(['to' => Task::tableName()], '"to".company_id = c.id AND "to".status = \'overdue\'');
 
-            $company['overdueTasks'] = $overdueTasks;
+        if ($filters['name'] ?? null) {
+            $companiesQuery->andWhere(['LIKE', 'c.name', $filters['name']]);
         }
+        if ($filters['status'] ?? null) {
+            $companiesQuery->andWhere(['c.status' => $status]);
+        }
+        if ($filters['accountant'] ?? null) {
+            $companiesQuery->innerJoin(['cc' => CompanyAccountant::tableName()], 'cc.company_id = c.id');
+            $companiesQuery->andWhere(['cc.accountant_id' => $filters['accountant']]);
+        }
+
+        switch ($sort) {
+            case 'name':
+                $companiesQuery->orderBy(['c.name' => SORT_ASC]);
+                break;
+            case 'overdue':
+                $companiesQuery
+                    ->having(['>', 'COUNT("to".id)', 0])
+                    ->orderBy(['overdue' => SORT_DESC]);
+                break;
+            case 'openTasks':
+                $companiesQuery
+                    ->having(['>', 'COUNT("tp".id)', 0])
+                    ->orderBy(['openTasks' => SORT_DESC]);
+                break;
+        }
+
+        $companiesQuery->groupBy([
+            'c.id',
+            'c.name',
+            'ct.name',
+            'ca.name',
+            'c.is_pdv',
+            'c.pib',
+            'c.status',
+        ]);
+
+        $companies = $companiesQuery->all();
+
+        $filterStatus = (new Query())
+            ->select('status')
+            ->distinct()
+            ->from(['c' => Company::tableName()])
+            ->orderBy('status')
+            ->all();
+        $filterAccountantQuery = (new Query())
+            ->select(['a.id', 'a.firstname', 'a.lastname'])
+            ->distinct()
+            ->from(['c' => Company::tableName()])
+            ->innerJoin(['ca' => CompanyAccountant::tableName()], 'ca.company_id = c.id')
+            ->innerJoin(['a' => Accountant::tableName()], 'a.id = ca.accountant_id');
         $data = [
             'user' => $accountant,
             'companies' => $companies,
             'back' => $status !== null,
+            'filterStatus' => $filterStatus,
+            'filterAccountant' => $filterAccountantQuery->all(),
         ];
         return $data;
     }
@@ -81,6 +125,36 @@ class CompanyController extends BaseController
         if ($accountant->isValid()) {
             $data = $this->getDataForPage($accountant, $status);
             return $this->renderPage($data);
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionFilter($pageStatus = null)
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $filters = [
+                'name' => $request->post('name'),
+                'status' => $request->post('status'),
+                'accountant' => $request->post('accountant'),
+                'sort' => $request->post('sort'),
+            ];
+            $data = $this->getDataForPage($accountant, $pageStatus, $filters);
+
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'data' => CompanyListWidget::widget(['user' => $accountant, 'companies' => $data['companies']]),
+                // 'filters' => $filters,
+                // 'debug' => $data,
+            ];
+            return $response;
         } else {
             return $this->renderLogout();
         }
@@ -107,8 +181,7 @@ class CompanyController extends BaseController
                 ->orderBy('due_date ASC')
                 ->all();
             $tasksOverdue = $taskQuery
-                ->andWhere(['!=', 'status', 'done'])
-                ->andWhere(['<', 'due_date', date('Y-m-d')])
+                ->andWhere(['status' => 'overdue'])
                 ->count();
             $documentsQuery = Document::find()
                 ->from(['d' => Document::tableName()])

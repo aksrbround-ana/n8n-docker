@@ -2,11 +2,15 @@
 
 namespace app\controllers;
 
+use yii\db\Query;
 use yii\web\Response;
-use app\models\Accountant;
-use \app\models\Task;
-use \app\models\TaskComment;
 use app\controllers\BaseController;
+use app\components\TaskListWidget;
+use app\models\Accountant;
+use app\models\Company;
+use app\models\Task;
+use app\models\TaskComment;
+use app\services\AuthService;
 
 class TaskController extends BaseController
 {
@@ -19,19 +23,56 @@ class TaskController extends BaseController
         }
         if ($status !== null) {
             if ($status == Task::STATUS_OVERDUE) {
-                $taskQuery->andWhere(['<', 'due_date', date('Y-m-d')]);
-                $taskQuery->andWhere(['!=', 'status', Task::STATUS_DONE]);
+                $taskQuery->andWhere(['status' => Task::STATUS_OVERDUE]);
             } else {
                 $taskQuery->andWhere(['status' => $status]);
             }
         }
         $tasks = $taskQuery->all();
 
+        $filterStatusQuery = (new Query())
+            ->select('status')
+            ->from(Task::tableName())
+            ->distinct()
+            ->from('task')
+            ->orderBy('status');
+
+        $filterPriorityQuery = (new Query())
+            ->select('priority')
+            ->from(Task::tableName())
+            ->distinct()
+            ->from('task')
+            ->orderBy('priority');
+
+        $filterCompanyQuery = (new Query())
+            ->select('c.*')
+            ->from(['c' => Company::tableName()])
+            ->distinct()
+            ->innerJoin(['t' => Task::tableName()], 't.company_id = c.id');
+        if ($accountant->rule !== Accountant::RULE_CEO) {
+            $filterCompanyQuery->where(['t.accountant_id' => $accountant->id]);
+        }
+
+        if (AuthService::hasPermission($accountant, 'viewAccountants')) {
+            $filterAssignedToQuery = (new Query())
+                ->select('a.*')
+                ->from(['a' => Accountant::tableName()])
+                ->distinct()
+                ->innerJoin(['t' => Task::tableName()], 't.accountant_id = a.id');
+            $filterAssignedTo = $filterAssignedToQuery->all();
+        } else {
+            $filterAssignedTo = [];
+        }
+
         $data = [
             'user' => $accountant,
             'tasks' => $tasks,
+            'filterStatus' => $filterStatusQuery->all(),
+            'filterPriority' => $filterPriorityQuery->all(),
+            'filterCompany' => $filterCompanyQuery->all(),
+            'filterAssignedTo' => $filterAssignedTo,
         ];
-        $data['back'] = $status !== null ? true : false;
+        $data['back'] = $status !== null;
         return $data;
     }
 
@@ -46,6 +87,56 @@ class TaskController extends BaseController
             return $this->renderPage($data);
         } else {
             return $this->renderLogout([$accountant, $accountant->isValid()]);
+        }
+    }
+
+    public function actionFilter()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $name = $request->post('name');
+            $status = $request->post('status');
+            $priority = $request->post('priority');
+            $company = $request->post('company');
+            $assignedTo = $request->post('assignedTo');
+            $taskQuery = Task::find();
+            if ($accountant->rule !== Accountant::RULE_CEO) {
+                $taskQuery->where(['accountant_id' => $accountant->id]);
+            }
+            if ($name) {
+                $taskQuery
+                    ->andWhere([
+                        'or',
+                        ['ilike', 'category', $name],
+                        ['ilike', 'request', $name],
+                    ]);
+            }
+            if ($status) {
+                $taskQuery->andWhere(['status' => $status]);
+            }
+            if ($priority) {
+                $taskQuery->andWhere(['priority' => $priority]);
+            }
+            if ($company) {
+                $taskQuery->andWhere(['company_id' => $company]);
+            }
+            if ($assignedTo) {
+                $taskQuery->andWhere(['accountant_id' => $assignedTo]);
+            }
+            $tasks = $taskQuery->all();
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'data' => TaskListWidget::widget(['user' => $accountant, 'tasks' => $tasks, 'company' => null]),
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout($accountant);
         }
     }
 

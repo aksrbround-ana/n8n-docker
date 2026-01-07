@@ -68,6 +68,7 @@ class DictionaryService
 
             // Common
             'search' =>  'Поиск',
+            'find' =>  'Найти',
             'searchPlaceholder' =>  'Поиск по компании, ПИБ, задаче...',
             'logout' =>  'Выйти',
             'profile' =>  'Профиль',
@@ -123,6 +124,11 @@ class DictionaryService
             'contacts' =>  'Контакты',
             'chat' => 'Чат',
             'addCompany' =>  'Добавить компанию',
+            'responsibleAccountant' => 'Ответственный бухгалтер',
+            'sorting' => 'Сортировка',
+            'byName' => 'По названию',
+            'byOverdue' => 'По просроченным задачам',
+            'byOpenTasks' => 'По открытым задачам',
 
             // Company statuses
             'statusActive' =>  'Активная',
@@ -148,6 +154,7 @@ class DictionaryService
             'changeStatus' =>  'Изменить статус',
             'assignAccountant' =>  'Назначить исполнителя',
             'selectedTasks' =>  'Выбрано задач',
+            'taskSearch' => 'Поиск задачи…',
 
             // Task statuses
             'taskStatusNew' =>  'Новая',
@@ -247,7 +254,7 @@ class DictionaryService
             'actionDate' => 'Дата действия',
             'reminderDate' => 'Дата напоминания',
             'escalationDate' => 'Дата эскалации',
-            'firstReminder'=> 'Первое напоминание',
+            'firstReminder' => 'Первое напоминание',
             'secondReminder' => 'Второе напоминание',
             'escalation' => 'Эскалация',
             'pending' => 'В ожидании',
@@ -340,6 +347,7 @@ class DictionaryService
 
             // Common
             'search' =>  'Pretraga',
+            'find' => 'Пронађи',
             'searchPlaceholder' =>  'Pretraga po kompaniji, PIB-u, zadatku...',
             'logout' =>  'Odjava',
             'profile' =>  'Profil',
@@ -395,6 +403,11 @@ class DictionaryService
             'contacts' =>  'Kontakti',
             'chat' => 'Chat',
             'addCompany' =>  'Dodaj kompaniju',
+            'responsibleAccountant' => 'Odgovorni računovođa',
+            'sorting' => 'Sortiranje',
+            'byName' => 'Po naslovu',
+            'byOverdue' => 'Po zakasnelim zadacima',
+            'byOpenTasks' => 'Po otvorenim zadacima',
 
             // Company statuses
             'statusActive' =>  'Aktivna',
@@ -420,6 +433,7 @@ class DictionaryService
             'changeStatus' =>  'Promeni status',
             'assignAccountant' =>  'Dodeli izvršioca',
             'selectedTasks' =>  'Izabrano zadataka',
+            'taskSearch' => 'Потражите задатак…',
 
             // Task statuses
             'taskStatusNew' =>  'Novi',
@@ -519,7 +533,7 @@ class DictionaryService
             'actionDate' => 'Datum akcije',
             'reminderDate' => 'Datum podsećanja',
             'escalationDate' => 'Datum eskalacije',
-            'firstReminder'=> 'Prvo podsećanje',
+            'firstReminder' => 'Prvo podsećanje',
             'secondReminder' => 'Drugo podsećanje',
             'escalation' => 'Eskalacija',
             'pending' => 'Na čekanju',
@@ -612,6 +626,7 @@ class DictionaryService
 
             // Common
             'search' =>  'Search',
+            'find' => 'Find',
             'searchPlaceholder' =>  'Search by company, PIB, task...',
             'logout' =>  'Logout',
             'profile' =>  'Profile',
@@ -667,6 +682,11 @@ class DictionaryService
             'contacts' =>  'Contacts',
             'chat' => 'Chat',
             'addCompany' =>  'Add Company',
+            'responsibleAccountant' => 'Responsible Accountant',
+            'sorting' => 'Sorting',
+            'byName' => 'By name',
+            'byOverdue' => 'By overdue',
+            'byOpenTasks' => 'By open tasks',
 
             // Company statuses
             'statusActive' =>  'Active',
@@ -692,6 +712,7 @@ class DictionaryService
             'changeStatus' =>  'Change Status',
             'assignAccountant' =>  'Assign Accountant',
             'selectedTasks' =>  'Selected Tasks',
+            'taskSearch' => 'Task search…',
             // Task statuses
             'taskStatusNew' =>  'New',
             'taskStatusInProgress' =>  'In Progress',
@@ -788,7 +809,7 @@ class DictionaryService
             'actionDate' => 'Date of Action',
             'reminderDate' => 'Reminder Date',
             'escalationDate' => 'Escalation Date',
-            'firstReminder'=> 'First Reminder',
+            'firstReminder' => 'First Reminder',
             'secondReminder' => 'Second Reminder',
             'escalation' => 'Escalation',
             'pending' => 'Pending',

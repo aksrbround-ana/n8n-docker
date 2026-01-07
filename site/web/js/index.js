@@ -36,6 +36,10 @@ function showError(title, message) {
       </div>
     </li>`
   );
+  let lastError = $('#error-tab ol li').last();
+  setTimeout(() => {
+    $(lastError).remove();
+  }, 5000);
 }
 
 function menu(el) {
@@ -293,6 +297,18 @@ $(document).on('click', '#login-button', function (e) {
       alert('Произошла ошибка при попытке входа.');
     }
   });
+});
+
+$(document).on('click', '#close-menu-button', function (e) {
+  $('#sidebar').toggleClass('w-16 w-64');
+  $('main').toggleClass('ml-4 ml-64');
+  if ($('#sidebar').hasClass('w-16')) {
+    $(this).html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-4 w-4"><path d="m9 18 6-6-6-6"></path></svg>');
+    $('#sidebar span.blink').hide();
+  } else {
+    $(this).html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left h-4 w-4"><path d="m15 18-6-6 6-6"></path></svg>');
+    $('#sidebar span.blink').show();
+  }
 });
 
 $(document).on('click', 'a.menuitem', function (e) {
@@ -1065,6 +1081,152 @@ $(document).on('click', 'input.tax-activity', function (e) {
     type: 'json'
   });
 });
+
+$(document).on('click', 'button.filters-on-off-button', function (e) {
+  if ($('div.filter-box').hasClass('hidden')) {
+    $('div.filter-box').removeClass('hidden');
+  } else {
+    $('div.filter-box').addClass('hidden');
+  }
+});
+
+$(document).on('click', 'button.reset-filters-button', function (e) {
+  $(this).closest('div.filter-box').find('select').val('');
+});
+
+$(document).on('click', '#company-find-button', function (e) {
+  const user = getUser();
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let accountant = $('#responsible-filters-select').val();
+  let sort = $('#sorting-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (accountant) {
+    data.accountant = accountant;
+  }
+  if (sort) {
+    data.sort = sort;
+  }
+  $.ajax({
+    url: '/company/filter',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#company-list').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Select error', response.message ?? '');
+      }
+    },
+    error: function (e) {
+      showError('Select error', e);
+    },
+    type: 'json'
+  });
+});
+
+$(document).on('click', '#task-find-button', function (e) {
+  const user = getUser();
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let priority = $('#priority-filters-select').val();
+  let assignedTo = $('#assignedTo-filters-select').length > 0 ? $('#assignedTo-filters-select').val() : '';
+  let company = $('#companyName-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (priority) {
+    data.priority = priority;
+  }
+  if (assignedTo) {
+    data.assignedTo = assignedTo;
+  }
+  if (company) {
+    data.company = company;
+  }
+  $.ajax({
+    url: '/task/filter',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#task-list').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Select error', response.message ?? '');
+      }
+    },
+    error: function (e) {
+      showError('Select error', e);
+    },
+    type: 'json'
+  });
+});
+
+$(document).on('click', '#doc-find-button', function (e) {
+  const user = getUser();
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let type = $('#documentType-filters-select').val();
+  let company = $('#companyName-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (type) {
+    data.type = type;
+  }
+  if (company) {
+    data.company = company;
+  }
+  $.ajax({
+    url: '/document/filter',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#doc-list').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Select error', response.message ?? '');
+      }
+    },
+    error: function (e) {
+      showError('Select error', e);
+    },
+    type: 'json'
+  });
+});
+
 
 // ----------------------------------------------------
 //                Resize Debounce

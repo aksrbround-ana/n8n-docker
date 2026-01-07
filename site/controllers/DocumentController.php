@@ -4,9 +4,11 @@ namespace app\controllers;
 
 use yii\web\Response;
 use yii\db\Query;
-use app\models\Accountant;
-use app\models\Document;
 use app\components\DocViewActivityWidget;
+use app\components\DocListWidget;
+use app\models\Accountant;
+use app\models\Company;
+use app\models\Document;
 use app\models\DocumentComment;
 use app\models\Task;
 use app\models\TaskDocument;
@@ -28,20 +30,40 @@ class DocumentController extends BaseController
             $docsQuery->andWhere(['documents.status' => $status]);
         }
         $docs = $docsQuery->all();
-        $debug = [];
-        foreach ($docs as $doc) {
-            $debug[] = [
-                'id' => $doc->id,
-                'filename' => $doc->filename,
-                'status' => $doc->status,
-            ];
+
+        $filterCompanyQuery = (new Query())
+            ->select(['c.id', 'c.name'])
+            ->distinct()
+            ->from(['d' => Document::tableName()])
+            ->innerJoin(['c' => Company::tableName()], 'c.id = d.company_id');
+        if ($accountant->rule !== 'ceo') {
+            $filterCompanyQuery
+                ->leftJoin(['td' => TaskDocument::tableName()], 'd.id = td.document_id')
+                ->leftJoin(['t' => Task::tableName()], 'td.task_id = t.id')
+                ->leftJoin(['a' => Accountant::tableName()], 't.accountant_id = a.id')
+                ->where('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
+
+        $filterDocumentTypeQuery = (new Query())
+            ->select(['t.id', 't.name'])
+            ->distinct()
+            ->from(['d' => Document::tableName()])
+            ->innerJoin(['t' => 'document_types'], 't.id = d.type_id')
+            ->orderBy('t.name ASC');
+
+        $filterStatusQuery = (new Query())
+            ->select('status')
+            ->distinct()
+            ->from(Document::tableName());
+
         $data = [
             'user' => $accountant,
             'documents' => $docs,
             'status' => $status,
+            'filterCompany' => $filterCompanyQuery->all(),
+            'filterDocumentType' => $filterDocumentTypeQuery->all(),
+            'filterStatus' => $filterStatusQuery->all(),
             'back' => $status !== null,
-            'debug' => $debug,
         ];
         return $data;
     }
@@ -74,6 +96,60 @@ class DocumentController extends BaseController
                 'document' => $doc,
             ];
             return $this->renderPage($data, 'view');
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionFilter()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $name = $request->post('name');
+            $status = $request->post('status');
+            $priority = $request->post('priority');
+            $company = $request->post('company');
+            $docsQuery = Document::find()
+                ->select(['d.*'])
+                ->distinct()
+                ->from(['d' => Document::tableName()]);
+            if ($accountant->rule !== 'ceo') {
+                $docsQuery
+                    ->leftJoin(['td' => TaskDocument::tableName()], 'd.id = td.document_id')
+                    ->leftJoin(['t' => Task::tableName()], 'td.task_id = t.id')
+                    ->leftJoin(['a' => Accountant::tableName()], 't.accountant_id = a.id')
+                    ->where('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+            }
+            if ($name) {
+                $docsQuery->andWhere([
+                    'OR',
+                    ['ilike','d.filename', $name],
+                    ['ilike','d.ocr_text', $name],
+                    ['ilike','d.summary', $name],
+                    ['ilike','d.category', $name],
+                ]);
+            }
+            if ($status) {
+                $docsQuery->andWhere(['d.status' => $status]);
+            }
+            if ($priority) {
+                $docsQuery->andWhere(['d.priority' => $priority]);
+            }
+            if ($company) {
+                $docsQuery->andWhere(['d.company_id' => $company]);
+            }
+            $docs = $docsQuery->all();
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'data' => DocListWidget::widget(['user' => $accountant, 'documents' => $docs, 'company' => null]),
+            ];
+            return $response;
         } else {
             return $this->renderLogout();
         }

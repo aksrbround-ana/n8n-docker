@@ -46,11 +46,11 @@ foreach ($companies as $company) {
                     <span class="text-xs text-muted-foreground"><?= DictionaryService::getWord('openTasks', $user->lang) ?></span>
                 </div>
                 <?php
-                if ($company['overdueTasks']) {
+                if ($company['overdue']) {
                 ?>
                     <div class="flex items-center gap-1.5">
                         <?= SvgService::svg('exclamation') ?>
-                        <span class="text-sm font-medium text-destructive"><?= $company['overdueTasks'] ?></span>
+                        <span class="text-sm font-medium text-destructive"><?= $company['overdue'] ?></span>
                     </div>
                 <?php
                 }
