@@ -1088,10 +1088,10 @@ $(document).on('click', '#company-find-button', function (e) {
   const data = {
     token: token,
   };
-  let name = $('#company-name-search').val();
-  let status = $('#company-status-filters-select').val();
-  let accountant = $('#company-responsible-filters-select').val();
-  let sort = $('#company-sorting-filters-select').val();
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let accountant = $('#responsible-filters-select').val();
+  let sort = $('#sorting-filters-select').val();
   if (name) {
     data.name = name;
   }
@@ -1131,11 +1131,11 @@ $(document).on('click', '#task-find-button', function (e) {
   const data = {
     token: token,
   };
-  let name = $('#task-search').val();
-  let status = $('#task-status-filters-select').val();
-  let priority = $('#task-priority-filters-select').val();
-  let assignedTo = $('#task-assignedTo-filters-select').length > 0 ? $('#task-assignedTo-filters-select').val() : '';
-  let company = $('#task-companyName-filters-select').val();
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let priority = $('#priority-filters-select').val();
+  let assignedTo = $('#assignedTo-filters-select').length > 0 ? $('#assignedTo-filters-select').val() : '';
+  let company = $('#companyName-filters-select').val();
   if (name) {
     data.name = name;
   }
@@ -1171,6 +1171,50 @@ $(document).on('click', '#task-find-button', function (e) {
     type: 'json'
   });
 });
+
+$(document).on('click', '#doc-find-button', function (e) {
+  const user = getUser();
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let type = $('#documentType-filters-select').val();
+  let company = $('#companyName-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (type) {
+    data.type = type;
+  }
+  if (company) {
+    data.company = company;
+  }
+  $.ajax({
+    url: '/document/filter',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#doc-list').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Select error', response.message ?? '');
+      }
+    },
+    error: function (e) {
+      showError('Select error', e);
+    },
+    type: 'json'
+  });
+});
+
 
 // ----------------------------------------------------
 //                Resize Debounce

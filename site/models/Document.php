@@ -41,6 +41,25 @@ class Document extends \yii\db\ActiveRecord
     const OCR_STATUS_DONE = 'done';
     const OCR_STATUS_NONE = 'none';
 
+
+    const DOCUMENT_TYPE_UNKNOW = 'unknown';
+    const DOCUMENT_TYPE_INVOICE = 'invoice';
+    const DOCUMENT_TYPE_BANK_STATEMENT = 'bankStatement';
+    const DOCUMENT_TYPE_PAYROLL = 'payroll';
+    const DOCUMENT_TYPE_CONTRACT = 'contract';
+    const DOCUMENT_TYPE_TAX_RETURN = 'taxReturn';
+    const DOCUMENT_TYPE_OTHER = 'other';
+
+    public static $types = [
+        self::DOCUMENT_TYPE_UNKNOW,
+        self::DOCUMENT_TYPE_INVOICE,
+        self::DOCUMENT_TYPE_BANK_STATEMENT,
+        self::DOCUMENT_TYPE_PAYROLL,
+        self::DOCUMENT_TYPE_CONTRACT,
+        self::DOCUMENT_TYPE_TAX_RETURN,
+        self::DOCUMENT_TYPE_OTHER,
+    ];
+
     public static $statuses = [
         'uploaded' =>  self::STATUS_UPLOADED,
         'checked' =>  self::STATUS_CHECKED,
@@ -120,7 +139,7 @@ class Document extends \yii\db\ActiveRecord
         $ret = parent::save($runValidation, $attributeNames);
         if ($docActivity->document_id === null) {
             $docActivity->document_id = $this->id;
-            $step = DocumentStep::findOne(['name' => DocumentStep::STEP_UPLOADED]);
+            $step = DocumentStep::findOne(['name' => self::STATUS_UPLOADED]);
             if ($step) {
                 $docActivity->step_id = $step->id;
                 $docActivity->save();

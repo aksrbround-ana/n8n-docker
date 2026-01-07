@@ -22,14 +22,13 @@ use app\services\SvgService;
                 <p class="text-muted-foreground mt-1">8 <?= strtolower(DictionaryService::getWord('tasks', $user->lang)) ?></p>
             </div>
         </div>
-        <!-- @todo Фильтры по задачам -->
         <div class="space-y-4">
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 max-w-md">
                     <?= SvgService::svg('search') ?>
-                    <input id="task-search" type="search" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10" placeholder="<?= DictionaryService::getWord('taskSearch', $user->lang) ?>">
+                    <input id="search" type="search" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10" placeholder="<?= DictionaryService::getWord('taskSearch', $user->lang) ?>">
                 </div>
-                <button id="task-filters-button" class="filters-on-off-button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 bg-secondary">
+                <button class="filters-on-off-button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 bg-secondary">
                     <?= SvgService::svg('filters') ?>
                     <?= DictionaryService::getWord('filters', $user->lang) ?>
                 </button>
@@ -44,7 +43,7 @@ use app\services\SvgService;
             </div>
             <div class="filter-box hidden flex flex-wrap items-center gap-3 p-4 bg-secondary/50 rounded-lg animate-fade-in">
                 <?= DictionaryService::getWord('status', $user->lang) ?>
-                <select id="task-status-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="status-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterStatus as $row) {
@@ -56,7 +55,7 @@ use app\services\SvgService;
                     ?>
                 </select>
                 <?= DictionaryService::getWord('priority', $user->lang) ?>
-                <select id="task-priority-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="priority-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterPriority as $row) {
@@ -71,7 +70,7 @@ use app\services\SvgService;
                 if (AuthService::hasPermission($user, 'viewAccountants')) {
                 ?>
                     <?= DictionaryService::getWord('assignedTo', $user->lang) ?>
-                    <select id="task-assignedTo-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                    <select id="assignedTo-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
                         <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                         <?php
                         foreach ($filterAssignedTo as $accountant) {
@@ -85,7 +84,7 @@ use app\services\SvgService;
                 }
                 ?>
                 <?= DictionaryService::getWord('companyName', $user->lang) ?>
-                <select id="task-companyName-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="companyName-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterCompany as $company) {

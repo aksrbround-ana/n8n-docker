@@ -110,8 +110,8 @@ class TaskController extends BaseController
                 $taskQuery
                     ->andWhere([
                         'or',
-                        ['like', 'category', $name],
-                        ['like', 'request', $name],
+                        ['ilike', 'category', $name],
+                        ['ilike', 'request', $name],
                     ]);
             }
             if ($status) {
@@ -127,12 +127,6 @@ class TaskController extends BaseController
                 $taskQuery->andWhere(['accountant_id' => $assignedTo]);
             }
             $tasks = $taskQuery->all();
-            $filters = [
-                'priority' => $request->post('priority'),
-                'status' => $status,
-                'assignedTo' => $assignedTo,
-                'company' => $company,
-            ];
             $response = \Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
