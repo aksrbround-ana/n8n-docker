@@ -151,8 +151,8 @@ class CompanyController extends BaseController
             $response->data = [
                 'status' => 'success',
                 'data' => CompanyListWidget::widget(['user' => $accountant, 'companies' => $data['companies']]),
-                'filters' => $filters,
-                'debug' => $data,
+                // 'filters' => $filters,
+                // 'debug' => $data,
             ];
             return $response;
         } else {

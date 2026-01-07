@@ -1070,16 +1070,16 @@ $(document).on('click', 'input.tax-activity', function (e) {
   });
 });
 
-$(document).on('click', '#company-filters-button', function (e) {
-  if ($('#company-filters-row').hasClass('hidden')) {
-    $('#company-filters-row').removeClass('hidden');
+$(document).on('click', 'button.filters-on-off-button', function (e) {
+  if ($('div.filter-box').hasClass('hidden')) {
+    $('div.filter-box').removeClass('hidden');
   } else {
-    $('#company-filters-row').addClass('hidden');
+    $('div.filter-box').addClass('hidden');
   }
 });
 
-$(document).on('click', '#company-reset-filters-button', function (e) {
-  $('#company-filter-box select').val('');
+$(document).on('click', 'button.reset-filters-button', function (e) {
+  $(this).closest('div.filter-box').find('select').val('');
 });
 
 $(document).on('click', '#company-find-button', function (e) {
@@ -1111,6 +1111,53 @@ $(document).on('click', '#company-find-button', function (e) {
     success: function (response) {
       if (response.status === 'success') {
         $('#company-list').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Select error', response.message ?? '');
+      }
+    },
+    error: function (e) {
+      showError('Select error', e);
+    },
+    type: 'json'
+  });
+});
+
+$(document).on('click', '#task-find-button', function (e) {
+  const user = getUser();
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+  };
+  let name = $('#task-search').val();
+  let status = $('#task-status-filters-select').val();
+  let priority = $('#task-priority-filters-select').val();
+  let assignedTo = $('#task-assignedTo-filters-select').length > 0 ? $('#task-assignedTo-filters-select').val() : '';
+  let company = $('#task-companyName-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (priority) {
+    data.priority = priority;
+  }
+  if (assignedTo) {
+    data.assignedTo = assignedTo;
+  }
+  if (company) {
+    data.company = company;
+  }
+  $.ajax({
+    url: '/task/filter',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#task-list').html(response.data);
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();

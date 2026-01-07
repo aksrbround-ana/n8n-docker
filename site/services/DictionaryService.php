@@ -154,6 +154,7 @@ class DictionaryService
             'changeStatus' =>  'Изменить статус',
             'assignAccountant' =>  'Назначить исполнителя',
             'selectedTasks' =>  'Выбрано задач',
+            'taskSearch' => 'Поиск задачи…',
 
             // Task statuses
             'taskStatusNew' =>  'Новая',
@@ -432,6 +433,7 @@ class DictionaryService
             'changeStatus' =>  'Promeni status',
             'assignAccountant' =>  'Dodeli izvršioca',
             'selectedTasks' =>  'Izabrano zadataka',
+            'taskSearch' => 'Потражите задатак…',
 
             // Task statuses
             'taskStatusNew' =>  'Novi',
@@ -710,6 +712,7 @@ class DictionaryService
             'changeStatus' =>  'Change Status',
             'assignAccountant' =>  'Assign Accountant',
             'selectedTasks' =>  'Selected Tasks',
+            'taskSearch' => 'Task search…',
             // Task statuses
             'taskStatusNew' =>  'New',
             'taskStatusInProgress' =>  'In Progress',
