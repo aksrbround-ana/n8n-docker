@@ -27,26 +27,32 @@ class SiteController extends BaseController
             'dashboard' => [
                 'url' => '/site/page',
                 'picture' => SvgService::svg('main'),
+                'active' => true,
             ],
             'companies' => [
                 'url' => '/company/page',
                 'picture' => SvgService::svg('activity'),
+                'active' => true,
             ],
             'tasks' => [
                 'url' => '/task/page',
                 'picture' => SvgService::svg('tasks'),
+                'active' => true,
             ],
             'documents' => [
                 'url' => '/document/page',
                 'picture' => SvgService::svg('document'),
+                'active' => true,
             ],
             'reminders' => [
                 'url' => '/reminder/page',
                 'picture' => SvgService::svg('reminder'),
+                'active' => true,
             ],
             'settings' => [
                 'url' => '/settings/page',
                 'picture' => SvgService::svg('settings'),
+                'active' => false,
             ],
         ];
         return $mainMenu;

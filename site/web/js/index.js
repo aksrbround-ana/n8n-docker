@@ -299,6 +299,18 @@ $(document).on('click', '#login-button', function (e) {
   });
 });
 
+$(document).on('click', '#close-menu-button', function (e) {
+  $('#sidebar').toggleClass('w-16 w-64');
+  $('main').toggleClass('ml-4 ml-64');
+  if ($('#sidebar').hasClass('w-16')) {
+    $(this).html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right h-4 w-4"><path d="m9 18 6-6-6-6"></path></svg>');
+    $('#sidebar span.blink').hide();
+  } else {
+    $(this).html('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left h-4 w-4"><path d="m15 18-6-6 6-6"></path></svg>');
+    $('#sidebar span.blink').show();
+  }
+});
+
 $(document).on('click', 'a.menuitem', function (e) {
   e.preventDefault();
   $('a.menuitem').removeClass('active');
