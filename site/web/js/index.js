@@ -36,6 +36,10 @@ function showError(title, message) {
       </div>
     </li>`
   );
+  let lastError = $('#error-tab ol li').last();
+  setTimeout(() => {
+    $(lastError).remove();
+  }, 5000);
 }
 
 function menu(el) {
@@ -1061,6 +1065,61 @@ $(document).on('click', 'input.tax-activity', function (e) {
     },
     error: function (e) {
       showError('Update error', e);
+    },
+    type: 'json'
+  });
+});
+
+$(document).on('click', '#company-filters-button', function (e) {
+  if ($('#company-filters-row').hasClass('hidden')) {
+    $('#company-filters-row').removeClass('hidden');
+  } else {
+    $('#company-filters-row').addClass('hidden');
+  }
+});
+
+$(document).on('click', '#company-reset-filters-button', function (e) {
+  $('#company-filter-box select').val('');
+});
+
+$(document).on('click', '#company-find-button', function (e) {
+  const user = getUser();
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+  };
+  let name = $('#company-name-search').val();
+  let status = $('#company-status-filters-select').val();
+  let accountant = $('#company-responsible-filters-select').val();
+  let sort = $('#company-sorting-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (accountant) {
+    data.accountant = accountant;
+  }
+  if (sort) {
+    data.sort = sort;
+  }
+  $.ajax({
+    url: '/company/filter',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#company-list').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Select error', response.message ?? '');
+      }
+    },
+    error: function (e) {
+      showError('Select error', e);
     },
     type: 'json'
   });
