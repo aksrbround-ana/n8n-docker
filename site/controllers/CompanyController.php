@@ -181,8 +181,7 @@ class CompanyController extends BaseController
                 ->orderBy('due_date ASC')
                 ->all();
             $tasksOverdue = $taskQuery
-                ->andWhere(['!=', 'status', 'done'])
-                ->andWhere(['<', 'due_date', date('Y-m-d')])
+                ->andWhere(['status' => 'overdue'])
                 ->count();
             $documentsQuery = Document::find()
                 ->from(['d' => Document::tableName()])
