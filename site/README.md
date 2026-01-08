@@ -2,5 +2,5 @@
 ## Замечания по установке
 1. Первой миграцией должна быть
 ```bash
-./yii migrate --migrationPath=@yii/rbac/migrations
+docker exec -it php-site php yii migrate --migrationPath=@yii/rbac/migrations
 ```

@@ -104,10 +104,9 @@ function loadPage(url, data = {}, saveHistory = false) {
   }
   data.token = token;
   let itemHistory = { url: url, data: data };
-  let pageHistory;
-  if (saveHistory) {
-    pageHistory = localStorage.getItem('pageHistory');
-    pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+  let pageHistory = localStorage.getItem('pageHistory');
+  pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+  if (saveHistory === true) {
     if (pageHistory.length > 0) {
       let lastPage = pageHistory[pageHistory.length - 1];
       if (lastPage.url !== itemHistory.url || JSON.stringify(lastPage.data) !== JSON.stringify(itemHistory.data)) {
@@ -116,7 +115,7 @@ function loadPage(url, data = {}, saveHistory = false) {
     } else {
       pageHistory.push(itemHistory);
     }
-  } else {
+  } else if (saveHistory === false) {
     pageHistory = [itemHistory];
   }
   localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
@@ -289,6 +288,9 @@ $(document).on('click', '#login-button', function (e) {
         setUser(response.user);
         loadContent();
         putLangDependentWords();
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
         showError('Ошибка входа', response.message);
       }
@@ -337,8 +339,11 @@ $(document).on('click', 'div span.ptm-logout', function (e) {
       if (response.status === 'success') {
         clearUser();
         loadContent();
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function () {
@@ -364,6 +369,54 @@ $(document).on('click', '.company_open_profile', function (e) {
     id: id
   }
   loadPage('/company/profile', data, true);
+  return false;
+});
+
+$(document).on('click', '#company-edit-button, #company-add-button', function (e) {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  let id = $(this).data('id') ?? null;
+  data = {
+    token: token,
+    id: id
+  };
+  loadPage('/company/edit', data, 'no');
+});
+
+$(document).on('click', '#company-save-button', function (e) {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  $.ajax({
+    url: '/company/save',
+    type: 'POST',
+    data: {
+      token: token,
+      id: $('#company-edit-table input[name=id]').val(),
+      name: $('#company-edit-table input[name=name]').val(),
+      name_tg: $('#company-edit-table input[name=name_tg]').val(),
+      type_id: $('#company-edit-table select[name=type]').val(),
+      pib: $('#company-edit-table input[name=pib]').val(),
+      status: $('#company-edit-table select[name=status]').val(),
+      is_pdv: $('#company-edit-table input[name=is_pdv]').prop('checked') ? 1 : 0,
+      activity_id: $('#company-edit-table select[name=activity]').val(),
+    },
+    success: function (response) {
+      if (response.status === 'success') {
+        let data = {
+          id: response.id
+        }
+        loadPage('/company/profile', data, 'no');
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function () {
+      alert('Произошла ошибка при добавлении заметки.');
+    }
+  });
   return false;
 });
 
@@ -418,8 +471,11 @@ $(document).on('click', '#add_note_button', function (e) {
       if (response.status === 'success') {
         $('#company-content-notes').html(response.data);
         $('#note_textarea').val('');
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function () {
@@ -481,8 +537,11 @@ $(document).on('click', '#finish-task', function (e) {
     success: function (response) {
       if (response.status === 'success') {
         loadPage('/task/view', { id: taskId });
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function () {
@@ -509,8 +568,11 @@ $(document).on('click', '#sendComment', function (e) {
       if (response.status === 'success') {
         $('#commentInput').val('');
         $('#task-comment-list').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function () {
@@ -548,7 +610,7 @@ $(document).on('change', '#doc-status-select', function (e) {
         clearUser();
         loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function () {
@@ -574,8 +636,11 @@ $(document).on('click', '#doc-send-comment', function (e) {
       if (response.status === 'success') {
         $('#commentInput').val('');
         $('#doc-comment-block').replaceWith(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function () {
@@ -606,8 +671,11 @@ $(document).on('click', '#save-user', function (e) {
     success: function (response) {
       if (response.status === 'success') {
         loadPage('/accountant/profile', {}, false);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function () {
@@ -634,11 +702,11 @@ $(document).on('change', '#tax-calendar-month', function (e) {
         clearUser();
         loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function (e) {
-      showError('Ошибка', e.message);
+      showError(dictionaryLookup('error', user.lang), e.message);
     }
   });
   return false;
@@ -665,11 +733,11 @@ $(document).on('click', '#tax-calendar-month-load', function (e) {
         clearUser();
         loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function (e) {
-      showError('Ошибка', e.message);
+      showError(dictionaryLookup('error', user.lang), e.message);
     }
   });
   return false;
@@ -695,11 +763,11 @@ $(document).on('click', '#reg-reminder-create', function (e) {
         clearUser();
         loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function (e) {
-      showError('Ошибка', e.message);
+      showError(dictionaryLookup('error', user.lang), e.message);
     }
   });
   return false;
@@ -726,11 +794,11 @@ $(document).on('click', '.edit-reg-reminder-btn', function (e) {
         clearUser();
         loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function (e) {
-      showError('Ошибка', e.message);
+      showError(dictionaryLookup('error', user.lang), e.message);
     }
   });
   return false;
@@ -765,11 +833,11 @@ $(document).on('click', '#save-reg-reminder', function (e) {
         clearUser();
         loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function (e) {
-      showError('Ошибка', e.message);
+      showError(dictionaryLookup('error', user.lang), e.message);
     }
   });
   return false;
@@ -798,11 +866,11 @@ $(document).on('click', '#reminders-button-list button', function (e) {
         clearUser();
         loadContent();
       } else {
-        showError('Ошибка', response.message);
+        showError(dictionaryLookup('error', user.lang), response.message);
       }
     },
     error: function (e) {
-      showError('Ошибка', e.message);
+      showError(dictionaryLookup('error', user.lang), e.message);
     }
   });
   return false;
@@ -828,11 +896,11 @@ $(document).on('click', '.cancel-reg-reminder-btn', function (e) {
           clearUser();
           loadContent();
         } else {
-          showError('Ошибка', response.message);
+          showError(dictionaryLookup('error', user.lang), response.message);
         }
       },
       error: function (e) {
-        showError('Ошибка', e.message);
+        showError(dictionaryLookup('error', user.lang), e.message);
       }
     });
   }

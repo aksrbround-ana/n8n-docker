@@ -5,7 +5,6 @@ use app\services\DictionaryService;
 <table class="w-full caption-bottom text-sm">
     <thead class="[&amp;_tr]:border-b bg-secondary/50 sticky top-0">
         <tr class="border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50">
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-12"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-20">ID</th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('taskType', $user->lang) ?></th>
@@ -22,9 +21,6 @@ use app\services\DictionaryService;
             $company = $task->getCompany();
         ?>
             <tr class="task-row border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors<?php if ($task->status == 'done') echo ' bg-destructive/5'; ?>" data-task-id="<?= $task->id ?>">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                    <button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button>
-                </td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs"><?= $task->id ?></td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                     <div>

@@ -27,6 +27,18 @@ use Yii;
 class Company extends \yii\db\ActiveRecord
 {
 
+    const COMPANY_STATUS_ACTIVE = 'active';
+    const COMPANY_STATUS_ONBOARDING = 'onboarding';
+    const COMPANY_STATUS_PAUSED = 'paused';
+    const COMPANY_STATUS_INACTIVE = 'inactive';
+
+    public static $statuses = [
+        self::COMPANY_STATUS_ACTIVE,
+        self::COMPANY_STATUS_ONBOARDING,
+        self::COMPANY_STATUS_PAUSED,
+        self::COMPANY_STATUS_INACTIVE,
+    ];
+
     public static $types = [
         'DOO',
         'Knigaš',
