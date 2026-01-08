@@ -14,11 +14,11 @@ use app\services\SvgService;
             <tbody class="">
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle "><input type="text" name="name" value="<?= $company->name ?>" /></td>
+                    <td class="p-4 text-left align-middle "><input type="text" name="name" value="<?= $company->name ?>" class="rounded-md border border-input bg-background" style="width:100%;" /></td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyNameTg', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle "><input type="text" name="name_tg" value="<?= $company->name_tg ?>" /></td>
+                    <td class="p-4 text-left align-middle "><input type="text" name="name_tg" value="<?= $company->name_tg ?>" class="rounded-md border border-input bg-background" style="width:100%;" /></td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyType', $user->lang) ?></th>
@@ -58,7 +58,7 @@ use app\services\SvgService;
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('pib', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle "><input type="text" name="pib" value="<?= $company->pib ?>" /></td>
+                    <td class="p-4 text-left align-middle "><input type="text" name="pib" value="<?= $company->pib ?>" class="rounded-md border border-input bg-background" /></td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-right">

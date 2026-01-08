@@ -11,6 +11,7 @@ use app\models\Company;
 use app\models\Task;
 use app\models\TaskComment;
 use app\services\AuthService;
+use yii\db\Expression;
 
 class TaskController extends BaseController
 {
@@ -151,8 +152,78 @@ class TaskController extends BaseController
             $data = [
                 'user' => $accountant,
                 'task' => Task::findOne(['id' => $id]),
+                'debug'=>[
+                    'statuses' => Task::getStatusesCompleted(),
+                    'priorities' => Task::getPriorities(),
+                    'task'=>Task::findOne(['id' => $id]),
+                ],
             ];
             return $this->renderPage($data, 'view');
+        } else {
+            return $this->renderLogout($accountant);
+        }
+    }
+
+    public function actionEdit()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $task = $id ? Task::findOne(['id' => $id]) : (new Task());
+            $data = [
+                'user' => $accountant,
+                'task' => $task,
+                'companies' => Company::find()->orderBy('name')->all(),
+                'accountants' => Accountant::find()->select(['id', 'lastname', 'firstname'])->where(['>', 'id', new Expression(0)])->orderBy(['lastname' => SORT_ASC, 'firstname' => SORT_ASC])->all(),
+                'statuses' => Task::getStatuses(),
+                'priorities' => Task::getPriorities(),
+                'debug' => [
+                    'statuses' => Task::getStatuses(),
+                    'priorities' => Task::getPriorities(),
+                ]
+            ];
+            return $this->renderPage($data, 'edit');
+        } else {
+            return $this->renderLogout($accountant);
+        }
+    }
+
+    public function actionSave()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $task = $id ? Task::findOne(['id' => $id]) : (new Task());
+            $task->category = $request->post('category');
+            $task->request = $request->post('request');
+            $task->status = $request->post('status');
+            $task->priority = $request->post('priority');
+            $task->due_date = $request->post('due_date');
+            $task->company_id = $request->post('company_id');
+            $task->accountant_id = $request->post('accountant_id');
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            if ($task->save()) {
+                $response->data = [
+                    'status' => 'success',
+                    'id' => $task->id,
+                    'task' => Task::findOne(['id' => $id]),
+                ];
+            } else {
+                $response->data = [
+                    'status' => 'error',
+                    'message' => $task->getErrors(),
+                    'task' => $task,
+                ];
+            }
+            return $response;
         } else {
             return $this->renderLogout($accountant);
         }

@@ -1,4 +1,5 @@
 <?php
+
 use app\services\DictionaryService;
 ?>
 <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
@@ -68,8 +69,15 @@ use app\services\DictionaryService;
                 </div>
                 <div>
                     <p class="text-xs text-muted-foreground"><?= DictionaryService::getWord('assignedTo', $user->lang) ?></p>
-                    <p class="text-sm font-medium"><?php $accountant = $task->getAccountant();
-                                                    echo $accountant->firstname . ' ' . $accountant->lastname ?></p>
+                    <p class="text-sm font-medium">
+                        <?php
+                        $accountant = $task->getAccountant();
+                        if ($accountant) {
+                            echo $accountant->firstname . ' ' . $accountant->lastname;
+                        } else {
+                            echo DictionaryService::getWord('notAssigned', $user->lang);
+                        }
+                        ?></p>
                 </div>
             </div>
             <div class="flex items-center gap-3">

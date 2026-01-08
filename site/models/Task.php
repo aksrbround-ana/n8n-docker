@@ -31,6 +31,10 @@ class Task extends \yii\db\ActiveRecord
     const STATUS_CLOSED = 'closed';
     const STATUS_ARCHIVED  = 'archived';
 
+    const PRIORITY_LOW = 'low';
+    const PRIORITY_NORMAL = 'normal';
+    const PRIORITY_HIGH = 'high';
+
     public $taskStatusStyles = [
         'overdue' =>   'bg-destructive/10 text-destructive border-destructive/20',
         'done' =>      'bg-success/10 text-success border-success/20',
@@ -39,6 +43,36 @@ class Task extends \yii\db\ActiveRecord
         'new' =>       'bg-info/10 text-info border-info/20',
     ];
 
+    public static function getStatuses()
+    {
+        return [
+            self::STATUS_NEW,
+            self::STATUS_IN_PROGRESS,
+            self::STATUS_WAITING,
+            self::STATUS_DONE,
+            self::STATUS_OVERDUE,
+            self::STATUS_CLOSED,
+            self::STATUS_ARCHIVED,
+        ];
+    }
+
+    public static function getStatusesCompleted()
+    {
+        return [
+            self::STATUS_DONE,
+            self::STATUS_CLOSED,
+            self::STATUS_ARCHIVED,
+        ];
+    }
+
+    public static function getPriorities()
+    {
+        return [
+            self::PRIORITY_LOW,
+            self::PRIORITY_NORMAL,
+            self::PRIORITY_HIGH,
+        ];
+    }
 
     /**
      * {@inheritdoc}
@@ -46,6 +80,16 @@ class Task extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'task';
+    }
+
+    public static function getAnyPriorityText($priority, $lang = 'ru')
+    {
+        return $priority ? DictionaryService::getWord('priority' . ucfirst($priority), $lang) : '';
+    }
+
+    public static function getAnyStatusText($status, $lang = 'ru')
+    {
+        return $status ? DictionaryService::getWord('taskStatus' . ucfirst($status), $lang) : '';
     }
 
     /**
@@ -141,21 +185,21 @@ class Task extends \yii\db\ActiveRecord
 
     public function getPriorityWord()
     {
-        return 'priority' . ucfirst($this->priority);
+        return $this->priority ? 'priority' . ucfirst($this->priority) : '';
+    }
+
+    public function getPriorityText($lang = 'ru')
+    {
+        return DictionaryService::getWord($this->getPriorityWord(), $lang);
     }
 
     public function getStatusText($lang = 'ru')
     {
-        return DictionaryService::getWord('taskStatus' . ucfirst($this->status), $lang);
+        return $this->status ? DictionaryService::getWord('taskStatus' . ucfirst($this->status), $lang) : '';
     }
 
     public function getDocuments()
     {
-        // $query = (new Query)
-        //     ->select('d.*')
-        //     ->from(['td' => TaskDocument::tableName()])
-        //     ->join(['d' => Document::tableName()], 'td.document_id = d.id')
-        //     ->where(['td.id' => $this->id]);
         return Document::find()
             ->leftJoin(['td' => TaskDocument::tableName()], 'td.document_id = documents.id')
             // ->where(['id' => 'td.task_id'])
