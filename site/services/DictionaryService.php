@@ -93,6 +93,7 @@ class DictionaryService
             'noData' =>  'Нет данных',
             'loading' =>  'Загрузка...',
             'all' =>  'Все',
+            'choose' => 'Выбрать',
 
             // Dashboard
             'welcomeBack' =>  'Добро пожаловать',
@@ -147,6 +148,7 @@ class DictionaryService
             'dueDate' =>  'Срок',
             'assignedTo' =>  'Исполнитель',
             'lastUpdate' =>  'Обновлено',
+            'taskCategory' => 'Категория задачи',
             'taskDetails' =>  'Детали задачи',
             'description' =>  'Описание',
             'checklist' =>  'Чек-лист',
@@ -158,6 +160,8 @@ class DictionaryService
             'assignAccountant' =>  'Назначить исполнителя',
             'selectedTasks' =>  'Выбрано задач',
             'taskSearch' => 'Поиск задачи…',
+            'taskEditing' => 'Редактирование задачи',
+            'taskCreation' => 'Создание задачи',
 
             // Task statuses
             'taskStatusNew' =>  'Новая',
@@ -376,6 +380,7 @@ class DictionaryService
             'noData' =>  'Nema podataka',
             'loading' =>  'Učitavanje...',
             'all' =>  'Sve',
+            'choose' => 'Izabrati',
 
             // Dashboard
             'welcomeBack' =>  'Dobrodošli',
@@ -430,6 +435,7 @@ class DictionaryService
             'dueDate' =>  'Rok',
             'assignedTo' =>  'Izvršilac',
             'lastUpdate' =>  'Ažurirano',
+            'taskCategory' => 'Категорија задатка',
             'taskDetails' =>  'Detalji zadatka',
             'description' =>  'Opis',
             'checklist' =>  'Kontrolna lista',
@@ -441,6 +447,8 @@ class DictionaryService
             'assignAccountant' =>  'Dodeli izvršioca',
             'selectedTasks' =>  'Izabrano zadataka',
             'taskSearch' => 'Потражите задатак…',
+            'taskEditing' => 'Уређивање задатка',
+            'taskCreation' => 'Креирање задатка',
 
             // Task statuses
             'taskStatusNew' =>  'Novi',
@@ -659,6 +667,7 @@ class DictionaryService
             'noData' =>  'No data',
             'loading' =>  'Loading...',
             'all' =>  'All',
+            'choose' => 'Choose',
 
             // Dashboard
             'welcomeBack' =>  'Welcome Back',
@@ -713,6 +722,7 @@ class DictionaryService
             'dueDate' =>  'Due Date',
             'assignedTo' =>  'Assigned To',
             'lastUpdate' =>  'Last Update',
+            'taskCategory' => 'Task category',
             'taskDetails' =>  'Task Details',
             'description' =>  'Description',
             'checklist' =>  'Checklist',
@@ -724,6 +734,9 @@ class DictionaryService
             'assignAccountant' =>  'Assign Accountant',
             'selectedTasks' =>  'Selected Tasks',
             'taskSearch' => 'Task search…',
+            'taskEditing' => 'Task editing',
+            'taskCreation' => 'Task creation',
+
             // Task statuses
             'taskStatusNew' =>  'New',
             'taskStatusInProgress' =>  'In Progress',
@@ -891,7 +904,8 @@ class DictionaryService
                 ksort($dictionary);
             }
             foreach ($dictionary as $key => $value) {
-                $file[] = "        {$key}: '{$value}',";
+                $escaped = addcslashes($value, "'");
+                $file[] = "        {$key}: '{$escaped}',";
             }
             $file[] = '    },';
         }

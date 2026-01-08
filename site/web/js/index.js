@@ -96,7 +96,7 @@ function showTiff() {
 
 }
 
-function loadPage(url, data = {}, saveHistory = false) {
+function loadPage(url, data = {}, saveHistory = false, success) {
   let user = getUser();
   let token = user ? user?.token : '';
   if (!data) {
@@ -131,6 +131,7 @@ function loadPage(url, data = {}, saveHistory = false) {
         $('main').html(response.data);
         userMenuResize();
         showTiff();
+        success();
       }
     },
     error: function (e) {
@@ -383,6 +384,60 @@ $(document).on('click', '#company-edit-button, #company-add-button', function (e
   loadPage('/company/edit', data, 'no');
 });
 
+$(document).on('click', '#task-edit-button, #task-add-button', function (e) {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  let id = $(this).data('id') ?? null;
+  data = {
+    token: token,
+    id: id
+  };
+  loadPage('/task/edit', data, true, function () {
+    if (id) {
+      $('main h1').text(dictionaryLookup('taskEdition', user.lang));
+    } else {
+      $('main h1').text(dictionaryLookup('taskCreation', user.lang));
+    }
+  });
+});
+
+$(document).on('click', '#task-save-button', function (e) {
+    let user = getUser();
+  let token = user ? user?.token : '';
+  $.ajax({
+    url: '/task/save',
+    type: 'POST',
+    data: {
+      token: token,
+      id: $('#task-edit-table input[name=id]').val(),
+      category: $('#task-edit-table input[name=category]').val(),
+      request: $('#task-edit-table textarea[name=request]').val(),
+      status: $('#task-edit-table select[name=status]').val(),
+      priority: $('#task-edit-table select[name=priority]').val(),
+      due_date: $('#task-edit-table input[name=due_date]').val(),
+      company_id: $('#task-edit-table select[name=company]').val(),
+      accountant_id: $('#task-edit-table select[name=accountant]').val(),
+    },
+    success: function (response) {
+      if (response.status === 'success') {
+        let data = {
+          id: response.id
+        }
+        loadPage('/task/view', data, 'no');
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function () {
+      showError(dictionaryLookup('error', user.lang));
+    }
+  });
+  return false;
+});
+
 $(document).on('click', '#company-save-button', function (e) {
   let user = getUser();
   let token = user ? user?.token : '';
@@ -414,7 +469,7 @@ $(document).on('click', '#company-save-button', function (e) {
       }
     },
     error: function () {
-      alert('Произошла ошибка при добавлении заметки.');
+      showError(dictionaryLookup('error', user.lang));
     }
   });
   return false;
