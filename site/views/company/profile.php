@@ -8,6 +8,7 @@ use app\components\CompanyNotesWidget;
 use app\components\CompanyChatWidget;
 use app\components\CompanyRemindersListWidget;
 use app\components\CompanyTopWidget;
+use app\services\SvgService;
 
 /**
  * @var $company app\models\Company
@@ -26,15 +27,7 @@ use app\components\CompanyTopWidget;
         <div dir="ltr" data-orientation="horizontal" class="space-y-4">
             <div role="tablist" aria-orientation="horizontal" class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground" tabindex="0" data-orientation="horizontal" style="outline: none;">
                 <button id="company-overview" type="button" role="tab" aria-selected="true" aria-controls="rcompany-overview" data-state="active" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building2 h-4 w-4">
-                        <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path>
-                        <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>
-                        <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path>
-                        <path d="M10 6h4"></path>
-                        <path d="M10 10h4"></path>
-                        <path d="M10 14h4"></path>
-                        <path d="M10 18h4"></path>
-                    </svg>
+                    <?= SvgService::svg('company-overview') ?>
                     <?= DictionaryService::getWord('overview', $user->lang) ?>
                 </button>
                 <button id="company-tasks" type="button" role="tab" aria-selected="false" aria-controls="rcompany-tasks" data-state="inactive" class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 gap-2" tabindex="-1" data-orientation="horizontal" data-radix-collection-item="">

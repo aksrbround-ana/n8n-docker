@@ -108,6 +108,8 @@ class DictionaryService
 
             // Companies
             'companyName' =>  'Название компании',
+            'companyNameTg' =>  'Название компании в Telegram',
+            'companyType' => 'Тип компании',
             'pib' =>  'ПИБ',
             'city' =>  'Город',
             'sector' =>  'Сектор',
@@ -129,6 +131,7 @@ class DictionaryService
             'byName' => 'По названию',
             'byOverdue' => 'По просроченным задачам',
             'byOpenTasks' => 'По открытым задачам',
+            'companyEditing' => 'Редактирование компании',
 
             // Company statuses
             'statusActive' =>  'Активная',
@@ -302,6 +305,7 @@ class DictionaryService
             'yourRequestHasBeenSent' => 'Запрос отправлен. Проверьте через пару минут.',
             'loadMonth' => 'Загрузить месяц',
             'back' => 'Назад',
+            'error' => 'Ошибка',
 
         ],
         'rs' =>   [
@@ -387,6 +391,8 @@ class DictionaryService
 
             // Companies
             'companyName' =>  'Naziv kompanije',
+            'companyNameTg' => 'Naziv kompanije u Telegramu',
+            'companyType' => 'Vrsta kompanije',
             'pib' =>  'PIB',
             'city' =>  'Grad',
             'sector' =>  'Delatnost',
@@ -408,6 +414,7 @@ class DictionaryService
             'byName' => 'Po naslovu',
             'byOverdue' => 'Po zakasnelim zadacima',
             'byOpenTasks' => 'Po otvorenim zadacima',
+            'companyEditing' => 'Уређивање компаније',
 
             // Company statuses
             'statusActive' =>  'Aktivna',
@@ -581,6 +588,7 @@ class DictionaryService
             'yourRequestHasBeenSent' => 'Vaš zahtev je poslat. Molimo vas da proverite ponovo za nekoliko minuta.',
             'loadMonth' => 'Učitaj mesec',
             'back' => 'Nazad',
+            'error' => 'Greška',
 
         ],
         'en' =>   [
@@ -666,6 +674,8 @@ class DictionaryService
 
             // Companies
             'companyName' =>  'Company Name',
+            'companyNameTg' => 'Telegram Company Name',
+            'companyType' => 'Type of company',
             'pib' =>  'PIB',
             'city' =>  'City',
             'sector' =>  'Sector',
@@ -687,6 +697,7 @@ class DictionaryService
             'byName' => 'By name',
             'byOverdue' => 'By overdue',
             'byOpenTasks' => 'By open tasks',
+            'companyEditing' => 'Company editing',
 
             // Company statuses
             'statusActive' =>  'Active',
@@ -857,6 +868,7 @@ class DictionaryService
             'yourRequestHasBeenSent' => 'Your request has been sent. Please check in a couple of minutes.',
             'loadMonth' => 'Load Month',
             'back' => 'Back',
+            'error' => 'Error',
         ],
     ];
 

@@ -12,6 +12,7 @@ use app\models\Accountant;
 use app\models\Company;
 use app\models\CompanyAccountant;
 use app\models\CompanyActivities;
+use app\models\CompanyType;
 use app\models\Customer;
 use app\models\Document;
 use app\models\Reminder;
@@ -209,6 +210,69 @@ class CompanyController extends BaseController
             ];
 
             return $this->renderPage($data, 'profile');
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionEdit()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $company = $id ? Company::findOne(['id' => $id]) : (new Company());
+            $companyTypes = CompanyType::find()->all();
+            $companyStatuses = Company::$statuses;
+            $companySector = CompanyActivities::find()->all();
+            $response->data = [
+                'status' => 'success',
+                'data' => $this->renderPartial('edit', [
+                    'user' => $accountant,
+                    'company' => $company,
+                    'companyTypes' => $companyTypes,
+                    'companyStatuses' => $companyStatuses,
+                    'companySector' => $companySector,
+                ]),
+                'company' => $company,
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionSave()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $company = $id ? Company::findOne(['id' => $id]) : (new Company());
+            $company->name = $request->post('name');
+            $company->name_tg = $request->post('name_tg');
+            $company->type_id = $request->post('type_id');
+            $company->activity_id = $request->post('activity_id');
+            $company->pib = $request->post('pib');
+            $company->is_pdv = $request->post('is_pdv');
+            $company->status = $request->post('status');
+            $company->save();
+            $response->data = [
+                'status' => 'success',
+                'id' => $company->id,
+                'company' => $company,
+            ];
+            return $response;
         } else {
             return $this->renderLogout();
         }
