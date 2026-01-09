@@ -60,6 +60,22 @@ use app\services\SvgService;
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('pib', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle "><input type="text" name="pib" value="<?= $company->pib ?>" class="rounded-md border border-input bg-background" /></td>
                 </tr>
+                <tr class="border-b">
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('Test', $user->lang) ?></th>
+                    <td class="p-4 text-left align-middle ">
+                        <div class="custom-select-wrapper">
+                            <div class="custom-select">
+                                <div class="custom-select-trigger">Выберите вариант...</div>
+                                <div class="custom-options">
+                                    <span class="custom-option" data-value="1">Вариант 1</span>
+                                    <span class="custom-option" data-value="2">Вариант 2</span>
+                                    <span class="custom-option" data-value="3">Вариант 3</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="my-select-value" id="real-input">
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="2" class="text-right">
                         <button id="company-save-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2" data-id="<?= $company['id'] ?>">
