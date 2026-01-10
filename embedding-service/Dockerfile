@@ -2,19 +2,24 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Установка зависимостей
-RUN pip install --no-cache-dir \
-    flask \
-    gunicorn \
-    sentence-transformers \
-    torch --extra-index-url https://download.pytorch.org/whl/cpu
+# Установка системных зависимостей для psycopg2
+RUN apt-get update && apt-get install -y \
+    gcc \
+    postgresql-client \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
+# Копируем requirements
+COPY requirements.txt .
+
+# Устанавливаем Python зависимости
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем код приложения
 COPY app.py .
 
-# Предзагрузка модели при сборке (опционально)
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')"
-
+# Открываем порт
 EXPOSE 5000
 
-# Используем Gunicorn вместо Flask dev server
+# Запускаем через gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "app:app"]
