@@ -235,6 +235,7 @@ button,
 input:where([type=button]),
 input:where([type=reset]),
 input:where([type=submit]) {
+    appearance: button;
     -webkit-appearance: button;
     background-color: transparent;
     background-image: none
@@ -258,6 +259,7 @@ progress {
 }
 
 [type=search] {
+    appearance: textfield;
     -webkit-appearance: textfield;
     outline-offset: -2px
 }
@@ -346,7 +348,7 @@ iframe,
 embed,
 object {
     display: block;
-    vertical-align: middle
+    /* vertical-align: middle */
 }
 
 img,
@@ -3573,7 +3575,8 @@ h6 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
 }
 
 .\[\&\>svg\+div\]\:translate-y-\[-3px\]>svg+div {

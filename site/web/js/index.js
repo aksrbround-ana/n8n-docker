@@ -394,7 +394,7 @@ $(document).on('click', '#task-edit-button, #task-add-button', function (e) {
   };
   loadPage('/task/edit', data, true, function () {
     if (id) {
-      $('main h1').text(dictionaryLookup('taskEdition', user.lang));
+      $('main h1').text(dictionaryLookup('taskEditing', user.lang));
     } else {
       $('main h1').text(dictionaryLookup('taskCreation', user.lang));
     }
