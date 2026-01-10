@@ -111,12 +111,6 @@ services:
   embedding-service:
     build: ./embedding-service
     container_name: embedding-service
-    environment:
-      - POSTGRES_HOST=${DB_HOST:-postgres}
-      - POSTGRES_PORT=${DB_PORT:-5432}
-      - POSTGRES_DB=${DB_DATABASE_DATA:-n8n_data}
-      - POSTGRES_USER=${DB_USER:-postgres}
-      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
     networks:
       - web
     ports:

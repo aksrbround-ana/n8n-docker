@@ -2,26 +2,19 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Установка системных зависимостей
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    postgresql-client \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Установка зависимостей
+RUN pip install --no-cache-dir \
+    flask \
+    gunicorn \
+    sentence-transformers \
+    torch --extra-index-url https://download.pytorch.org/whl/cpu
 
-# Копируем requirements
-COPY requirements.txt .
-
-# Устанавливаем Python зависимости
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
-
-# Копируем код приложения
 COPY app.py .
 
-# Открываем порт
+# Предзагрузка модели при сборке (опционально)
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')"
+
 EXPOSE 5000
 
-# Запускаем через gunicorn с увеличенным timeout
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "300", "--preload", "app:app"]
+# Используем Gunicorn вместо Flask dev server
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120", "app:app"]
