@@ -16,10 +16,12 @@ class m260111_092242_create_faq_structure extends Migration
             'answer_ru' => $this->text()->notNull(),
             'question_rs' => $this->text()->notNull(),
             'answer_rs' => $this->text()->notNull(),
+            'embedding_ru' => 'vector(768)',
+            'embedding_rs' => 'vector(768)',
             'client_type' => $this->string(20)->notNull()->defaultValue(''),
+            'cluster_id' => $this->integer()->notNull()->defaultValue(0),
             'cluster_size' => $this->integer()->defaultValue(1),
             'variants' => $this->json(),
-            'embedding' => 'vector(768)', // Специфичный тип данных
             'reviewed' => $this->boolean()->defaultValue(false),
             'status' => $this->string(20)->defaultValue('pending'),
             'created_at' => $this->timestamp()->defaultExpression('NOW()'),
@@ -59,7 +61,8 @@ class m260111_092242_create_faq_structure extends Migration
 
         // 5. Индексы
         // Семантический поиск pgvector
-        $this->execute('CREATE INDEX ON {{%faq}} USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);');
+        $this->execute('CREATE INDEX ON {{%faq}} USING ivfflat (embedding_ru vector_cosine_ops) WITH (lists = 100);');
+        $this->execute('CREATE INDEX ON {{%faq}} USING ivfflat (embedding_rs vector_cosine_ops) WITH (lists = 100);');
 
         // Полнотекстовый поиск (GIN)
         $this->execute("CREATE INDEX faq_question_ru_idx ON {{%faq}} USING GIN (to_tsvector('russian', question_ru));");
@@ -89,35 +92,32 @@ class m260111_092242_create_faq_structure extends Migration
 
         // 7. Функции
         $this->execute("
-            CREATE OR REPLACE FUNCTION find_similar_questions(
-                query_embedding vector(768),
-                threshold FLOAT DEFAULT 0.8,
-                max_results INTEGER DEFAULT 10
-            )
-            RETURNS TABLE (
-                id INTEGER,
-                question_ru TEXT,
-                answer_ru TEXT,
-                question_rs TEXT,
-                answer_rs TEXT,
-                similarity FLOAT
-            ) AS $$
-            BEGIN
-                RETURN QUERY
-                SELECT 
-                    f.id,
-                    f.question_ru,
-                    f.answer_ru,
-                    f.question_rs,
-                    f.answer_rs,
-                    (1 - (f.embedding <=> query_embedding))::FLOAT AS similarity
-                FROM {{%faq}} f
-                WHERE f.status = 'approved'
-                    AND 1 - (f.embedding <=> query_embedding) > threshold
-                ORDER BY f.embedding <=> query_embedding
-                LIMIT max_results;
-            END;
-            $$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION public.find_similar_questions(
+    query_embedding vector, 
+    threshold double precision DEFAULT 0.8, 
+    max_results integer DEFAULT 10
+)
+RETURNS TABLE(id integer, question_ru text, answer_ru text, question_rs text, answer_rs text, similarity double precision)
+LANGUAGE plpgsql
+AS \$function$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        f.id,
+        f.question_ru,
+        f.answer_ru,
+        f.question_rs,
+        f.answer_rs,
+        (1 - (f.embedding_ru <=> query_embedding))::FLOAT AS similarity
+    FROM {{%faq}} f
+    WHERE f.status = 'approved'
+      -- Используем чистый оператор расстояния. 
+      -- Если сходство > 0.8, то расстояние < 0.2 (1 - 0.8)
+      AND (f.embedding_ru <=> query_embedding) < (1 - threshold)
+    ORDER BY f.embedding_ru <=> query_embedding
+    LIMIT max_results;
+END;
+\$function$;
         ");
 
         $this->execute("
@@ -163,7 +163,6 @@ class m260111_092242_create_faq_structure extends Migration
 
     public function safeDown()
     {
-        $this->dropIndex('idx-faq_raw-qa_hash', '{{%faq_raw}}');
         $this->dropIndex('idx-faq-status_reviewed', '{{%faq}}');
         $this->dropIndex('faq_question_ru_idx', '{{%faq}}');
         $this->dropIndex('faq_answer_ru_idx', '{{%faq}}');
