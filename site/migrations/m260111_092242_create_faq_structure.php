@@ -12,11 +12,13 @@ class m260111_092242_create_faq_structure extends Migration
         // 2. Таблица faq
         $this->createTable('{{%faq}}', [
             'id' => $this->primaryKey(),
-            'question' => $this->text()->notNull(),
-            'answer' => $this->text()->notNull(),
+            'question_ru' => $this->text()->notNull(),
+            'answer_ru' => $this->text()->notNull(),
+            'question_rs' => $this->text()->notNull(),
+            'answer_rs' => $this->text()->notNull(),
+            'client_type' => $this->string(20)->notNull()->defaultValue(''),
             'cluster_size' => $this->integer()->defaultValue(1),
             'variants' => $this->json(),
-            'source_files' => $this->json(),
             'embedding' => 'vector(768)', // Специфичный тип данных
             'reviewed' => $this->boolean()->defaultValue(false),
             'status' => $this->string(20)->defaultValue('pending'),
@@ -29,8 +31,7 @@ class m260111_092242_create_faq_structure extends Migration
             'id' => $this->primaryKey(),
             'question' => $this->text()->notNull(),
             'answer' => $this->text()->notNull(),
-            'source_file' => $this->string(255),
-            'qa_hash' => $this->string(32),
+            'client_type' => $this->string(20)->notNull()->defaultValue(''),
             'cluster_id' => $this->integer(),
             'created_at' => $this->timestamp()->defaultExpression('NOW()'),
         ]);
@@ -61,12 +62,13 @@ class m260111_092242_create_faq_structure extends Migration
         $this->execute('CREATE INDEX ON {{%faq}} USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);');
 
         // Полнотекстовый поиск (GIN)
-        $this->execute("CREATE INDEX faq_question_idx ON {{%faq}} USING GIN (to_tsvector('russian', question));");
-        $this->execute("CREATE INDEX faq_answer_idx ON {{%faq}} USING GIN (to_tsvector('russian', answer));");
+        $this->execute("CREATE INDEX faq_question_ru_idx ON {{%faq}} USING GIN (to_tsvector('russian', question_ru));");
+        $this->execute("CREATE INDEX faq_answer_ru_idx ON {{%faq}} USING GIN (to_tsvector('russian', answer_ru));");
+        $this->execute("CREATE INDEX faq_question_rs_idx ON {{%faq}} USING GIN (to_tsvector('russian', question_rs));");
+        $this->execute("CREATE INDEX faq_answer_rs_idx ON {{%faq}} USING GIN (to_tsvector('russian', answer_rs));");
 
         // Обычные индексы
         $this->createIndex('idx-faq-status_reviewed', '{{%faq}}', ['status', 'reviewed']);
-        $this->createIndex('idx-faq_raw-qa_hash', '{{%faq_raw}}', 'qa_hash', true);
 
         // 6. Триггер для updated_at
         $this->execute("
@@ -94,16 +96,20 @@ class m260111_092242_create_faq_structure extends Migration
             )
             RETURNS TABLE (
                 id INTEGER,
-                question TEXT,
-                answer TEXT,
+                question_ru TEXT,
+                answer_ru TEXT,
+                question_rs TEXT,
+                answer_rs TEXT,
                 similarity FLOAT
             ) AS $$
             BEGIN
                 RETURN QUERY
                 SELECT 
                     f.id,
-                    f.question,
-                    f.answer,
+                    f.question_ru,
+                    f.answer_ru,
+                    f.question_rs,
+                    f.answer_rs,
                     (1 - (f.embedding <=> query_embedding))::FLOAT AS similarity
                 FROM {{%faq}} f
                 WHERE f.status = 'approved'
@@ -141,8 +147,10 @@ class m260111_092242_create_faq_structure extends Migration
             CREATE OR REPLACE VIEW faq_view AS
             SELECT 
                 id,
-                question,
-                LEFT(answer, 200) || CASE WHEN LENGTH(answer) > 200 THEN '...' ELSE '' END AS answer_preview,
+                question_ru,
+                LEFT(answer_ru, 200) || CASE WHEN LENGTH(answer_ru) > 200 THEN '...' ELSE '' END AS answer_ru_preview,
+                question_rs,
+                LEFT(answer_rs, 200) || CASE WHEN LENGTH(answer_rs) > 200 THEN '...' ELSE '' END AS answer_rs_preview,
                 cluster_size,
                 jsonb_array_length(variants) AS variant_count,
                 status,
@@ -155,6 +163,13 @@ class m260111_092242_create_faq_structure extends Migration
 
     public function safeDown()
     {
+        $this->dropIndex('idx-faq_raw-qa_hash', '{{%faq_raw}}');
+        $this->dropIndex('idx-faq-status_reviewed', '{{%faq}}');
+        $this->dropIndex('faq_question_ru_idx', '{{%faq}}');
+        $this->dropIndex('faq_answer_ru_idx', '{{%faq}}');
+        $this->dropIndex('faq_question_rs_idx', '{{%faq}}');
+        $this->dropIndex('faq_answer_rs_idx', '{{%faq}}');
+
         $this->execute('DROP VIEW IF EXISTS faq_view');
         $this->execute('DROP FUNCTION IF EXISTS get_faq_stats()');
         $this->execute('DROP FUNCTION IF EXISTS find_similar_questions(vector, FLOAT, INTEGER)');
