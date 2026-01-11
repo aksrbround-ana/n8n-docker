@@ -17,7 +17,7 @@ CREATE OR REPLACE FUNCTION public.find_similar_questions(
 )
 RETURNS TABLE(id integer, question_ru text, answer_ru text, question_rs text, answer_rs text, similarity double precision)
 LANGUAGE plpgsql
-AS $$
+AS \$function$
 BEGIN
     RETURN QUERY
     SELECT 
@@ -29,11 +29,13 @@ BEGIN
         (1 - (f.embedding <=> query_embedding))::FLOAT AS similarity
     FROM {{%faq}} f
     WHERE f.status = 'approved'
-        AND (f.embedding <=> query_embedding) < (1 - threshold)
+      -- Используем чистый оператор расстояния. 
+      -- Если сходство > 0.8, то расстояние < 0.2 (1 - 0.8)
+      AND (f.embedding <=> query_embedding) < (1 - threshold)
     ORDER BY f.embedding <=> query_embedding
     LIMIT max_results;
 END;
-$$ LANGUAGE plpgsql;
+\$function$;
         ");
 
     }
