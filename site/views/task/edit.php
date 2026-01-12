@@ -1,6 +1,7 @@
 <?php
 
 use app\components\ButtonBackWidget;
+use app\components\SelectWidget;
 use app\models\Task;
 use app\services\DictionaryService;
 use app\services\SvgService;
@@ -26,23 +27,41 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="status" class="w-full">
-                            <option value=""><?= DictionaryService::getWord('choose', $user->lang) ?></option>
-                            <?php foreach ($statuses as $status) : ?>
-                                <option value="<?= $status ?>" <?= $task->status == $status ? 'selected' : '' ?>><?= Task::getAnyStatusText($status, $user->lang) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($statuses as $status) {
+                            $options[] = [
+                                'id' => $status,
+                                'name' => Task::getAnyStatusText($status, $user->lang),
+                            ];
+                        }
+                        echo SelectWidget::widget([
+                            'user' => $user,
+                            'id' => 'status',
+                            'options' => $options,
+                            'selected' => $task->status,
+                        ]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('priority', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="priority" class="w-full">
-                            <option value=""><?= DictionaryService::getWord('choose', $user->lang) ?></option>
-                            <?php foreach ($priorities as $priority) : ?>
-                                <option value="<?= $priority ?>" <?= $task->priority == $priority ? 'selected' : '' ?>><?= Task::getAnyPriorityText($priority, $user->lang) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($priorities as $priority) {
+                            $options[] = [
+                                'id' => $priority,
+                                'name' => Task::getAnyPriorityText($priority, $user->lang),
+                            ];
+                        }
+                        echo SelectWidget::widget([
+                            'user' => $user,
+                            'id' => 'priority',
+                            'options' => $options,
+                            'selected' => $task->priority,
+                        ]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
@@ -55,23 +74,41 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('company', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="company" class="w-full">
-                            <option value=""><?= DictionaryService::getWord('choose', $user->lang) ?></option>
-                            <?php foreach ($companies as $company) : ?>
-                                <option value="<?= $company->id ?>" <?= $task->company_id == $company->id ? 'selected' : '' ?>><?= $company->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($companies as $company) {
+                            $options[] = [
+                                'id' => $company->id,
+                                'name' => $company->name,
+                            ];
+                        }
+                        echo SelectWidget::widget([
+                            'user' => $user,
+                            'id' => 'company',
+                            'options' => $options,
+                            'selected' => $task->company_id,
+                        ]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('accountant', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="accountant" class="w-full">
-                            <option value=""><?= DictionaryService::getWord('choose', $user->lang) ?></option>
-                            <?php foreach ($accountants as $accountant) : ?>
-                                <option value="<?= $accountant->id ?>" <?= $task->accountant_id === $accountant->id ? 'selected' : '' ?>><?= $accountant->firstname . ' ' . $accountant->lastname ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($accountants as $accountant) {
+                            $options[] = [
+                                'id' => $accountant->id,
+                                'name' => $accountant->firstname . ' ' . $accountant->lastname,
+                            ];
+                        }
+                        echo SelectWidget::widget([
+                            'user' => $user,
+                            'id' => 'accountant',
+                            'options' => $options,
+                            'selected' => $task->accountant_id,
+                        ]);
+                        ?>
                     </td>
                 </tr>
                 <tr>

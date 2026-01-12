@@ -1,6 +1,7 @@
 <?php
 
 use app\components\ButtonBackWidget;
+use app\components\SelectWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
 
@@ -23,21 +24,31 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyType', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="type" class="w-full">
-                            <?php foreach ($companyTypes as $type) : ?>
-                                <option value="<?= $type->id ?>" <?= $company->type_id == $type->id ? 'selected' : '' ?>><?= $type->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($companyTypes as $type) {
+                            $options[] = [
+                                'id' => $type->id,
+                                'name' => $type->name,
+                            ];
+                        }
+                        echo SelectWidget::widget(['user' => $user, 'id' => 'type', 'options' => $options, 'selected' => $company->type_id]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="status" class="w-full">
-                            <?php foreach ($companyStatuses as $status) : ?>
-                                <option value="<?= $status ?>" <?= $company->status == $status ? 'selected' : '' ?>><?= DictionaryService::getWord('status' . ucfirst($status), $user->lang) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($companyStatuses as $status) {
+                            $options[] = [
+                                'id' => $status,
+                                'name' => DictionaryService::getWord('status' . ucfirst($status), $user->lang),
+                            ];
+                        }
+                        echo SelectWidget::widget(['user' => $user, 'id' => 'status', 'options' => $options, 'selected' => $company->status]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
@@ -49,11 +60,16 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('sector', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="activity" class="w-full">
-                            <?php foreach ($companySector as $sector) : ?>
-                                <option value="<?= $sector->id ?>" <?= $company->activity_id == $sector->id ? 'selected' : '' ?>><?= ucfirst($sector->name) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($companySector as $sector) {
+                            $options[] = [
+                                'id' => $sector->id,
+                                'name' => ucfirst($sector->name),
+                            ];
+                        }
+                        echo SelectWidget::widget(['user' => $user, 'id' => 'activity', 'options' => $options, 'selected' => $company->activity_id]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
