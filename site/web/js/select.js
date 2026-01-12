@@ -1,25 +1,35 @@
 
+function getSelectWidgetValue(id) {
+    let widget = $('#' + id);
+    if (widget.length === 0) {
+        return null;
+    } else {
+        return widget.find('input.select-widget-value').val();
+    }
+}
+
 // 1. Открытие/закрытие по клику на триггер
-$(document).on('click', '.custom-select-trigger', function (e) {
-    $(this).parent('.custom-select').toggleClass('open');
+$(document).on('click', '.select-widget-trigger', function (e) {
+    $(this).parent('.select-widget').toggleClass('open');
 });
 
 // 2. Выбор опции
-$(document).on('click', '.custom-option', function (e) {
+$(document).on('click', '.select-widget-option', function (e) {
     let value = $(this).data('value');
     let text = $(this).text();
+    let wrapper = $(this).closest('.select-widget-wrapper');
 
     // Обновляем текст в триггере и скрытый инпут
-    $('.custom-select-trigger').text(text);
-    $('#real-input').val(value);
+    $(wrapper).find('div.select-widget-trigger').text(text);
+    $(wrapper).find('input.select-widget-value').val(value);
 
     // Закрываем список
-    $('.custom-select').removeClass('open');
+    $(wrapper).find('.select-widget').removeClass('open');
 });
 
 // 3. Закрытие списка, если кликнули вне его области
 $(window).on('click', function (e) {
-    if (!$(e.target).closest('.custom-select').length) {
-        $('.custom-select').removeClass('open');
+    if (!$(e.target).closest('.select-widget').length) {
+        $('.select-widget').removeClass('open');
     }
 });

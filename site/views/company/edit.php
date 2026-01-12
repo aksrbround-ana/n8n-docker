@@ -1,6 +1,7 @@
 <?php
 
 use app\components\ButtonBackWidget;
+use app\components\SelectWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
 
@@ -23,21 +24,31 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyType', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="type" class="w-full">
-                            <?php foreach ($companyTypes as $type) : ?>
-                                <option value="<?= $type->id ?>" <?= $company->type_id == $type->id ? 'selected' : '' ?>><?= $type->name ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($companyTypes as $type) {
+                            $options[] = [
+                                'id' => $type->id,
+                                'name' => $type->name,
+                            ];
+                        }
+                        echo SelectWidget::widget(['user' => $user, 'id' => 'type', 'options' => $options, 'selected' => $company->type_id]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="status" class="w-full">
-                            <?php foreach ($companyStatuses as $status) : ?>
-                                <option value="<?= $status ?>" <?= $company->status == $status ? 'selected' : '' ?>><?= DictionaryService::getWord('status' . ucfirst($status), $user->lang) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($companyStatuses as $status) {
+                            $options[] = [
+                                'id' => $status,
+                                'name' => DictionaryService::getWord('status' . ucfirst($status), $user->lang),
+                            ];
+                        }
+                        echo SelectWidget::widget(['user' => $user, 'id' => 'status', 'options' => $options, 'selected' => $company->status]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
@@ -49,32 +60,21 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('sector', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <select name="activity" class="w-full">
-                            <?php foreach ($companySector as $sector) : ?>
-                                <option value="<?= $sector->id ?>" <?= $company->activity_id == $sector->id ? 'selected' : '' ?>><?= ucfirst($sector->name) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php
+                        $options = [];
+                        foreach ($companySector as $sector) {
+                            $options[] = [
+                                'id' => $sector->id,
+                                'name' => ucfirst($sector->name),
+                            ];
+                        }
+                        echo SelectWidget::widget(['user' => $user, 'id' => 'activity', 'options' => $options, 'selected' => $company->activity_id]);
+                        ?>
                     </td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('pib', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle "><input type="text" name="pib" value="<?= $company->pib ?>" class="rounded-md border border-input bg-background" /></td>
-                </tr>
-                <tr class="border-b">
-                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('Test', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle ">
-                        <div class="custom-select-wrapper">
-                            <div class="custom-select">
-                                <div class="custom-select-trigger">Выберите вариант...</div>
-                                <div class="custom-options">
-                                    <span class="custom-option" data-value="1">Вариант 1</span>
-                                    <span class="custom-option" data-value="2">Вариант 2</span>
-                                    <span class="custom-option" data-value="3">Вариант 3</span>
-                                </div>
-                            </div>
-                        </div>
-                        <input type="hidden" name="my-select-value" id="real-input">
-                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-right">

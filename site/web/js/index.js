@@ -131,7 +131,9 @@ function loadPage(url, data = {}, saveHistory = false, success) {
         $('main').html(response.data);
         userMenuResize();
         showTiff();
-        success();
+        if (success && (typeof (success) === 'function')) {
+          success();
+        }
       }
     },
     error: function (e) {
@@ -402,7 +404,7 @@ $(document).on('click', '#task-edit-button, #task-add-button', function (e) {
 });
 
 $(document).on('click', '#task-save-button', function (e) {
-    let user = getUser();
+  let user = getUser();
   let token = user ? user?.token : '';
   $.ajax({
     url: '/task/save',
@@ -412,11 +414,11 @@ $(document).on('click', '#task-save-button', function (e) {
       id: $('#task-edit-table input[name=id]').val(),
       category: $('#task-edit-table input[name=category]').val(),
       request: $('#task-edit-table textarea[name=request]').val(),
-      status: $('#task-edit-table select[name=status]').val(),
-      priority: $('#task-edit-table select[name=priority]').val(),
+      status: getSelectWidgetValue('status'),
+      priority: getSelectWidgetValue('priority'),
       due_date: $('#task-edit-table input[name=due_date]').val(),
-      company_id: $('#task-edit-table select[name=company]').val(),
-      accountant_id: $('#task-edit-table select[name=accountant]').val(),
+      company_id: getSelectWidgetValue('company'),
+      accountant_id: getSelectWidgetValue('accountant'),
     },
     success: function (response) {
       if (response.status === 'success') {
@@ -441,20 +443,21 @@ $(document).on('click', '#task-save-button', function (e) {
 $(document).on('click', '#company-save-button', function (e) {
   let user = getUser();
   let token = user ? user?.token : '';
+  let data = {
+    token: token,
+    id: $('#company-edit-table input[name=id]').val(),
+    name: $('#company-edit-table input[name=name]').val(),
+    name_tg: $('#company-edit-table input[name=name_tg]').val(),
+    type_id: getSelectWidgetValue('type'),
+    pib: $('#company-edit-table input[name=pib]').val(),
+    status: getSelectWidgetValue('status'),
+    is_pdv: $('#company-edit-table input[name=is_pdv]').prop('checked') ? 1 : 0,
+    activity_id: getSelectWidgetValue('activity'),
+  };
   $.ajax({
     url: '/company/save',
     type: 'POST',
-    data: {
-      token: token,
-      id: $('#company-edit-table input[name=id]').val(),
-      name: $('#company-edit-table input[name=name]').val(),
-      name_tg: $('#company-edit-table input[name=name_tg]').val(),
-      type_id: $('#company-edit-table select[name=type]').val(),
-      pib: $('#company-edit-table input[name=pib]').val(),
-      status: $('#company-edit-table select[name=status]').val(),
-      is_pdv: $('#company-edit-table input[name=is_pdv]').prop('checked') ? 1 : 0,
-      activity_id: $('#company-edit-table select[name=activity]').val(),
-    },
+    data: data,
     success: function (response) {
       if (response.status === 'success') {
         let data = {

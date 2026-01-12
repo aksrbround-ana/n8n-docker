@@ -1,31 +1,33 @@
 :root {
     --radius: 10px;
 }
-.custom-select-wrapper {
+
+.select-widget-wrapper {
     position: relative;
     user-select: none;
     width: 250px;
     border-radius: var(--radius);
 }
 
-.custom-select {
+.select-widget {
+    padding: 4px;
     position: relative;
     display: flex;
     flex-direction: column;
-    border: 1px solid #ccc;
-    background: #fff;
     cursor: pointer;
     border-radius: var(--radius);
 }
 
-.custom-select-trigger {
+.select-widget-trigger {
     padding: 10px;
-    background: #f9f9f9;
+    background: #fff;
     border-radius: var(--radius);
+    border-color: #eee;
+    border-width: 1px;
 }
 
 /* Список опций скрыт по умолчанию */
-.custom-options {
+.select-widget-options {
     position: absolute;
     display: none;
     top: 100%;
@@ -36,18 +38,25 @@
     z-index: 10;
 }
 
+.select-widget.open {
+    border-color: red;
+    border-style: solid;
+    border-width: 2px;
+    padding: 2px;
+}
+
 /* Когда селект открыт — показываем список */
-.custom-select.open .custom-options {
+.select-widget.open .select-widget-options {
     display: block;
 }
 
-.custom-option {
+.select-widget-option {
     display: block;
     padding: 10px;
     border-bottom: 1px solid #eee;
 }
 
-.custom-option:hover {
+.select-widget-option:hover {
     background: #3498db;
     color: #fff;
 }
