@@ -207,6 +207,7 @@ class DictionaryService
             'selectCompany' =>  'Выберите компанию',
             'selectPeriod' =>  'Выберите период',
             'selectDocType' =>  'Выберите тип документа',
+            'selectOption' => 'Выберите вариант',
 
             // Document types
             'docTypeUnknown' =>  'Неизвестно',
@@ -494,6 +495,7 @@ class DictionaryService
             'selectCompany' =>  'Izaberite kompaniju',
             'selectPeriod' =>  'Izaberite period',
             'selectDocType' =>  'Izaberite tip dokumenta',
+            'selectOption' => 'Izaberite opciju',
 
             // Document types
             'docTypeUnknown' =>  'Nepoznato',
@@ -781,6 +783,8 @@ class DictionaryService
             'selectCompany' =>  'Select Company',
             'selectPeriod' =>  'Select Period',
             'selectDocType' =>  'Select Document Type',
+            'selectOption' =>  'Select an option',
+
             // Document types
             'docTypeUnknown' =>  'Unknown',
             'docTypeInvoice' =>  'Invoice',

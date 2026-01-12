@@ -80,7 +80,7 @@ use app\services\SvgService;
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-card rounded-xl border p-5">
                         <h3 class="font-medium text-muted-foreground text-sm"><?= DictionaryService::getWord('sector', $user->lang) ?></h3>
-                        <p class="mt-1 font-semibold"><?= $activity->name ?></p>
+                        <p class="mt-1 font-semibold"><?= $activity->name ?? '' ?></p>
                     </div>
                     <!-- <div class="bg-card rounded-xl border p-5">
                         <h3 class="font-medium text-muted-foreground text-sm">Ответственный бухгалтер</h3>
