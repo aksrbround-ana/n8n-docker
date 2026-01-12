@@ -120,6 +120,7 @@ END;
 \$function$;
         ");
 
+        $this->execute("DROP FUNCTION IF EXISTS get_faq_stats();");
         $this->execute("
             CREATE OR REPLACE FUNCTION get_faq_stats()
             RETURNS TABLE (
