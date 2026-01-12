@@ -7,7 +7,8 @@ RUN pip install --no-cache-dir \
     flask \
     gunicorn \
     sentence-transformers \
-    torch --extra-index-url https://download.pytorch.org/whl/cpu
+    torch --extra-index-url https://download.pytorch.org/whl/cpu && \
+    apt-get update && apt-get install -y curl
 
 COPY app.py .
 
