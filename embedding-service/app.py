@@ -1,41 +1,35 @@
 from flask import Flask, request, jsonify
 from sentence_transformers import SentenceTransformer
 import logging
+import os
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Используем модель с размерностью 768
-model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
-logging.info("Model loaded successfully")
+MODEL_NAME = 'paraphrase-multilingual-mpnet-base-v2'
+
+try:
+    model = SentenceTransformer(MODEL_NAME)
+    logging.info(f"Model {MODEL_NAME} loaded successfully")
+except Exception as e:
+    logging.error(f"Failed to load model: {str(e)}")
 
 @app.route('/embed', methods=['POST'])
 def embed():
     try:
         data = request.json
-        logging.info(f"Received request with {len(data) if isinstance(data, list) else 1} items")
-        
-        # Поддержка разных форматов
         if isinstance(data, list):
             texts = [item.get('text', '') for item in data]
         elif isinstance(data, dict):
-            if 'text' in data:
-                texts = [data['text']]
-            elif 'texts' in data:
-                texts = data['texts']
-            else:
-                return jsonify({'error': 'Missing text or texts field'}), 400
-        else:
-            return jsonify({'error': 'Invalid input format'}), 400
+            texts = data.get('texts', [data.get('text')]) if any(k in data for k in ['text', 'texts']) else None
         
-        texts = [t for t in texts if t]
-        
-        if not texts:
+        if not texts or not any(texts):
             return jsonify({'error': 'No valid texts provided'}), 400
         
-        embeddings = model.encode(texts, convert_to_numpy=True)
+        # Очистка пустых строк
+        texts = [str(t) for t in texts if t]
         
-        logging.info(f"Generated {len(embeddings)} embeddings, dimension: {embeddings.shape[1]}")
+        embeddings = model.encode(texts, convert_to_numpy=True)
         
         if len(texts) == 1:
             return jsonify({'embedding': embeddings[0].tolist()})
@@ -43,13 +37,13 @@ def embed():
             return jsonify({'embeddings': embeddings.tolist()})
             
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
+        logging.error(f"Error during embedding: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({
         'status': 'ok', 
-        'model': 'paraphrase-multilingual-mpnet-base-v2',
-        'dimension': 768
+        'model': MODEL_NAME,
+        'dimension': 768 # У mpnet размерность 384
     })
