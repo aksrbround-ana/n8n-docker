@@ -28,31 +28,43 @@ class SiteController extends BaseController
                 'url' => '/site/page',
                 'picture' => SvgService::svg('main'),
                 'active' => true,
+                'rules' => ['accountant', 'admin', 'ceo',],
             ],
             'companies' => [
                 'url' => '/company/page',
                 'picture' => SvgService::svg('activity'),
                 'active' => true,
+                'rules' => ['accountant', 'admin', 'ceo',],
             ],
             'tasks' => [
                 'url' => '/task/page',
                 'picture' => SvgService::svg('tasks'),
                 'active' => true,
+                'rules' => ['accountant', 'admin', 'ceo',],
             ],
             'documents' => [
                 'url' => '/document/page',
                 'picture' => SvgService::svg('document'),
                 'active' => true,
+                'rules' => ['accountant', 'admin', 'ceo',],
             ],
             'reminders' => [
                 'url' => '/reminder/page',
                 'picture' => SvgService::svg('reminder'),
                 'active' => true,
+                'rules' => ['accountant', 'admin', 'ceo',],
             ],
             'settings' => [
                 'url' => '/settings/page',
                 'picture' => SvgService::svg('settings'),
                 'active' => false,
+                'rules' => ['accountant', 'admin', 'ceo',],
+            ],
+            'accountants' => [
+                'url' => '/accountant/list',
+                'picture' => SvgService::svg('settings'),
+                'active' => true,
+                'rules' => ['admin', 'ceo'],
             ],
         ];
         return $mainMenu;

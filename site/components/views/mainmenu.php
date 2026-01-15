@@ -19,6 +19,9 @@ use app\services\SvgService;
             if (!$value['active']) {
                 continue;
             }
+            if (!in_array($user->rule, $value['rules'])) {
+                continue;
+            }
             if ($name === 'dashboard') {
                 $style = 'bg-sidebar-primary text-sidebar-primary-foreground active';
             } else {

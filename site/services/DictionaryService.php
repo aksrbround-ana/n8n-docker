@@ -51,9 +51,13 @@ class DictionaryService
             'users' =>  'Пользователи',
 
             // Roles
+            'role' => 'Роль',
             'ceo' =>  'Руководитель',
             'admin' =>  'Администратор',
             'accountant' =>  'Бухгалтер',
+            'accountants' =>  'Бухгалтеры',
+            'accountantCreate' => 'Создание учетной записи',
+            'accountantEdit' => 'Редактирование учетной записи',
 
             // Auth
             'login' =>  'Войти',
@@ -112,6 +116,7 @@ class DictionaryService
             'companyNameTg' =>  'Название компании в Telegram',
             'companyType' => 'Тип компании',
             'pib' =>  'ПИБ',
+            'pibIsRequired' =>  'ПИБ — обязательное поле',
             'city' =>  'Город',
             'sector' =>  'Сектор',
             'assignedAccountant' =>  'Ответственный бухгалтер',
@@ -230,7 +235,8 @@ class DictionaryService
             // User management
             'userManagement' =>  'Управление пользователями',
             'createUser' =>  'Создать пользователя',
-            'userName' =>  'Имя',
+            'firstName' =>  'Имя',
+            'lastName' =>  'Фамилия',
             'userEmail' =>  'Email',
             'userRole' =>  'Роль',
             'userStatus' =>  'Статус',
@@ -311,6 +317,10 @@ class DictionaryService
             'loadMonth' => 'Загрузить месяц',
             'back' => 'Назад',
             'error' => 'Ошибка',
+            'language' => 'Язык',
+            'en' => 'Английский',
+            'rs' => 'Сербский',
+            'ru' => 'Русский',
 
         ],
         'rs' =>   [
@@ -339,9 +349,13 @@ class DictionaryService
             'users' =>  'Korisnici',
 
             // Roles
+            'role' => 'Uloga',
             'ceo' =>  'Direktor',
             'admin' =>  'Administrator',
             'accountant' =>  'Knjigovođa',
+            'accountants' => 'Knjigovođe',
+            'accountantCreate' => 'Креирање налога',
+            'accountantEdit' => 'Уређивање налога',
 
             // Auth
             'login' =>  'Prijava',
@@ -400,6 +414,7 @@ class DictionaryService
             'companyNameTg' => 'Naziv kompanije u Telegramu',
             'companyType' => 'Vrsta kompanije',
             'pib' =>  'PIB',
+            'pibIsRequired' =>  'ПИБ - обавезно поље',
             'city' =>  'Grad',
             'sector' =>  'Delatnost',
             'assignedAccountant' =>  'Zaduženi knjigovođa',
@@ -518,7 +533,8 @@ class DictionaryService
             // User management
             'userManagement' =>  'Upravljanje korisnicima',
             'createUser' =>  'Kreiraj korisnika',
-            'userName' =>  'Ime',
+            'firstName' =>  'Ime',
+            'lastName' =>  'Prezime',
             'userEmail' =>  'Email',
             'userRole' =>  'Uloga',
             'userStatus' =>  'Status',
@@ -599,6 +615,10 @@ class DictionaryService
             'loadMonth' => 'Učitaj mesec',
             'back' => 'Nazad',
             'error' => 'Greška',
+            'language' => 'Jezik',
+            'en' => 'Engleski',
+            'rs' => 'Srpski',
+            'ru' => 'Ruski',
 
         ],
         'en' =>   [
@@ -627,9 +647,13 @@ class DictionaryService
             'users' =>  'Users',
 
             // Roles
+            'role' => 'Role',
             'ceo' =>  'CEO',
             'admin' =>  'Administrator',
             'accountant' =>  'Accountant',
+            'accountants' => 'Accountants',
+            'accountantCreate' => 'Create an account',
+            'accountantEdit' => 'Editing an account',
 
             // Auth
             'login' =>  'Login',
@@ -688,6 +712,7 @@ class DictionaryService
             'companyNameTg' => 'Telegram Company Name',
             'companyType' => 'Type of company',
             'pib' =>  'PIB',
+            'pibIsRequired' => 'PIB is required',
             'city' =>  'City',
             'sector' =>  'Sector',
             'assignedAccountant' =>  'Assigned Accountant',
@@ -805,7 +830,8 @@ class DictionaryService
             // User management
             'userManagement' =>  'User Management',
             'createUser' =>  'Create User',
-            'userName' =>  'Name',
+            'firstName' =>  'Name',
+            'lastName' =>  'Last Name',
             'userEmail' =>  'Email',
             'userRole' =>  'Role',
             'userStatus' =>  'Status',
@@ -886,6 +912,11 @@ class DictionaryService
             'loadMonth' => 'Load Month',
             'back' => 'Back',
             'error' => 'Error',
+            'language' => 'Language',
+            'en' => 'English',
+            'rs' => 'Serbian',
+            'ru' => 'Russian',
+
         ],
     ];
 
