@@ -35,17 +35,33 @@ use yii\debug\models\timeline\Svg;
             <?= SvgService::svg('location-gray') ?>
             <span class="text-sm">Белград</span>
         </div> -->
-        <div class="flex items-center gap-2">
-            <?= SvgService::svg('telegram') ?>
-            <?php
-            foreach ($customers as $customer) {
-            ?>
-                <span class="text-sm">
-                    <?= MakeTelegramLinkWidget::widget(['username' => $customer['username']]) ?>
-                </span>
-            <?php
-            }
-            ?>
-        </div>
+        <?php
+        if (count($customers) > 0) {
+        ?>
+            <div class="flex items-center gap-2">
+                <?= SvgService::svg('telegram') ?>
+                <?php
+                foreach ($customers as $customer) {
+                ?>
+                    <span class="text-sm">
+                        <?= MakeTelegramLinkWidget::widget(['username' => $customer['username']]) ?>
+                    </span>
+                <?php
+                }
+                ?>
+            </div>
+        <?php
+        }
+        $accountants = $company->getCompanyAccountants();
+        if ($accountants->count() > 0) {
+            $link = $accountants->one();
+            $accountant = $link->getAccountant()->one();
+        ?>
+            <div class="flex items-center gap-2">
+                <span class="text-sm"><?= DictionaryService::getWord('responsibleAccountant', $user->lang) ?>: <?= $accountant->firstname . ' ' . $accountant->lastname ?></span>
+            </div>
+        <?php
+        }
+        ?>
     </div>
 </div>

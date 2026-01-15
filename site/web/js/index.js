@@ -117,6 +117,11 @@ function loadPage(url, data = {}, saveHistory = false, success) {
     }
   } else if (saveHistory === false) {
     pageHistory = [itemHistory];
+  } else if (typeof saveHistory === 'number') {
+    while (saveHistory > 0) {
+      saveHistory--;
+      pageHistory.pop();
+    }
   }
   localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
   $.ajax({
@@ -383,7 +388,7 @@ $(document).on('click', '#company-edit-button, #company-add-button', function (e
     token: token,
     id: id
   };
-  loadPage('/company/edit', data, 'no');
+  loadPage('/company/edit', data, true);
 });
 
 $(document).on('click', '#task-edit-button, #task-add-button', function (e) {
@@ -425,7 +430,7 @@ $(document).on('click', '#task-save-button', function (e) {
         let data = {
           id: response.id
         }
-        loadPage('/task/view', data, 'no');
+        loadPage('/task/view', data, 1);
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();
@@ -453,6 +458,7 @@ $(document).on('click', '#company-save-button', function (e) {
     status: getSelectWidgetValue('status'),
     is_pdv: $('#company-edit-table input[name=is_pdv]').prop('checked') ? 1 : 0,
     activity_id: getSelectWidgetValue('activity'),
+    accountant_id: getSelectWidgetValue('accountant'),
   };
   if (!data.pib) {
     showError(dictionaryLookup('pibIsRequired', user.lang), '');
@@ -468,7 +474,7 @@ $(document).on('click', '#company-save-button', function (e) {
         let data = {
           id: response.id
         }
-        loadPage('/company/profile', data, 'no');
+        loadPage('/company/profile', data, 1);
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();

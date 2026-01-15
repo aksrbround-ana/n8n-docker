@@ -76,6 +76,31 @@ use app\services\SvgService;
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('pib', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle "><input type="text" name="pib" value="<?= $company->pib ?>" class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm " /></td>
                 </tr>
+                <tr class="border-b">
+                    <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('responsibleAccountant', $user->lang) ?></th>
+                    <td class="p-4 text-left align-middle ">
+                        <?php
+                        $options = [
+                            [
+                                'id' => 0,
+                                'name' => DictionaryService::getWord('no', $user->lang),
+                            ]
+                        ];
+                        $accountantId = 0;
+                        $link = $company->getCompanyAccountants()->count() ? $company->getCompanyAccountants()->one() : null;
+                        if ($link) {
+                            $accountantId = $link->accountant_id;
+                        }
+                        foreach ($accountants as $accountant) {
+                            $options[] = [
+                                'id' => $accountant->id,
+                                'name' => $accountant->firstname . ' ' . $accountant->lastname,
+                            ];
+                        }
+                        echo SelectWidget::widget(['user' => $user, 'id' => 'accountant', 'options' => $options, 'selected' => $accountantId]);
+                        ?>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="2" class="text-right">
                         <button id="company-save-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2" data-id="<?= $company['id'] ?>">
