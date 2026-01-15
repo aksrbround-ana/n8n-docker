@@ -321,6 +321,7 @@ class DictionaryService
             'en' => 'Английский',
             'rs' => 'Сербский',
             'ru' => 'Русский',
+            'no' => 'Нет',
 
         ],
         'rs' =>   [
@@ -619,6 +620,7 @@ class DictionaryService
             'en' => 'Engleski',
             'rs' => 'Srpski',
             'ru' => 'Ruski',
+            'no' => 'Nema',
 
         ],
         'en' =>   [
@@ -916,6 +918,7 @@ class DictionaryService
             'en' => 'English',
             'rs' => 'Serbian',
             'ru' => 'Russian',
+            'no' => 'No',
 
         ],
     ];

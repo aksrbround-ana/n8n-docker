@@ -230,6 +230,7 @@ class CompanyController extends BaseController
             $companyTypes = CompanyType::find()->all();
             $companyStatuses = Company::$statuses;
             $companySector = CompanyActivities::find()->all();
+            $accountants = Accountant::find()->where(['!=', 'rule', 'bot'])->orderBy(['lastname' => SORT_ASC, 'firstname' => SORT_ASC,])->all();
             $response->data = [
                 'status' => 'success',
                 'data' => $this->renderPartial('edit', [
@@ -238,6 +239,7 @@ class CompanyController extends BaseController
                     'companyTypes' => $companyTypes,
                     'companyStatuses' => $companyStatuses,
                     'companySector' => $companySector,
+                    'accountants' => $accountants,
                 ]),
                 'company' => $company,
             ];
@@ -267,10 +269,39 @@ class CompanyController extends BaseController
             $company->is_pdv = $request->post('is_pdv');
             $company->status = $request->post('status');
             $company->save();
+            $companyAccountant = $request->post('accountant_id');
+            $errors = [];
+            if ($companyAccountant) {
+                $ca = CompanyAccountant::findOne(['company_id' => $company->id]);
+                if (!$ca) {
+                    $ca = new CompanyAccountant();
+                    $ca->company_id = $company->id;
+                    $ca->accountant_id = $companyAccountant;
+                    $ca->save();
+                    $errors = $ca->getErrors();
+                    $p = 1;
+                } elseif ($ca->accountant_id !== $companyAccountant) {
+                    $ca->accountant_id = $companyAccountant;
+                    $p = 2;
+                    $ca->save();
+                    $errors = $ca->getErrors();
+                }
+            } else {
+                $ca = CompanyAccountant::findOne(['company_id' => $company->id]);
+                if ($ca) {
+                    $ca->delete();
+                    $errors = $ca->getErrors();
+                    $p = 3;
+                } else {
+                    $p = 4;
+                }
+            }
             $response->data = [
                 'status' => 'success',
                 'id' => $company->id,
                 'company' => $company,
+                'errors' => $errors,
+                'p' => $p
             ];
             return $response;
         } else {
