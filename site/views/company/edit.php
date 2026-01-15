@@ -15,11 +15,11 @@ use app\services\SvgService;
             <tbody class="">
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle "><input type="text" name="name" value="<?= $company->name ?>" class="rounded-md border border-input bg-background" style="width:100%;" /></td>
+                    <td class="p-4 text-left align-middle "><input type="text" name="name" value="<?= $company->name ?>" class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm " style="width:100%;" /></td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyNameTg', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle "><input type="text" name="name_tg" value="<?= $company->name_tg ?>" class="rounded-md border border-input bg-background" style="width:100%;" /></td>
+                    <td class="p-4 text-left align-middle "><input type="text" name="name_tg" value="<?= $company->name_tg ?>" class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm " style="width:100%;" /></td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyType', $user->lang) ?></th>
@@ -54,7 +54,7 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('PDV', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle ">
-                        <input type="checkbox" name="is_pdv" <?= $company->is_pdv ? 'checked="checked"' : '' ?> />
+                        <input type="checkbox" name="is_pdv" class="pl-10" <?= $company->is_pdv ? 'checked="checked"' : '' ?> />
                     </td>
                 </tr>
                 <tr class="border-b">
@@ -74,7 +74,7 @@ use app\services\SvgService;
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('pib', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle "><input type="text" name="pib" value="<?= $company->pib ?>" class="rounded-md border border-input bg-background" /></td>
+                    <td class="p-4 text-left align-middle "><input type="text" name="pib" value="<?= $company->pib ?>" class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm " /></td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-right">

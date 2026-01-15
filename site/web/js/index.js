@@ -454,6 +454,11 @@ $(document).on('click', '#company-save-button', function (e) {
     is_pdv: $('#company-edit-table input[name=is_pdv]').prop('checked') ? 1 : 0,
     activity_id: getSelectWidgetValue('activity'),
   };
+  if (!data.pib) {
+    showError(dictionaryLookup('pibIsRequired', user.lang), '');
+    $('#company-edit-table input[name=pib]').focus();
+    return false;
+  }
   $.ajax({
     url: '/company/save',
     type: 'POST',
@@ -562,6 +567,128 @@ $(document).on('click', '.go-to-link', function (e) {
   return false;
 });
 
+$(document).on('click', '.load-by-link', function (e) {
+  const link = $(this).data('link');
+  const target = $(this).data('target');
+  const user = getUser();
+  const data = {
+    token: user.token
+  };
+  $.ajax({
+    url: link,
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#' + target).html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function () {
+      showError(dictionaryLookup('error', user.lang), 'Unknown error');
+    }
+  });
+  return false;
+});
+
+$(document).on('click', '#accountant-edit-button', function (e) {
+  const id = $(this).data('id');
+  const user = getUser();
+  const data = {
+    token: user.token,
+    id: id
+  };
+  $.ajax({
+    url: '/accountant/change',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#accountant-map').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function () {
+      showError(dictionaryLookup('error', user.lang), 'Unknown error');
+    }
+  });
+  return false;
+});
+
+$(document).on('click', '#accountant-cancel-button', function (e) {
+  const id = $(this).data('id');
+  const user = getUser();
+  const data = {
+    token: user.token,
+  };
+  $.ajax({
+    url: '/accountant/page/' + id,
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#accountant-map').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function () {
+      showError(dictionaryLookup('error', user.lang), 'Unknown error');
+    }
+  });
+  return false;
+});
+
+$(document).on('click', '#accountant-save-button', function (e) {
+  const table = $('#accountant-map table.accountant-page');
+  const id = $(this).data('id');
+  const email = $(table).find('input[name=accountant-email]').val();
+  const firstname = $(table).find('input[name=accountant-firstname]').val();
+  const lastname = $(table).find('input[name=accountant-lastname]').val();
+  const role = getSelectWidgetValue('accountant-role');
+  const lang = getSelectWidgetValue('accountant-lang');
+  const user = getUser();
+  const data = {
+    token: user.token,
+    id: id,
+    email: email,
+    firstname: firstname,
+    lastname: lastname,
+    role: role,
+    lang: lang
+  };
+  $.ajax({
+    url: '/accountant/write/',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#accountant-map').html(response.data);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function () {
+      showError(dictionaryLookup('error', user.lang), 'Unknown error');
+    }
+  });
+  return false;
+});
+
 $(document).on('click', 'button.back', function (e) {
   goBack();
 });
@@ -603,7 +730,7 @@ $(document).on('click', '#finish-task', function (e) {
       }
     },
     error: function () {
-      alert('Произошла ошибка при завершении задачи.');
+      showError(dictionaryLookup('error', user.lang), 'Unknown error');
     }
   });
   return false;

@@ -115,3 +115,11 @@ a.desc:after {
 .align-left {
     text-align: left;
 }
+
+.load-by-link {
+    color:grey;
+}
+
+table.accountant-page td {
+    color:grey;
+}
