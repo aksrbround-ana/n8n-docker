@@ -10,7 +10,7 @@ class BaseController extends Controller
 {
     public function renderPage($data, $view = 'page')
     {
-        $html = $this->render($view, $data);
+        $html = $this->renderPartial($view, $data);
         $response = \Yii::$app->response;
         $response->format = Response::FORMAT_JSON;
         $response->headers->set('Content-Type', 'application/json; charset=UTF-8');

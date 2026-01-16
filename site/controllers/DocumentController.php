@@ -12,6 +12,7 @@ use app\models\Document;
 use app\models\DocumentComment;
 use app\models\Task;
 use app\models\TaskDocument;
+use Exception;
 
 class DocumentController extends BaseController
 {
@@ -126,10 +127,10 @@ class DocumentController extends BaseController
             if ($name) {
                 $docsQuery->andWhere([
                     'OR',
-                    ['ilike','d.filename', $name],
-                    ['ilike','d.ocr_text', $name],
-                    ['ilike','d.summary', $name],
-                    ['ilike','d.category', $name],
+                    ['ilike', 'd.filename', $name],
+                    ['ilike', 'd.ocr_text', $name],
+                    ['ilike', 'd.summary', $name],
+                    ['ilike', 'd.category', $name],
                 ]);
             }
             if ($status) {
@@ -160,12 +161,81 @@ class DocumentController extends BaseController
         $this->layout = false;
         $request = \Yii::$app->request;
         $token = $request->post('token');
-        $accountant = Accountant::findIdentityByAccessToken($token);
-        if ($accountant->isValid()) {
-            $data = [
-                'user' => $accountant,
-            ];
-            return $this->renderPage($data, 'upload');
+        $viewer = Accountant::findIdentityByAccessToken($token);
+        if ($viewer->isValid()) {
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $id = $request->post('task_id');
+            $file = $_FILES['document'] ?? null;
+            if ($id && $file) {
+                try {
+                    $task = Task::findOne(['id' => $id]);
+                    $errors = [];
+                    $document = new Document();
+                    $document->filename = $file['name'];
+                    $document->mimetype = $file['type'];
+                    $document->content = file_get_contents($file['tmp_name']);
+                    $document->status = Document::STATUS_UPLOADED;
+                    $document->company_id = $task->company_id ?? null;
+                    $metadata = [
+                        'chatId' => '',
+                        'fileId' => '',
+                        'fileName' => $file['name'],
+                        'mimeType' => $file['type'],
+                        'userName' => $viewer->firstname . ' ' . $viewer->lastname,
+                    ];
+                    $document->metadata = $metadata;
+                    try {
+                        if (!$document->save()) {
+                            $errors[] = $document->getErrors();
+                        }
+                    } catch (\Exception $e) {
+                        $errors[] = [
+                            'doc' => $document->getAttributes(null, ['metadata', 'content',]),
+                            'message' => $e->getMessage(),
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'trace' => $e->getTraceAsString(),
+                        ];
+                    }
+                    if ($task && $document->id) {
+                        $taskDocument = new TaskDocument();
+                        $taskDocument->task_id = $id;
+                        $taskDocument->document_id = $document->id;
+                        if (!$taskDocument->save()) {
+                            $errors[] = $taskDocument->getErrors();
+                        }
+                    }
+                    if ($errors) {
+                        $response->data = [
+                            'status' => 'error',
+                            'message' => implode(',\n', $errors),
+                        ];
+                    } else {
+                        $response->data = [
+                            'status' => 'success',
+                            'data' => [
+                                'doc' => $document->id,
+                            ],
+                        ];
+                    }
+                } catch (Exception $e) {
+                    $response->data = [
+                        'status' => 'error',
+                        'message' => $e->getMessage(),
+                    ];
+                }
+            } else {
+                $response->data = [
+                    'status' => 'error',
+                    'user' => $viewer,
+                    'task_id' => $id,
+                    'post' => $_POST,
+                    'files' => $_FILES,
+                ];
+            }
+            return $response;
         } else {
             return $this->renderLogout();
         }

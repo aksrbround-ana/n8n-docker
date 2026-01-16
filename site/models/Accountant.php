@@ -146,6 +146,7 @@ class Accountant extends ActiveRecord //implements \yii\web\IdentityInterface
             default:
                 Yii::$app->language = 'en-US';
         }
+        $GLOBALS['currentAccountant'] = $accountant;
         return $accountant;
     }
 

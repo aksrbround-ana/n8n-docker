@@ -41,7 +41,6 @@ class AuthController extends Controller
             $accountant->save();
             $session = Yii::$app->getSession();
             $session->set($token, $token);
-            // Yii::$app->user->login($accountant);
             $response->data =
                 [
                     'status' => 'success',
