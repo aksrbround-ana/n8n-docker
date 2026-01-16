@@ -7,12 +7,13 @@ use yii\base\Widget;
 class DocUploadBodyWidget extends Widget
 {
     public $user;
-    public $document;
+    public $taskId;
 
     public function run()
     {
         return $this->render('docuploadbody', [
             'user' => $this->user,
+            'taskId' => $this->taskId,
         ]);
     }
 }

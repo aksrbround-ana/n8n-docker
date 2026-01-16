@@ -204,6 +204,7 @@ class DictionaryService
             // Documents
             'fileName' =>  'Имя файла',
             'documentType' =>  'Тип документа',
+            'addDocument' => 'Добавить документ',
             'uploadedBy' =>  'Загрузил',
             'uploadDate' =>  'Дата загрузки',
             'documentStatus' =>  'Статус',
@@ -322,6 +323,7 @@ class DictionaryService
             'rs' => 'Сербский',
             'ru' => 'Русский',
             'no' => 'Нет',
+            'dragDropCaption' => 'Для загрузки документа кликните здесь или перетащите файл'
 
         ],
         'rs' =>   [
@@ -503,6 +505,7 @@ class DictionaryService
             // Documents
             'fileName' =>  'Naziv fajla',
             'documentType' =>  'Tip dokumenta',
+            'addDocument' =>  'Dodaj dokument',
             'uploadedBy' =>  'Otpremio',
             'uploadDate' =>  'Datum otpreme',
             'documentStatus' =>  'Status',
@@ -621,6 +624,7 @@ class DictionaryService
             'rs' => 'Srpski',
             'ru' => 'Ruski',
             'no' => 'Nema',
+            'dragDropCaption' => 'Да бисте отпремили документ, кликните овде или превуците и испустите датотеку.',
 
         ],
         'en' =>   [
@@ -802,6 +806,7 @@ class DictionaryService
             // Documents
             'fileName' =>  'File Name',
             'documentType' =>  'Document Type',
+            'addDocument' => 'Add document',
             'uploadedBy' =>  'Uploaded By',
             'uploadDate' =>  'Upload Date',
             'documentStatus' =>  'Status',
@@ -919,6 +924,7 @@ class DictionaryService
             'rs' => 'Serbian',
             'ru' => 'Russian',
             'no' => 'No',
+            'dragDropCaption' => 'To upload a document, click here or drag and drop the file.',
 
         ],
     ];

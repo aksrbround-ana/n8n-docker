@@ -842,8 +842,88 @@ $(document).on('click', '#doc-send-comment', function (e) {
 });
 
 $(document).on('click', '#upload-docs', function (e) {
-  loadPage('/document/upload', {}, true);
+  const taskId = $(this).data('task-id');
+  loadPage('/document/upload/' + id, {}, true);
   return false;
+});
+
+async function uploadFile(file, taskId) {
+  let formData = new FormData();
+  formData.append('document', file);
+  formData.append('task_id', taskId);
+  const user = getUser();
+  formData.append('token', user.token);
+
+  try {
+    const response = await fetch('/document/upload/', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (result.status == 'success') {
+      formData = new FormData();
+      formData.append('token', user.token);
+      formData.append('id', taskId);
+      const responseList = await fetch('/task/documents', {
+        method: 'POST',
+        body: formData,
+      });
+      return await responseList.json();
+    } else if (result.status === 'logout') {
+      clearUser();
+      loadContent();
+    } else {
+      showError(dictionaryLookup('error', user.lang), response.message);
+    }
+  } catch (error) {
+    console.error('Сетевая ошибка:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+$(document).on('change', '#document-to-upload', async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const taskId = $(e.target).data('task-id');
+    const result = await uploadFile(file, taskId);
+    e.target.value = '';
+    if (result.status === 'success') {
+      $('#task-documents-list').html(result.data);
+    } else {
+      showError(dictionaryLookup('error', user.lang), result.message);
+    }
+  }
+});
+
+$(document).on('click', '#dropArea', () => {
+  $('#document-to-upload').click()
+});
+$(document).on('dragover', '#dropArea', (e) => {
+  e.preventDefault();
+  $('#dropArea').css('border-color', '#ff7700');
+});
+$(document).on('dragleave', '#dropArea', (e) => {
+  e.preventDefault();
+  $('#dropArea').css('border-color', '#ccc');
+});
+$(document).on('drop', '#dropArea', async (e) => {
+  e.preventDefault();
+  $('#dropArea').css('border-color', '#ccc');
+  const originalEvent = e.originalEvent;
+  const files = originalEvent.dataTransfer.files;
+  if (files.length > 0) {
+    const taskId = $('#dropArea').data('task-id');
+    for (let i = 0; i < files.length; i++) {
+      const result = await uploadFile(files[i], taskId);
+      if (result.status === 'success') {
+        $('#task-documents-list').html(result.data);
+      } else {
+        showError(dictionaryLookup('error', user.lang), result.message);
+      }
+    }
+  }
 });
 
 $(document).on('click', '#save-user', function (e) {

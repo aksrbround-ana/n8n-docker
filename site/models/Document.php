@@ -7,6 +7,7 @@ use app\models\Company;
 use app\models\DocumentType;
 use app\models\DocumentActivity;
 use app\models\DocumentStep;
+use app\services\AuthService;
 use app\services\DictionaryService;
 
 /**
@@ -122,7 +123,8 @@ class Document extends \yii\db\ActiveRecord
     {
         $docActivity = new DocumentActivity();
         $docActivity->document_id = $this->id;
-        $docActivity->accountant_id = $this->accountant_id;
+        $accountant = $GLOBALS['currentAccountant'];
+        $docActivity->accountant_id =  $accountant->id;
         if (!$this->isNewRecord) {
             $oldDocument = Document::findOne(['id' => $this->id]);
             if ($oldDocument && $oldDocument->status !== $this->status) {
@@ -144,6 +146,9 @@ class Document extends \yii\db\ActiveRecord
                 $docActivity->step_id = $step->id;
                 $docActivity->save();
             }
+        }
+        if ($docActivity->hasErrors()) {
+            $this->addErrors($docActivity->getErrors());
         }
         return $ret;
     }

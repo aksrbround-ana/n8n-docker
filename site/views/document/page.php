@@ -65,15 +65,6 @@ use app\services\SvgService;
                 <?= SvgService::svg('plus-white') ?>
                 <?= DictionaryService::getWord('find', $user->lang) ?>
             </button>
-            <div class="ml-auto">
-                <button id="upload-docs" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:r6m:" data-state="closed">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus h-4 w-4 mr-2">
-                        <path d="M5 12h14"></path>
-                        <path d="M12 5v14"></path>
-                    </svg>
-                    <?= DictionaryService::getWord('uploadDocuments', $user->lang) ?>
-                </button>
-            </div>
         </div>
         <div class="border rounded-lg overflow-hidden">
             <div id="doc-list" class="relative w-full overflow-auto">

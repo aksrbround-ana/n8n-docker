@@ -6,6 +6,7 @@ use yii\db\Query;
 use yii\web\Response;
 use app\controllers\BaseController;
 use app\components\TaskListWidget;
+use app\components\TaskViewDocumentListWidget;
 use app\models\Accountant;
 use app\models\Company;
 use app\models\Task;
@@ -152,11 +153,6 @@ class TaskController extends BaseController
             $data = [
                 'user' => $accountant,
                 'task' => Task::findOne(['id' => $id]),
-                'debug'=>[
-                    'statuses' => Task::getStatusesCompleted(),
-                    'priorities' => Task::getPriorities(),
-                    'task'=>Task::findOne(['id' => $id]),
-                ],
             ];
             return $this->renderPage($data, 'view');
         } else {
@@ -180,12 +176,41 @@ class TaskController extends BaseController
                 'accountants' => Accountant::find()->select(['id', 'lastname', 'firstname'])->where(['>', 'id', new Expression(0)])->orderBy(['lastname' => SORT_ASC, 'firstname' => SORT_ASC])->all(),
                 'statuses' => Task::getStatuses(),
                 'priorities' => Task::getPriorities(),
-                'debug' => [
-                    'statuses' => Task::getStatuses(),
-                    'priorities' => Task::getPriorities(),
-                ]
             ];
             return $this->renderPage($data, 'edit');
+        } else {
+            return $this->renderLogout($accountant);
+        }
+    }
+
+    public function actionDocuments()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $task = $id ? Task::findOne(['id' => $id]) : (new Task());
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            if ($task) {
+                $data = [
+                    'user' => $accountant,
+                    'documents' => $task->getDocuments(),
+                ];
+                $response->data = [
+                    'status' => 'success',
+                    'data' => TaskViewDocumentListWidget::widget($data),
+                ];
+            } else {
+                $response->data = [
+                    'status' => 'error',
+                    'message' => 'Задача не найдена',
+                ];
+            }
+            return $response;
         } else {
             return $this->renderLogout($accountant);
         }
