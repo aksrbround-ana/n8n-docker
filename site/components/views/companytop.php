@@ -54,8 +54,7 @@ use yii\debug\models\timeline\Svg;
         }
         $accountants = $company->getCompanyAccountants();
         if ($accountants->count() > 0) {
-            $link = $accountants->one();
-            $accountant = $link->getAccountant()->one();
+            foreach ($accountants->all() as $accountant)
         ?>
             <div class="flex items-center gap-2">
                 <span class="text-sm"><?= DictionaryService::getWord('responsibleAccountant', $user->lang) ?>: <?= $accountant->firstname . ' ' . $accountant->lastname ?></span>

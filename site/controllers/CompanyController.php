@@ -170,7 +170,7 @@ class CompanyController extends BaseController
         if ($accountant->isValid()) {
             $id = $request->post('id');
             $company = Company::findOne(['id' => $id]);
-            $customers = Customer::findAll(['company_id' => $id]);
+            $customers = $company->getCustomers();
             $activity = CompanyActivities::findOne(['id' => $company->activity_id]);
             $taskQuery = Task::find()
                 ->where(['company_id' => $company->id]);
