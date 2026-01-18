@@ -87,9 +87,9 @@ use app\services\SvgService;
                             ]
                         ];
                         $accountantId = 0;
-                        $link = $company->getCompanyAccountants()->count() ? $company->getCompanyAccountants()->one() : null;
-                        if ($link) {
-                            $accountantId = $link->accountant_id;
+                        $accountant = $company->getCompanyAccountants()->count() ? $company->getCompanyAccountants()->one() : [];
+                        if ($accountant) {
+                            $accountantId = $accountant->id;
                         }
                         foreach ($accountants as $accountant) {
                             $options[] = [

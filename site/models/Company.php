@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "company".
@@ -14,14 +15,20 @@ use Yii;
  * @property bool|null $is_pdv
  * @property int|null $activity_id
  * @property string|null $specific_reports
- * @property int|null $report_date
  * @property string|null $reminder
  * @property int|null $pib
  * @property string|null $status
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string|null $report_date
+ * @property string|null $embedding
  *
  * @property Accountant[] $accountants
  * @property CompanyActivities $activity
  * @property CompanyAccountant[] $companyAccountants
+ * @property CompanyCustomer[] $companyCustomers
+ * @property CompanyNotes[] $companyNotes
+ * @property ReminderSchedule[] $reminderSchedules
  * @property CompanyType $type
  */
 class Company extends \yii\db\ActiveRecord
@@ -45,7 +52,6 @@ class Company extends \yii\db\ActiveRecord
         'Paušal,'
     ];
 
-
     /**
      * {@inheritdoc}
      */
@@ -60,12 +66,14 @@ class Company extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'name_tg', 'type_id', 'activity_id', 'specific_reports', 'report_date', 'reminder', 'pib'], 'default', 'value' => null],
+            [['name', 'name_tg', 'type_id', 'activity_id', 'specific_reports', 'reminder', 'pib', 'report_date', 'embedding'], 'default', 'value' => null],
             [['is_pdv'], 'default', 'value' => 0],
             [['status'], 'default', 'value' => 'onboarding'],
-            [['type_id', 'activity_id', 'report_date', 'pib'], 'default', 'value' => null],
-            [['type_id', 'activity_id', 'report_date', 'pib'], 'integer'],
+            [['type_id', 'activity_id', 'pib'], 'default', 'value' => null],
+            [['type_id', 'activity_id', 'pib'], 'integer'],
             [['is_pdv'], 'boolean'],
+            [['created_at', 'updated_at', 'report_date'], 'safe'],
+            [['embedding'], 'string'],
             [['name', 'name_tg'], 'string', 'max' => 512],
             [['specific_reports', 'reminder'], 'string', 'max' => 256],
             [['status'], 'string', 'max' => 32],
@@ -88,10 +96,13 @@ class Company extends \yii\db\ActiveRecord
             'is_pdv' => 'Is Pdv',
             'activity_id' => 'Activity ID',
             'specific_reports' => 'Specific Reports',
-            'report_date' => 'Report Date',
             'reminder' => 'Reminder',
             'pib' => 'Pib',
             'status' => 'Status',
+            'created_at' => 'Created At',
+            'updated_at' => 'Updated At',
+            'report_date' => 'Report Date',
+            'embedding' => 'Embedding',
         ];
     }
 
@@ -100,7 +111,7 @@ class Company extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAccountants()
+    public function getCompanyAccountants()
     {
         return $this->hasMany(Accountant::class, ['id' => 'accountant_id'])->viaTable('company_accountant', ['company_id' => 'id']);
     }
@@ -126,13 +137,49 @@ class Company extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[CompanyAccountants]].
+     * Gets query for [[CompanyCustomers]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCompanyAccountants()
+    public function getCompanyCustomersQuery()
     {
-        return $this->hasMany(CompanyAccountant::class, ['company_id' => 'id']);
+        return $this->hasMany(CompanyCustomer::class, ['company_id' => 'id']);
+    }
+
+    public function getCustomers()
+    {
+        $query = Customer::find()
+            ->leftJoin(CompanyCustomer::tableName(), CompanyCustomer::tableName() . '.customer_id = customer.id')
+            ->where([CompanyCustomer::tableName() . '.company_id' => $this->id]);
+        return $query->all();
+    }
+
+    public function getCustomer()
+    {
+        $query = Customer::find()
+            ->leftJoin(CompanyCustomer::tableName(), CompanyCustomer::tableName() . '.customer_id = customer.id')
+            ->where([CompanyCustomer::tableName() . '.company_id' => $this->id]);
+        return $query->one();
+    }
+
+    /**
+     * Gets query for [[CompanyNotes]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCompanyNotesQuery()
+    {
+        return $this->hasMany(CompanyNotes::class, ['company_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[ReminderSchedules]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getReminderSchedulesQuery()
+    {
+        return $this->hasMany(ReminderSchedule::class, ['company_id' => 'id']);
     }
 
     /**
@@ -140,7 +187,7 @@ class Company extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getType()
+    public function getTypeQuery()
     {
         return $this->hasOne(CompanyType::class, ['id' => 'type_id']);
     }
@@ -153,10 +200,5 @@ class Company extends \yii\db\ActiveRecord
     public function getNotesNumber()
     {
         return CompanyNotes::find()->where(['company_id' => $this->id, 'status' => 'active'])->count();
-    }
-
-    public function getCustomer()
-    {
-        return Customer::find()->where(['company_id' => $this->id, 'status' => 'active'])->one();
     }
 }
