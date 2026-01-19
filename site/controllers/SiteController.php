@@ -118,6 +118,17 @@ class SiteController extends BaseController
     {
         $permissions = AuthService::getPermissions($accountant);
         $viewAccountants = array_key_exists('viewAccountants', $permissions);
+        $overdueTasksQuery = (new Query())
+            ->select(['a.id', 'COUNT(t.id) AS "overdue_tasks"'])
+            ->from(['a' => 'accountant'])
+            ->leftJoin(['t' => Task::tableName()], 't.accountant_id = a.id')
+            ->where(['!=', 'a.rule', 'bot'])
+            ->andWhere(['!=', 'a.rule', 'admin'])
+            ->andWhere('t.status not in (\'done\', \'closed\', \'archived\')')
+            ->andWhere('t.due_date < CURRENT_DATE')
+            ->andWhere(['!=', 'a.rule', 'ceo'])
+            ->groupBy('a.id')
+            ->orderBy(['a.id' => SORT_ASC]);
         if ($viewAccountants) {
             $accountantQuery = (new Query())
                 ->select(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email', 'COUNT(t.id) AS tasks'])
@@ -134,21 +145,8 @@ class SiteController extends BaseController
                 $accountants[$accountantOne['id']] = $accountantOne;
             }
 
-            $overdueTasksQuery = (new Query())
-                ->select(['a.id', 'COUNT(t.id) AS "overdue_tasks"'])
-                ->from(['a' => 'accountant'])
-                ->leftJoin(['t' => Task::tableName()], 't.accountant_id = a.id AND t.status != \'done\' AND t.due_date < CURRENT_DATE')
-                ->where(['!=', 'a.rule', 'bot'])
-                ->andWhere(['!=', 'a.rule', 'admin'])
-                ->andWhere(['!=', 'a.rule', 'ceo'])
-                ->groupBy('a.id')
-                ->orderBy(['a.id' => SORT_ASC]);
             if ($accountant->rule !== 'ceo') {
                 $overdueTasksQuery->andWhere('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
-            }
-            $overdueTasks = $overdueTasksQuery->all();
-            foreach ($overdueTasks as $overdueTask) {
-                $accountants[$overdueTask['id']]['overdueTasks'] = $overdueTask['overdue_tasks'];
             }
             $recentActivity = [];
         } else {
@@ -158,6 +156,10 @@ class SiteController extends BaseController
                 ->orderBy(['created_at' => SORT_DESC])
                 ->limit(10)
                 ->all();
+        }
+        $overdueTasks = $overdueTasksQuery->all();
+        foreach ($overdueTasks as $overdueTask) {
+            $accountants[$overdueTask['id']]['overdueTasks'] = $overdueTask['overdue_tasks'];
         }
         $upcomingDeadlinesQuery = (new Query())
             ->select([
@@ -177,7 +179,7 @@ class SiteController extends BaseController
             ->from(['t' => 'task'])
             ->rightJoin(['c' => 'company'], 'c.id=t.company_id')
             ->leftJoin(['a' => 'accountant'], 'a.id = t.accountant_id')
-            ->where(['!=', 't.status', 'done'])
+            ->andWhere('t.status not in (\'done\', \'closed\', \'archived\')')
             ->orderBy(['due_date' => SORT_ASC])
             ->limit(5);
         if ($accountant->rule !== 'ceo') {
@@ -199,7 +201,6 @@ class SiteController extends BaseController
         if ($accountant->rule !== 'ceo') {
             $overdueTasksQuery->andWhere('accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
-        $overdueTasks = $overdueTasksQuery->count();
         $docsToCheckQuery = Document::find()
             ->from(['d' => Document::tableName()])
             ->where(['d.status' => 'uploaded']);
@@ -221,7 +222,7 @@ class SiteController extends BaseController
                 'docsToCheck' => $docsToCheck,
                 'activities' => $recentActivity,
                 'viewAccountants' => $viewAccountants,
-            ]
+            ],
         ];
         return $data;
     }
