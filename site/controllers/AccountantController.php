@@ -173,6 +173,7 @@ class AccountantController extends BaseController
                     $accountant = Accountant::findOne($id) ?? (new Accountant());
                 } else {
                     $accountant = new Accountant();
+                    $accountant->setPassword($request->post('password'));
                 }
                 $accountant->firstname = $request->post('firstname');
                 $accountant->lastname = $request->post('lastname');

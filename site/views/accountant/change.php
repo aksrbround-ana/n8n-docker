@@ -60,6 +60,18 @@ $title = $accountant->id ? 'accountantEdit' : 'accountantCreate';
                             ]) ?>
                         </td>
                     </tr>
+                    <?php
+                    if (!$accountant->id) {
+                    ?>
+                    <tr>
+                        <th class="align-left px-4 py-2"><?= DictionaryService::getWord('password', $user->lang) ?></th>
+                        <td class="align-left px-4 py-2">
+                            <input type="text" name="accountant-password" class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" value="<?= $accountant->password ?>" />
+                        </td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
                 </tbody>
             </table>
             <button id="accountant-save-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" data-id="<?= $accountant->id ?>">

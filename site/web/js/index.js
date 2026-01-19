@@ -411,12 +411,13 @@ $(document).on('click', '#task-edit-button, #task-add-button', function (e) {
 $(document).on('click', '#task-save-button', function (e) {
   let user = getUser();
   let token = user ? user?.token : '';
+  let taskId = $('#task-edit-table input[name=id]').val();
   $.ajax({
     url: '/task/save',
     type: 'POST',
     data: {
       token: token,
-      id: $('#task-edit-table input[name=id]').val(),
+      id: taskId,
       category: $('#task-edit-table input[name=category]').val(),
       request: $('#task-edit-table textarea[name=request]').val(),
       status: getSelectWidgetValue('status'),
@@ -430,7 +431,11 @@ $(document).on('click', '#task-save-button', function (e) {
         let data = {
           id: response.id
         }
-        loadPage('/task/view', data, 1);
+        if (taskId) {
+          loadPage('/task/view', data, 1);
+        } else {
+          loadPage('/task/view', data, 0);
+        }
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();
@@ -631,28 +636,32 @@ $(document).on('click', '#accountant-edit-button', function (e) {
 
 $(document).on('click', '#accountant-cancel-button', function (e) {
   const id = $(this).data('id');
-  const user = getUser();
-  const data = {
-    token: user.token,
-  };
-  $.ajax({
-    url: '/accountant/page/' + id,
-    type: 'POST',
-    data: data,
-    success: function (response) {
-      if (response.status === 'success') {
-        $('#accountant-map').html(response.data);
-      } else if (response.status === 'logout') {
-        clearUser();
-        loadContent();
-      } else {
-        showError(dictionaryLookup('error', user.lang), response.message);
+  if (id) {
+    const user = getUser();
+    const data = {
+      token: user.token,
+    };
+    $.ajax({
+      url: '/accountant/page/' + id,
+      type: 'POST',
+      data: data,
+      success: function (response) {
+        if (response.status === 'success') {
+          $('#accountant-map').html(response.data);
+        } else if (response.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          showError(dictionaryLookup('error', user.lang), response.message);
+        }
+      },
+      error: function () {
+        showError(dictionaryLookup('error', user.lang), 'Unknown error');
       }
-    },
-    error: function () {
-      showError(dictionaryLookup('error', user.lang), 'Unknown error');
-    }
-  });
+    });
+  } else {
+    $('#accountant-map').empty();
+  }
   return false;
 });
 
@@ -674,6 +683,9 @@ $(document).on('click', '#accountant-save-button', function (e) {
     role: role,
     lang: lang
   };
+  if (!id) {
+    data.password = $(table).find('input[name=accountant-password]').val();
+  }
   $.ajax({
     url: '/accountant/write/',
     type: 'POST',
@@ -727,7 +739,7 @@ $(document).on('click', '#finish-task', function (e) {
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        loadPage('/task/view', { id: taskId });
+        loadPage('/task/view', { id: taskId }, 0);
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();
@@ -841,12 +853,6 @@ $(document).on('click', '#doc-send-comment', function (e) {
   return false;
 });
 
-$(document).on('click', '#upload-docs', function (e) {
-  const taskId = $(this).data('task-id');
-  loadPage('/document/upload/' + id, {}, true);
-  return false;
-});
-
 async function uploadFile(file, taskId) {
   let formData = new FormData();
   formData.append('document', file);
@@ -897,7 +903,11 @@ $(document).on('change', '#document-to-upload', async (e) => {
   }
 });
 
+let isDialogOpen = false;
 $(document).on('click', '#dropArea', () => {
+  if (isDialogOpen) return;
+  isDialogOpen = true;
+  setTimeout(() => isDialogOpen = false, 300);
   $('#document-to-upload').click()
 });
 $(document).on('dragover', '#dropArea', (e) => {

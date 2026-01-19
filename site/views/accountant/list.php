@@ -18,15 +18,16 @@ use app\services\DictionaryService;
                         <?php
                         foreach ($accountants as $accountant) {
                         ?>
-                        <!-- <div class="rounded-lg text-card-foreground shadow-sm hover:underline text-sm font-medium cursor-pointer" data-v0-t="card"> -->
                             <div class="p-2">
                                 <div class="load-by-link hover:underline cursor-pointer space-y-2" data-link="/accountant/page/<?= $accountant->id ?>" data-target="accountant-map"><?= $accountant->firstname . ' ' . $accountant->lastname ?></div>
                             </div>
-                        <!-- </div> -->
                         <?php
                         }
                         ?>
                     </div>
+                </div>
+                <div class="p-2">
+                    <button class="load-by-link inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" data-link="/accountant/change/" data-target="accountant-map"><?= DictionaryService::getWord('accountantCreate', $user->lang) ?></button>
                 </div>
             </div>
             <div>
