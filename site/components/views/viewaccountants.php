@@ -35,10 +35,6 @@ use app\services\DictionaryService;
                                 <span class="text-xs text-destructive font-medium">(<?= $accountant['overdueTasks'] ?> !)</span>
                             <?php
                             }
-                        } else {
-                            ?>
-                            <pre><?php print_r($accountant); ?></pre>
-                        <?php
                         }
                         ?>
                     </div>
