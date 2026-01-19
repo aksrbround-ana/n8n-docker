@@ -23,7 +23,7 @@ class TestDataController extends Controller
             $db = Yii::$app->getDb();
             $db->transaction(function () {
                 // $this->actionClear();
-                $this->actionLoad();
+                $this->load();
             });
             echo "Test data loaded successfully\n\n";
             return ExitCode::OK;
@@ -57,7 +57,7 @@ class TestDataController extends Controller
         return ExitCode::OK;
     }
 
-    public function clear()
+    private function clear()
     {
         $fileAccountant = file_get_contents(realpath(Yii::getAlias(self::TEST_DIRECTORY)) . '/' . self::TEST_DATA_ACCOUNTANT_FILE_NAME);
         $accountants = json_decode($fileAccountant, true);
@@ -93,35 +93,43 @@ class TestDataController extends Controller
         echo "Test companies cleared\n\n";
     }
 
-    public function actionLoad()
+    private function load()
     {
         $fileCompany = file_get_contents(realpath(Yii::getAlias(self::TEST_DIRECTORY)) . '/' . self::TEST_DATA_COMPANY_FILE_NAME);
         $companies = json_decode($fileCompany, true);
         $nextCompanyIdQuery = 'SELECT nextval(\'company_id_seq\'::regclass)';
         $insertCompanyQuery = 'INSERT INTO "company" ("id","name","name_tg","type_id","is_pdv","activity_id","specific_reports","reminder","pib","status","report_date") VALUES (:id,:name,:name_tg,:type_id,:is_pdv,:activity_id,:specific_reports,:reminder,:pib,:status,:report_date) RETURNING id';
         $nextCustomerIdQuery = 'SELECT nextval(\'customer_id_seq\'::regclass)';
-        $insertCustomerQuery = 'INSERT INTO "customer" ("id","tg_id","company_id","firstname","lastname","username","status","lang") VALUES (:id,:tg_id,:company_id,:firstname,:lastname,:username,:status,:lang) RETURNING id';
+        $insertCustomerQuery = 'INSERT INTO "customer" ("id","tg_id","firstname","lastname","username","status","lang") VALUES (:id,:tg_id,:firstname,:lastname,:username,:status,:lang) RETURNING id';
+        $insertCompanyCustomerQuery = 'INSERT INTO "company_customer" ("company_id","customer_id") VALUES (:company_id,:customer_id) RETURNING id';
         $nextAccountantIdQuery = 'SELECT nextval(\'accountant_id_seq\'::regclass)';
         $insertAccountantQuery = 'INSERT INTO "accountant" (id, firstname, lastname, "rule", lang, email, "password", token) VALUES (:id, :firstname, :lastname, :rule, :lang, :email, :password, :token) RETURNING id';
         $nextTaskIdQuery = 'SELECT nextval(\'task_id_seq\'::regclass)';
         $insertTaskQuery = 'INSERT INTO "task" ("id","company_id","category","request","status","due_date","accountant_id","priority") VALUES (:id,:company_id,:category,:request,:status,:due_date,:accountant_id,:priority) RETURNING id';
         $nextCompanyId = 0;
         $accountantId = 0;
+        $lastCompany = 0;
         foreach ($companies as $company) {
             $nextCompanyId = Yii::$app->db
                 ->createCommand($nextCompanyIdQuery)
                 ->queryScalar();
             $company['id'] = $nextCompanyId;
+            $lastCompany = $nextCompanyId;
             Yii::$app->db->createCommand($insertCompanyQuery, $company)->execute();
         }
         $fileCustomers = file_get_contents(realpath(Yii::getAlias(self::TEST_DIRECTORY)) . '/' . self::TEST_DATA_CUSTOMER_FILE_NAME);
         $customers = json_decode($fileCustomers, true);
         foreach ($customers as $customer) {
-            $customer['company_id'] = $nextCompanyId;
+            // $customer['company_id'] = $nextCompanyId;
             $customer['id'] = Yii::$app->db
                 ->createCommand($nextCustomerIdQuery)
                 ->queryScalar();
             Yii::$app->db->createCommand($insertCustomerQuery, $customer)->execute();
+            $companyCustomer = [
+                'company_id' => $lastCompany,
+                'customer_id' => $customer['id'],
+            ];
+            Yii::$app->db->createCommand($insertCompanyCustomerQuery, $companyCustomer)->execute();
         }
         $fileAccountant = file_get_contents(realpath(Yii::getAlias(self::TEST_DIRECTORY)) . '/' . self::TEST_DATA_ACCOUNTANT_FILE_NAME);
         $accountants = json_decode($fileAccountant, true);
