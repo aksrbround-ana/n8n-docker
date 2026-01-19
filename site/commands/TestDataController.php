@@ -2,6 +2,7 @@
 
 namespace app\commands;
 
+use app\services\AuthService;
 use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
@@ -134,7 +135,7 @@ class TestDataController extends Controller
         $fileAccountant = file_get_contents(realpath(Yii::getAlias(self::TEST_DIRECTORY)) . '/' . self::TEST_DATA_ACCOUNTANT_FILE_NAME);
         $accountants = json_decode($fileAccountant, true);
         foreach ($accountants as $accountant) {
-            // $accountant['company_id'] = $nextCompanyId;
+            $accountant['password'] = AuthService::encodePassword($accountant['password']);
             $accountant['id'] = Yii::$app->db
                 ->createCommand($nextAccountantIdQuery)
                 ->queryScalar();
