@@ -167,6 +167,7 @@ class DictionaryService
             'taskSearch' => 'Поиск задачи…',
             'taskEditing' => 'Редактирование задачи',
             'taskCreation' => 'Создание задачи',
+            'finishTask' =>  'Отметить выполненной',
 
             // Task statuses
             'taskStatusNew' =>  'Новая',
@@ -468,6 +469,7 @@ class DictionaryService
             'taskSearch' => 'Потражите задатак…',
             'taskEditing' => 'Уређивање задатка',
             'taskCreation' => 'Креирање задатка',
+            'finishTask' =>  'Означи као готово',
 
             // Task statuses
             'taskStatusNew' =>  'Novi',
@@ -769,6 +771,7 @@ class DictionaryService
             'taskSearch' => 'Task search…',
             'taskEditing' => 'Task editing',
             'taskCreation' => 'Task creation',
+            'finishTask' =>  'Mark done',
 
             // Task statuses
             'taskStatusNew' =>  'New',
