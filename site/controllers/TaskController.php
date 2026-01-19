@@ -236,6 +236,7 @@ class TaskController extends BaseController
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             if ($task->save()) {
+                $id = $task->id;
                 $response->data = [
                     'status' => 'success',
                     'id' => $task->id,
