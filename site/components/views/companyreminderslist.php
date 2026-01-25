@@ -13,7 +13,7 @@ use app\services\SvgService;
         <tr class="border-b transition-colors hover:bg-muted/50">
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('topic', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('text', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('deadline_day', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('deadlineDay', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('activity', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('stopForThisMonth', $user->lang) ?></th>
@@ -53,7 +53,7 @@ use app\services\SvgService;
                     </div>
                 </td>
                 <td class="p-4 align-middle text-sm"><?= $user->lang == 'ru' ? $reminder['text_ru'] : $reminder['text_rs'] ?></td>
-                <td class="p-4 align-middle text-sm"><?= $reminder['deadline_day'] ?></td>
+                <td class="p-4 align-middle text-sm"><?= $reminder['deadlineDay'] ?></td>
                 <td class="p-4 align-middle">
                     <input class="reminder-activity" type="checkbox" <?= $checked ?> data-rm-id="<?= $reminder['reminder_id'] ?>" data-sc-id="<?= $reminder['schedule_id'] ?>" data-co-id="<?= $reminder['company_id'] ?>" data-type="rr">
                 </td>
@@ -82,7 +82,7 @@ use app\services\SvgService;
         <tr class="border-b transition-colors hover:bg-muted/50">
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('topic', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('text', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('deadline_day', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('deadlineDay', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
         </tr>
     </thead>

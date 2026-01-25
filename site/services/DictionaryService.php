@@ -219,6 +219,8 @@ class DictionaryService
             // Document types
             'docTypeUnknown' =>  'Неизвестно',
             'docTypeInvoice' =>  'Счёт-фактура',
+            'docTypeBill' =>  'Счет',
+            'docTypeReceipt' => 'Квитанция',
             'docTypeBankStatement' =>  'Банковская выписка',
             'docTypePayroll' =>  'Зарплатная ведомость',
             'docTypeContract' =>  'Договор',
@@ -265,6 +267,7 @@ class DictionaryService
             'overdue' =>  'Просрочено',
             'daysLeft' =>  'дней осталось',
             'daysOverdue' =>  'дней просрочено',
+            'deadlineDay' => 'Крайний срок',
 
             // Reminders
             'actionDate' => 'Дата действия',
@@ -286,7 +289,6 @@ class DictionaryService
             'thisMonthReminders' => 'Напоминания этого месяца',
             'loadTaxCalendarPage' => 'Загрузить страницу налогового календаря',
             'editReminder' => 'Редактировать напоминание',
-            'deadline_day' => 'Крайний срок',
             'createReminder' => 'Создать регулярное напоминание',
             'topic' => 'Тема',
             'text' => 'Текст',
@@ -521,6 +523,8 @@ class DictionaryService
             // Document types
             'docTypeUnknown' =>  'Nepoznato',
             'docTypeInvoice' =>  'Faktura',
+            'docTypeBill' =>  'Račun',
+            'docTypeReceipt'=>'Priznanica',
             'docTypeBankStatement' =>  'Izvod iz banke',
             'docTypePayroll' =>  'Platni spisak',
             'docTypeContract' =>  'Ugovor',
@@ -567,6 +571,7 @@ class DictionaryService
             'overdue' =>  'Zakasnelo',
             'daysLeft' =>  'dana preostalo',
             'daysOverdue' =>  'dana zakašnjenja',
+            'deadlineDay' => 'Крајњи рок (дан)',
 
             // Reminders
             'actionDate' => 'Datum akcije',
@@ -588,7 +593,6 @@ class DictionaryService
             'thisMonthReminders' => 'Podsećanja za ovaj mesec',
             'loadTaxCalendarPage' => 'Učitaj stranicu poreskog kalendara',
             'editReminder' => 'Izmeni podsećanje',
-            'deadline_day' => 'Крайњи рок',
             'createReminder' => 'Kreiraj stalno podsećanje',
             'topic' => 'Tema',
             'text' => 'Tekst',
@@ -823,6 +827,8 @@ class DictionaryService
             // Document types
             'docTypeUnknown' =>  'Unknown',
             'docTypeInvoice' =>  'Invoice',
+            'docTypeBill' => 'Bill',
+            'docTypeReceipt' =>  'Receipt',
             'docTypeBankStatement' =>  'Bank Statement',
             'docTypePayroll' =>  'Payroll',
             'docTypeContract' =>  'Contract',
@@ -868,6 +874,7 @@ class DictionaryService
             'overdue' =>  'Overdue',
             'daysLeft' =>  'days left',
             'daysOverdue' =>  'days overdue',
+            'deadlineDay' => 'Deadline Day',
 
             // Reminders
             'actionDate' => 'Date of Action',
@@ -889,7 +896,6 @@ class DictionaryService
             'thisMonthReminders' => 'This Month\'s Reminders',
             'loadTaxCalendarPage' => 'Load Tax Calendar Page',
             'editReminder' => 'Edit Reminder',
-            'deadline_day' => 'Deadline Day',
             'createReminder' => 'Create Regular Reminder',
             'topic' => 'Topic',
             'text' => 'Text',
