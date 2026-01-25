@@ -53,8 +53,10 @@ class CompanyRemindersListWidget extends Widget
             ->select([
                 'reminder_id' => TaxCalendar::tableName() . '.id',
                 'schedule_id' => ReminderSchedule::tableName() . '.id',
-                TaxCalendar::tableName() . '.activity_type AS topic',
-                TaxCalendar::tableName() . '.activity_text AS text',
+                TaxCalendar::tableName() . '.activity_type_rs AS topic_rs',
+                TaxCalendar::tableName() . '.activity_text_rs AS text_rs',
+                TaxCalendar::tableName() . '.activity_type_ru AS topic_ru',
+                TaxCalendar::tableName() . '.activity_text_ru AS text_ru',
                 // TaxCalendar::tableName() . '.input_date AS deadline_date',
                 'deadline_date' => new Expression('DATE(' . TaxCalendar::tableName() . '.input_date)'),
                 'company_id' => new Expression($this->company->id),

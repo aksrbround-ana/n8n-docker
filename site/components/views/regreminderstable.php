@@ -9,7 +9,7 @@ use app\services\SvgService;
     <thead>
         <tr class="border-t bg-muted/50">
             <th class="p-6 text-left text-sm font-semibold tracking-tight">ID</th>
-            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('deadline_day', $user->lang)  ?></th>
+            <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('deadlineDay', $user->lang)  ?></th>
             <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('type_ru', $user->lang)  ?></th>
             <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('type_rs', $user->lang) ?></th>
             <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('text_ru', $user->lang) ?></th>
