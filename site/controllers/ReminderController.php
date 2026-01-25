@@ -44,7 +44,7 @@ class ReminderController extends BaseController
         $lastDay = date('Y-m-t', strtotime($month));
         $taxCalendar = TaxCalendar::find()
             ->where(['between', 'input_date', $firstDay, $lastDay])
-            ->orderBy(["input_date" => SORT_ASC, 'activity_type' => SORT_ASC])
+            ->orderBy(["input_date" => SORT_ASC, 'activity_type_rs' => SORT_ASC])
             ->all();
         $data = [
             'user' => $accountant,

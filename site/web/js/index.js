@@ -1085,6 +1085,52 @@ $(document).on('click', '.edit-reg-reminder-btn', function (e) {
   return false;
 });
 
+function fieldTranslate(fieldFrom, fieldTo, langFrom, langTo) {
+  let textOriginal = $(fieldFrom).val();
+  let user = getUser();
+  let data = {
+    token: user.token,
+    text: textOriginal,
+    from: langFrom,
+    to: langTo
+  };
+  $.ajax({
+    url: '/util/translate/',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $(fieldTo).val(response.data.translation);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function (e) {
+      showError(dictionaryLookup('error', user.lang), e.message);
+    }
+  });
+  return false;
+}
+
+$(document).on('change', '#modal-create-reg-reminder input[name=type_ru]', function (e) {
+  return fieldTranslate('#modal-create-reg-reminder input[name=type_ru]', '#modal-create-reg-reminder input[name=type_rs]', 'ru', 'rs');
+});
+
+$(document).on('change', '#modal-create-reg-reminder input[name=type_rs]', function (e) {
+  return fieldTranslate('#modal-create-reg-reminder input[name=type_rs]', '#modal-create-reg-reminder input[name=type_ru]', 'rs', 'ru');
+});
+
+$(document).on('change', '#modal-create-reg-reminder input[name=text_ru]', function (e) {
+  return fieldTranslate('#modal-create-reg-reminder input[name=text_ru]', '#modal-create-reg-reminder input[name=text_rs]', 'ru', 'rs');
+});
+
+$(document).on('change', '#modal-create-reg-reminder input[name=text_rs]', function (e) {
+  return fieldTranslate('#modal-create-reg-reminder input[name=text_rs]', '#modal-create-reg-reminder input[name=text_ru]', 'rs', 'ru');
+});
+
 $(document).on('click', '#save-reg-reminder', function (e) {
   let user = getUser();
   let modalBody = $(this).closest('.modal-window').find('.modal-body');
