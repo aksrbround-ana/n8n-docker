@@ -144,7 +144,7 @@ class ReminderController extends BaseController
             $response->format = \yii\web\Response::FORMAT_JSON;
             $response->data = [
                 'status' => 'success',
-                'message' => 'Reminder updated successfully',
+                // 'message' => 'Reminder updated successfully',
                 'data' => $html,
             ];
             return $response;
@@ -160,13 +160,36 @@ class ReminderController extends BaseController
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         if ($accountant->isValid()) {
+            $topicFrom = $request->post('topic');
+            $textFrom = $request->post('text');
+            $langFrom = $request->post('lang');
+            $langTo = $langFrom == 'ru' ? 'rs' : 'ru';
+            $data = [
+                'text' => $topicFrom,
+                'from' => $langFrom,
+                'to' => $langTo,
+            ];
+            $topicTo = $this->makeN8nWebhookCall('translate', $data)['data']['translation'] ?? '';
+            $data['text'] = $textFrom;
+            $textTo = $this->makeN8nWebhookCall('translate', $data)['data']['translation'] ?? '';
+            if ($langFrom == 'ru') {
+                $topicRu = $topicFrom;
+                $textRu = $textFrom;
+                $topicRs = $topicTo;
+                $textRs = $textTo;
+            } else {
+                $topicRs = $topicFrom;
+                $textRs = $textFrom;
+                $topicRu = $topicTo;
+                $textRu = $textTo;
+            }
             $data = [
                 'id' => $request->post('id'),
                 'deadline_day' => $request->post('deadLine'),
-                'type_ru' => $request->post('type_ru'),
-                'type_rs' => $request->post('type_rs'),
-                'text_ru' => $request->post('text_ru'),
-                'text_rs' => $request->post('text_rs'),
+                'type_ru' => $topicRu,
+                'type_rs' => $topicRs,
+                'text_ru' => $textRu,
+                'text_rs' => $textRs,
             ];
             if ($data['id']) {
                 $reminder = ReminderRegular::findOne($data['id']);
@@ -175,6 +198,35 @@ class ReminderController extends BaseController
             }
             $reminder->load($data, '');
             $reminder->save();
+            $reminderSchedule = ReminderSchedule::find()
+                ->where(['template_id' => $reminder->id, 'type' => 'regular'])
+                ->all();
+            $debug = [];
+            if ($reminderSchedule) {
+                foreach ($reminderSchedule as $item) {
+                    $companyId = $item->company_id;
+                    $lang = (new Query())
+                        ->select([
+                            'lang' => "coalesce(c2.lang, 'no')",
+                            'tg_id' => 'coalesce(c2.tg_id, 0)'
+                        ])
+                        ->from(['c' => 'company'])
+                        ->leftJoin(['cc' => 'company_customer'], 'cc.company_id = c.id')
+                        ->leftJoin(['c2' => 'customer'], 'c2.id = cc.customer_id')
+                        ->where(['c.id' => $companyId])
+                        ->limit(1)
+                        ->one();
+                    if ($lang['tg_id'] == 0 || $lang['tg_id'] == null) {
+                        continue;
+                    }
+                    $item->message = ($lang['lang'] == 'ru') ? $reminder->text_ru : $reminder->text_rs;
+                    $debug[] = [
+                        'lang' => $lang,
+                        'message' => $item->message,
+                    ];
+                    $item->save();
+                }
+            }
             $response = \Yii::$app->response;
             $response->format = \yii\web\Response::FORMAT_JSON;
             if ($reminder->hasErrors()) {
@@ -195,6 +247,7 @@ class ReminderController extends BaseController
                         'reminder' => $reminder,
                         'class' => ['reg-reminder-btn'],
                     ]),
+                    'debug' => $debug,
                 ];
                 return $response;
             }

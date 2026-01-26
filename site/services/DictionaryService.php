@@ -292,10 +292,6 @@ class DictionaryService
             'createReminder' => 'Создать регулярное напоминание',
             'topic' => 'Тема',
             'text' => 'Текст',
-            'type_ru' => 'Тема (RU)',
-            'type_rs' => 'Тема (RS)',
-            'text_ru' => 'Текст (RU)',
-            'text_rs' => 'Текст (RS)',
 
             // OCR
             'ocrSummary' => 'Резюме',
@@ -596,10 +592,6 @@ class DictionaryService
             'createReminder' => 'Kreiraj stalno podsećanje',
             'topic' => 'Tema',
             'text' => 'Tekst',
-            'type_ru' => 'Тема (RU)',
-            'type_rs' => 'Тема (RS)',
-            'text_ru' => 'Tekst (RU)',
-            'text_rs' => 'Tekst (RS)',
 
             // OCR
             'ocrSummary' => 'Резюме',
@@ -899,10 +891,6 @@ class DictionaryService
             'createReminder' => 'Create Regular Reminder',
             'topic' => 'Topic',
             'text' => 'Text',
-            'type_ru' => 'Topic (RU)',
-            'type_rs' => 'Topic (RS)',
-            'text_ru' => 'Text (RU)',
-            'text_rs' => 'Text (RS)',
 
             // OCR
             'ocrSummary' => 'Summary',

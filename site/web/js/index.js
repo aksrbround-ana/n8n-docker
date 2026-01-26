@@ -1085,6 +1085,7 @@ $(document).on('click', '.edit-reg-reminder-btn', function (e) {
   return false;
 });
 
+/*
 function fieldTranslate(fieldFrom, fieldTo, langFrom, langTo) {
   let textOriginal = $(fieldFrom).val();
   let user = getUser();
@@ -1114,22 +1115,23 @@ function fieldTranslate(fieldFrom, fieldTo, langFrom, langTo) {
   });
   return false;
 }
+*/
 
-$(document).on('change', '#modal-create-reg-reminder input[name=type_ru]', function (e) {
-  return fieldTranslate('#modal-create-reg-reminder input[name=type_ru]', '#modal-create-reg-reminder input[name=type_rs]', 'ru', 'rs');
-});
+// $(document).on('change', '#modal-create-reg-reminder input[name=type_ru]', function (e) {
+//   return fieldTranslate('#modal-create-reg-reminder input[name=type_ru]', '#modal-create-reg-reminder input[name=type_rs]', 'ru', 'rs');
+// });
 
-$(document).on('change', '#modal-create-reg-reminder input[name=type_rs]', function (e) {
-  return fieldTranslate('#modal-create-reg-reminder input[name=type_rs]', '#modal-create-reg-reminder input[name=type_ru]', 'rs', 'ru');
-});
+// $(document).on('change', '#modal-create-reg-reminder input[name=type_rs]', function (e) {
+//   return fieldTranslate('#modal-create-reg-reminder input[name=type_rs]', '#modal-create-reg-reminder input[name=type_ru]', 'rs', 'ru');
+// });
 
-$(document).on('change', '#modal-create-reg-reminder input[name=text_ru]', function (e) {
-  return fieldTranslate('#modal-create-reg-reminder input[name=text_ru]', '#modal-create-reg-reminder input[name=text_rs]', 'ru', 'rs');
-});
+// $(document).on('change', '#modal-create-reg-reminder input[name=text_ru]', function (e) {
+//   return fieldTranslate('#modal-create-reg-reminder input[name=text_ru]', '#modal-create-reg-reminder input[name=text_rs]', 'ru', 'rs');
+// });
 
-$(document).on('change', '#modal-create-reg-reminder input[name=text_rs]', function (e) {
-  return fieldTranslate('#modal-create-reg-reminder input[name=text_rs]', '#modal-create-reg-reminder input[name=text_ru]', 'rs', 'ru');
-});
+// $(document).on('change', '#modal-create-reg-reminder input[name=text_rs]', function (e) {
+//   return fieldTranslate('#modal-create-reg-reminder input[name=text_rs]', '#modal-create-reg-reminder input[name=text_ru]', 'rs', 'ru');
+// });
 
 $(document).on('click', '#save-reg-reminder', function (e) {
   let user = getUser();
@@ -1137,11 +1139,10 @@ $(document).on('click', '#save-reg-reminder', function (e) {
   let data = {
     token: user.token,
     id: $(modalBody).find('input[name="reminderId"]').val(),
+    lang: $(modalBody).find('input[name="reminder-lang"]').val(),
     deadLine: $(modalBody).find('input[name="deadlineDay"]').val(),
-    type_ru: $(modalBody).find('input[name="type_ru"]').val(),
-    type_rs: $(modalBody).find('input[name="type_rs"]').val(),
-    text_ru: $(modalBody).find('input[name="text_ru"]').val(),
-    text_rs: $(modalBody).find('input[name="text_rs"]').val(),
+    topic: $(modalBody).find('input[name="topic"]').val(),
+    text: $(modalBody).find('input[name="text"]').val(),
   };
   $.ajax({
     url: '/reminder/reg-reminder-save/',

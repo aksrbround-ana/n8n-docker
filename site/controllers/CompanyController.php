@@ -465,6 +465,21 @@ class CompanyController extends BaseController
                     if ($reminderCompany->save()) {
                         $reminderRegular = ReminderRegular::findOne(['id' => $reminderId]);
                         if ($reminderRegular) {
+                            $companyId = (int)$checkedCompanies[$i];
+                            $lang = (new Query())
+                                ->select([
+                                    'lang' => "coalesce(c2.lang, 'no')",
+                                    'tg_id' => 'coalesce(c2.tg_id, 0)'
+                                ])
+                                ->from(['c' => 'company'])
+                                ->leftJoin(['cc' => 'company_customer'], 'cc.company_id = c.id')
+                                ->leftJoin(['c2' => 'customer'], 'c2.id = cc.customer_id')
+                                ->where(['c.id' => $companyId])
+                                ->limit(1)
+                                ->one();
+                            if ($lang['tg_id'] == 0 || $lang['tg_id'] == null) {
+                                continue;
+                            }
                             $deadlineDate = date('Y-m-') . str_pad($reminderRegular->deadline_day, 2, '0', STR_PAD_LEFT);
                             $escalationDate = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($deadlineDate . ' -1 day')));
                             $reminder_2_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($escalationDate . ' -1 day')));
@@ -480,6 +495,7 @@ class CompanyController extends BaseController
                             $reminderSchedule->escalation_date = $escalationDate;
                             $reminderSchedule->target_month = date('Y-m-01', time());
                             $reminderSchedule->status = ReminderSchedule::STATUS_PENDING;
+                            $reminderSchedule->message = ($lang['lang'] == 'ru') ? $reminderRegular->text_ru : $reminderRegular->text_rs;
                             $reminderSchedule->save();
                             if ($reminderSchedule->hasErrors()) {
                                 $errors[] = $reminderSchedule->getErrors();
@@ -530,6 +546,21 @@ class CompanyController extends BaseController
             $errors = [];
             if (!empty($checkedCompanies)) {
                 for ($i = 0; $i < count($checkedCompanies); $i++) {
+                    $companyId = (int)$checkedCompanies[$i];
+                    $lang = (new Query())
+                        ->select([
+                            'lang' => "coalesce(c2.lang, 'no')",
+                            'tg_id' => 'coalesce(c2.tg_id, 0)'
+                        ])
+                        ->from(['c' => 'company'])
+                        ->leftJoin(['cc' => 'company_customer'], 'cc.company_id = c.id')
+                        ->leftJoin(['c2' => 'customer'], 'c2.id = cc.customer_id')
+                        ->where(['c.id' => $companyId])
+                        ->limit(1)
+                        ->one();
+                    if ($lang['tg_id'] == 0 || $lang['tg_id'] == null) {
+                        continue;
+                    }
                     $ps = TaxCalendar::findOne(['id' => $reminderId]);
                     $searchQuery = ReminderSchedule::find()
                         ->where([
@@ -552,7 +583,7 @@ class CompanyController extends BaseController
                     $reminder->reminder_2_date = date('Y-m-d H:i:s', strtotime($ps->reminder_2_date));
                     $reminder->escalation_date = date('Y-m-d H:i:s', strtotime($ps->escalation_date));
                     $reminder->target_month = date('Y-m-01', strtotime($ps->target_month));
-                    // $reminder->message = $ps->activity_text;
+                    $reminder->message = ($lang['lang'] == 'ru') ? $ps->activity_text_ru : $ps->activity_text_rs;
                     $r = $reminder->save();
                     if (!$r) {
                         $errors[] = $reminder->getErrors();
