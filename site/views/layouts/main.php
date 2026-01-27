@@ -15,6 +15,7 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+$centrifugoUrl = getenv('CENTRIFUGO_URL');
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -33,6 +34,18 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <script src="/js/modal.js"></script>
     <script src="/js/tiff.min.js"></script>
     <script src="/js/select.js"></script>
+    <script src="https://unpkg.com/centrifuge@3.1.0/dist/centrifuge.js"></script>
+    <script>
+        const centrifuge = new Centrifuge('ws://<?= $centrifugoUrl ?>:8000/connection/websocket');
+        const sub = centrifuge.newSubscription('public:messages');
+        sub.on('publication', function(ctx) {
+            const msg = ctx.data.text;
+            // Добавляем сообщение в верстку
+            document.getElementById('chat-box').innerHTML += `<p>${msg}</p>`;
+        });
+        sub.subscribe();
+        centrifuge.connect();
+    </script>
     <link rel="stylesheet" href="/css/site.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/modal.css">

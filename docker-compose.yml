@@ -68,7 +68,6 @@ services:
       - traefik.http.routers.n8n.middlewares=n8n@docker
       - traefik.http.services.n8n.loadbalancer.server.port=5678
     environment:
-#      - DB_TYPE=sqlite
       - DB_TYPE=${DB_TYPE:-postgresdb}
       - DB_POSTGRESDB_HOST=${DB_HOST:-postgres}
       - DB_POSTGRESDB_PORT=${DB_PORT:-5432}
@@ -92,11 +91,12 @@ services:
       - EXECUTIONS_DATA_PRUNE=true
       - EXECUTIONS_DATA_MAX_AGE=168   # 7 дней
       - EXECUTIONS_DATA_SAVE_ON_ERROR=all
-      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none # Экономит кучу места. 'info' - компромисс
-      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false # <-- Исправлено на false для скорости!
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
+      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false
       - NODE_OPTIONS=--max-old-space-size=2048
       - NODE_FUNCTION_ALLOW_BUILTIN=crypto
       - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      - CENTRIFUGO_URL=${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}
     ports:
       - '5678:5678'
     volumes:
@@ -130,6 +130,24 @@ services:
       retries: 3
       start_period: 60s
 
+  centrifugo:
+    image: centrifugo/centrifugo:latest
+    container_name: centrifugo
+    networks:
+      - web # общая сеть с traefik
+    ports:
+      - "8000:8000"    
+    command: centrifugo -c config.json
+    environment:
+      - CENTRIFUGO_API_KEY=CENTRIFUGO_API_KEY
+      - CENTRIFUGO_TOKEN_HMAC_SECRET_KEY=CENTRIFUGO_TOKEN_HMAC_SECRET_KEY
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.centrifugo.rule=Host(`${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.centrifugo.entrypoints=websecure"
+      - "traefik.http.routers.centrifugo.tls.certresolver=myresolver"
+      - "traefik.http.services.centrifugo.loadbalancer.server.port=8000"
+
   php-site:
     build:
       context: .
@@ -145,6 +163,7 @@ services:
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
       - N8N_WEBHOOK_BASE_URL=${N8N_WEBHOOK_BASE_URL}
+      - CENTRIFUGO_URL=${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}
     volumes:
       - ./site:/var/www/html
     networks:
