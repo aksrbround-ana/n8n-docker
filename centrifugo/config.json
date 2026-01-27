@@ -1,0 +1,9 @@
+{
+    "namespaces": [
+        {
+            "name": "public",
+            "publish": true,
+            "anonymous": true
+        }
+    ]
+}
