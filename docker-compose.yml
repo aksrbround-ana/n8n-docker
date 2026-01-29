@@ -166,6 +166,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
       - N8N_WEBHOOK_BASE_URL=${N8N_WEBHOOK_BASE_URL}
       - CENTRIFUGO_URL=${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}
+      - CENTRIFUGO_TOKEN_SECRET=${CENTRIFUGO_API_KEY}
     volumes:
       - ./site:/var/www/html
     networks:
