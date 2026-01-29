@@ -453,19 +453,19 @@ class CompanyController extends BaseController
                     $searchQuery = ReminderRegularCompany::find()
                         ->where([
                             'reminder_id' => $reminderId,
-                            'company_id' => (int)$checkedCompanies[$i],
+                            'company_id' => (int) $checkedCompanies[$i],
                         ]);
                     $existingReminder = $searchQuery->count();
                     if ($existingReminder > 0) {
                         continue;
                     }
                     $reminderCompany = new ReminderRegularCompany();
-                    $reminderCompany->company_id = (int)$checkedCompanies[$i];
+                    $reminderCompany->company_id = (int) $checkedCompanies[$i];
                     $reminderCompany->reminder_id = $reminderId;
                     if ($reminderCompany->save()) {
                         $reminderRegular = ReminderRegular::findOne(['id' => $reminderId]);
                         if ($reminderRegular) {
-                            $companyId = (int)$checkedCompanies[$i];
+                            $companyId = (int) $checkedCompanies[$i];
                             $lang = (new Query())
                                 ->select([
                                     'lang' => "coalesce(c2.lang, 'no')",
@@ -485,7 +485,7 @@ class CompanyController extends BaseController
                             $reminder_2_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($escalationDate . ' -1 day')));
                             $reminder_1_date = CalendarService::getClosestWorkingDay(date('Y-m-d', strtotime($reminder_2_date . ' -1 day')));
                             $reminderSchedule = new ReminderSchedule();
-                            $reminderSchedule->company_id = (int)$checkedCompanies[$i];
+                            $reminderSchedule->company_id = (int) $checkedCompanies[$i];
                             $reminderSchedule->type = 'regular';
                             $reminderSchedule->template_id = $reminderId;
                             $reminderSchedule->updated_at = date('Y-m-d H:i:s');
@@ -546,7 +546,7 @@ class CompanyController extends BaseController
             $errors = [];
             if (!empty($checkedCompanies)) {
                 for ($i = 0; $i < count($checkedCompanies); $i++) {
-                    $companyId = (int)$checkedCompanies[$i];
+                    $companyId = (int) $checkedCompanies[$i];
                     $lang = (new Query())
                         ->select([
                             'lang' => "coalesce(c2.lang, 'no')",
@@ -566,14 +566,14 @@ class CompanyController extends BaseController
                         ->where([
                             'type' => 'calendar',
                             'template_id' => $reminderId,
-                            'company_id' => (int)$checkedCompanies[$i],
+                            'company_id' => (int) $checkedCompanies[$i],
                         ]);
                     $existingReminder = $searchQuery->count();
                     if ($existingReminder > 0) {
                         continue;
                     }
                     $reminder = new ReminderSchedule();
-                    $reminder->company_id = (int)$checkedCompanies[$i];
+                    $reminder->company_id = (int) $checkedCompanies[$i];
                     $reminder->type = 'calendar';
                     $reminder->template_id = $reminderId;
                     // $reminder->created_at = date('Y-m-d H:i:s');
@@ -641,7 +641,23 @@ class CompanyController extends BaseController
             $text = $request->post('text');
             $tc = TaxCalendar::findOne(['id' => $reminderId]);
             if ($tc) {
-                $tc->activity_text = $text;
+                if ($accountant->lang == 'ru') {
+                    $tc->activity_text_ru = $text;
+                    $data = [
+                        'text' => $text,
+                        'from' => 'ru',
+                        'to' => 'rs',
+                    ];
+                    $tc->activity_text_rs = $this->makeN8nWebhookCall('translate', $data)['data']['translation'] ?? '';
+                } else {
+                    $tc->activity_text_rs = $text;
+                    $data = [
+                        'text' => $text,
+                        'from' => 'rs',
+                        'to' => 'ru',
+                    ];
+                    $tc->activity_text_ru = $this->makeN8nWebhookCall('translate', $data)['data']['translation'] ?? '';
+                }
                 $tc->save();
             }
             $response = \Yii::$app->response;
