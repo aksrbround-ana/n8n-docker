@@ -53,7 +53,7 @@ use app\services\SvgService;
                     </div>
                 </td>
                 <td class="p-4 align-middle text-sm"><?= $user->lang == 'ru' ? $reminder['text_ru'] : $reminder['text_rs'] ?></td>
-                <td class="p-4 align-middle text-sm"><?= $reminder['deadlineDay'] ?></td>
+                <td class="p-4 align-middle text-sm"><?= $reminder['deadline_day'] ?></td>
                 <td class="p-4 align-middle">
                     <input class="reminder-activity" type="checkbox" <?= $checked ?> data-rm-id="<?= $reminder['reminder_id'] ?>" data-sc-id="<?= $reminder['schedule_id'] ?>" data-co-id="<?= $reminder['company_id'] ?>" data-type="rr">
                 </td>
@@ -95,11 +95,11 @@ use app\services\SvgService;
                 <td class="p-4 align-middle">
                     <div class="flex items-center gap-2">
                         <div>
-                            <p class="font-medium text-sm truncate max-w-[200px]"><?= $reminder['topic'] ?></p>
+                            <p class="font-medium text-sm truncate max-w-[200px]"><?= $user->lang == 'ru' ? $reminder['topic_ru'] : $reminder['topic_rs'] ?></p>
                         </div>
                     </div>
                 </td>
-                <td class="p-4 align-middle text-sm"><?= $reminder['text'] ?></td>
+                <td class="p-4 align-middle text-sm"><?= $user->lang == 'ru' ? $reminder['text_ru'] : $reminder['text_rs'] ?></td>
                 <td class="p-4 align-middle text-sm"><?= $reminder['deadline_date'] ?></td>
                 <td class="p-4 align-middle">
                     <input class="tax-activity" type="checkbox" <?= $checked ?> data-rm-id="<?= $reminder['reminder_id'] ?>" data-sc-id="<?= $reminder['schedule_id'] ?>" data-co-id="<?= $reminder['company_id'] ?>" data-type="tx">
