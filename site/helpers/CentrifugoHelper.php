@@ -2,6 +2,8 @@
 
 namespace app\helpers;
 
+use Firebase\JWT\JWT;
+
 /**
  * Helper для работы с Centrifugo
  * 
@@ -19,18 +21,18 @@ class CentrifugoHelper
     public static function generateConnectionToken($userId, $ttl = 3600)
     {
         $secret = getenv('CENTRIFUGO_TOKEN_SECRET');
-        
+
         if (!$secret) {
             throw new \Exception('CENTRIFUGO_TOKEN_SECRET not set in environment');
         }
-        
+
         $claims = [
             'sub' => (string)$userId,
             'exp' => time() + $ttl,
             'iat' => time(),
         ];
-        
-        return \Firebase\JWT\JWT::encode($claims, $secret, 'HS256');
+
+        return JWT::encode($claims, $secret, 'HS256');
     }
 
     /**
@@ -44,19 +46,19 @@ class CentrifugoHelper
     public static function generateSubscriptionToken($userId, $channel, $ttl = 3600)
     {
         $secret = getenv('CENTRIFUGO_TOKEN_SECRET');
-        
+
         if (!$secret) {
             throw new \Exception('CENTRIFUGO_TOKEN_SECRET not set in environment');
         }
-        
+
         $claims = [
             'sub' => (string)$userId,
             'channel' => $channel,
             'exp' => time() + $ttl,
             'iat' => time(),
         ];
-        
-        return \Firebase\JWT\JWT::encode($claims, $secret, 'HS256');
+
+        return JWT::encode($claims, $secret, 'HS256');
     }
 
     /**
@@ -70,11 +72,11 @@ class CentrifugoHelper
     {
         $apiKey = getenv('CENTRIFUGO_API_KEY');
         $centrifugoUrl = 'http://centrifugo:8000/api';
-        
+
         if (!$apiKey) {
             throw new \Exception('CENTRIFUGO_API_KEY not set in environment');
         }
-        
+
         $payload = [
             'method' => 'publish',
             'params' => [
@@ -82,7 +84,7 @@ class CentrifugoHelper
                 'data' => $data,
             ],
         ];
-        
+
         $ch = curl_init($centrifugoUrl);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
@@ -94,15 +96,14 @@ class CentrifugoHelper
             ],
             CURLOPT_TIMEOUT => 5,
         ]);
-        
+
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        
+
         if ($httpCode === 200) {
             return json_decode($response, true);
         }
-        
+
         \Yii::error("Centrifugo publish error: HTTP $httpCode - $response", __METHOD__);
         return false;
     }
@@ -118,7 +119,7 @@ class CentrifugoHelper
     {
         $channel = "chat:{$chatId}";
         $result = self::publish($channel, $messageData);
-        
+
         return $result !== false;
     }
 
@@ -132,18 +133,18 @@ class CentrifugoHelper
     {
         $apiKey = getenv('CENTRIFUGO_API_KEY');
         $centrifugoUrl = 'http://centrifugo:8000/api';
-        
+
         if (!$apiKey) {
             throw new \Exception('CENTRIFUGO_API_KEY not set in environment');
         }
-        
+
         $payload = [
             'method' => 'info',
             'params' => [
                 'channel' => $channel,
             ],
         ];
-        
+
         $ch = curl_init($centrifugoUrl);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
@@ -155,15 +156,14 @@ class CentrifugoHelper
             ],
             CURLOPT_TIMEOUT => 5,
         ]);
-        
+
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        
+
         if ($httpCode === 200) {
             return json_decode($response, true);
         }
-        
+
         return false;
     }
 }
