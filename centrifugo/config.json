@@ -1,9 +1,16 @@
 {
-    "namespaces": [
-        {
-            "name": "public",
-            "publish": true,
-            "anonymous": true
-        }
-    ]
+  "client": {
+    "token": {
+      "hmac_secret_key": "${CENTRIFUGO_TOKEN_HMAC_SECRET_KEY}"
+    },
+    "allowed_origins": ["*"]
+  },
+  "http_api": {
+    "key": "${CENTRIFUGO_API_KEY}"
+  },
+  "channel": {
+    "without_namespace": {
+      "allow_subscribe_for_client": true
+    }
+  }
 }
