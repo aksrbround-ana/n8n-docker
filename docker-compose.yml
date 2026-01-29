@@ -95,8 +95,11 @@ services:
       - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false
       - NODE_OPTIONS=--max-old-space-size=2048
       - NODE_FUNCTION_ALLOW_BUILTIN=crypto
-      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
-      - CENTRIFUGO_URL=${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}
+      # - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+      # - N8N_BLOCK_ENV_ACCESS_IN_EXPRESSIONS=false
+      # - CENTRIFUGO_URL=${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}
+      # - CENTRIFUGO_API_KEY=CENTRIFUGO_API_KEY
+      # - CENTRIFUGO_TOKEN_HMAC_SECRET_KEY=CENTRIFUGO_TOKEN_HMAC_SECRET_KEY
     ports:
       - '5678:5678'
     volumes:
@@ -131,16 +134,15 @@ services:
       start_period: 60s
 
   centrifugo:
-    image: centrifugo/centrifugo:latest
+    build:
+      context: ./centrifugo
+      dockerfile: Dockerfile
+    # image: centrifugo/centrifugo:latest
     container_name: centrifugo
     networks:
       - web # общая сеть с traefik
     ports:
-      - "8000:8000"    
-    command: centrifugo -c config.json
-    environment:
-      - CENTRIFUGO_API_KEY=CENTRIFUGO_API_KEY
-      - CENTRIFUGO_TOKEN_HMAC_SECRET_KEY=CENTRIFUGO_TOKEN_HMAC_SECRET_KEY
+      - "8000:8000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.centrifugo.rule=Host(`${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}`)"
