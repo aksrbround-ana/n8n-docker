@@ -526,6 +526,7 @@ $(document).on('click', 'div[role=tablist] button[role=tab]', function (e) {
     parentTablist.find('div[role=tabpanel]').attr('data-state', 'inactive').attr('hidden', '');
     targetTab.attr('data-state', 'active').removeAttr('hidden');
   }
+  // return tabId == 'company-chat';
 });
 
 $(document).on('click', '#add_note_button', function (e) {

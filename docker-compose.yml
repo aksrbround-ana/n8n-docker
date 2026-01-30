@@ -167,6 +167,7 @@ services:
       - N8N_WEBHOOK_BASE_URL=${N8N_WEBHOOK_BASE_URL}
       - CENTRIFUGO_URL=${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}
       - CENTRIFUGO_TOKEN_SECRET=${CENTRIFUGO_API_KEY}
+      - PORTAL_URL=${SITE_SUBDOMAIN}.${DOMAIN_NAME}
     volumes:
       - ./site:/var/www/html
     networks:

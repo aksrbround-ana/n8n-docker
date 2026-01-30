@@ -126,7 +126,7 @@ use app\services\SvgService;
             <div data-state="inactive" data-orientation="horizontal" role="tabpanel" aria-labelledby="company-notes" id="company-content-notes" tabindex="0" class="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" hidden="">
                 <?= CompanyNotesWidget::widget(['user' => $user, 'company' => $company]); ?>
             </div>
-            <div data-state="inactive" data-orientation="horizontal" role="tabpanel" aria-labelledby="company-chat" id="company-content-contacts" tabindex="0" class="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" hidden="">
+            <div data-state="inactive" data-orientation="horizontal" role="tabpanel" aria-labelledby="company-chat" id="company-content-chat" tabindex="0" class="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" hidden="">
                 <?= CompanyChatWidget::widget(['user' => $user, 'company' => $company]); ?>
             </div>
         </div>

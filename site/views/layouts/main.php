@@ -34,22 +34,32 @@ $centrifugoUrl = getenv('CENTRIFUGO_URL');
     <script src="/js/modal.js"></script>
     <script src="/js/tiff.min.js"></script>
     <script src="/js/select.js"></script>
+    <!-- <script src="/js/centrifugo.js"></script> -->
     <script src="https://unpkg.com/centrifuge@3.1.0/dist/centrifuge.js"></script>
+    <script src="/js/chat.js"></script>
     <script>
-        const centrifuge = new Centrifuge('ws://<?= $centrifugoUrl ?>:8000/connection/websocket');
-        const sub = centrifuge.newSubscription('public:messages');
-        sub.on('publication', function(ctx) {
-            const msg = ctx.data.text;
-            // Добавляем сообщение в верстку
-            document.getElementById('chat-box').innerHTML += `<p>${msg}</p>`;
-        });
-        sub.subscribe();
-        centrifuge.connect();
+        const CONFIG = {
+            centrifugoUrl: 'wss://<?= getenv('CENTRIFUGO_URL') ?>/connection/websocket',
+            centrifugoToken: '<?= getenv('CENTRIFUGO_TOKEN_SECRET') ?>', // Генерируется на сервере
+            yii2ApiUrl: 'https://<?= getenv('PORTAL_URL') ?>',
+            operatorId: 1, // ID текущего оператора
+            operatorName: 'Оператор'
+        };
+        // const centrifuge = new Centrifuge('ws://<?= $centrifugoUrl ?>:8000/connection/websocket');
+        // const sub = centrifuge.newSubscription('public:messages');
+        // sub.on('publication', function(ctx) {
+        //     const msg = ctx.data.text;
+        //     // Добавляем сообщение в верстку
+        //     document.getElementById('chat-box').innerHTML += `<p>${msg}</p>`;
+        // });
+        // sub.subscribe();
+        // centrifuge.connect();
     </script>
     <link rel="stylesheet" href="/css/site.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/select.css">
+    <link rel="stylesheet" href="/css/chat.css">
 </head>
 
 <body>
