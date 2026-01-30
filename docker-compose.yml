@@ -160,6 +160,36 @@ services:
       postgres:
         condition: service_healthy
 
+  workerman:
+    build:
+      context: .
+      dockerfile: site/Dockerfile
+    container_name: workerman
+    restart: unless-stopped
+    # Команда запуска консольной команды Yii2
+    command: php yii socket/start 
+    environment:
+      - POSTGRES_HOST=${DB_HOST:-postgres}
+      - POSTGRES_PORT=${DB_PORT:-5432}
+      - POSTGRES_DATA_DB=${DB_DATABASE_DATA:-n8n_data}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+    volumes:
+      - ./site:/var/www/html
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      # Настраиваем отдельный путь /ws для сокетов на том же домене
+      - "traefik.http.routers.workerman.rule=Host(`${SITE_SUBDOMAIN}.${DOMAIN_NAME}`) && PathPrefix(`/ws`)"
+      - "traefik.http.routers.workerman.entrypoints=websecure"
+      - "traefik.http.routers.workerman.tls=true"
+      - "traefik.http.routers.workerman.tls.certresolver=mytlschallenge"
+      # Traefik перенаправляет трафик на внутренний порт Workerman
+      - "traefik.http.services.workerman.loadbalancer.server.port=2346"
+    depends_on:
+      postgres:
+        condition: service_healthy
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin

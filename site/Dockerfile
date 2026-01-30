@@ -21,6 +21,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable pdo pdo_pgsql \
     && rm -rf /var/lib/apt/lists/*
 
+RUN docker-php-ext-install pcntl posix
+
 # Включение mod_rewrite для ЧПУ
 RUN a2enmod rewrite
 
