@@ -25,7 +25,7 @@ services:
   postgres:
     image: pgvector/pgvector:pg15
     # build:
-      # dockerfile: postgres/Dockerfile
+    # dockerfile: postgres/Dockerfile
     container_name: postgres
     restart: unless-stopped
     environment:
@@ -68,7 +68,7 @@ services:
       - traefik.http.routers.n8n.middlewares=n8n@docker
       - traefik.http.services.n8n.loadbalancer.server.port=5678
     environment:
-#      - DB_TYPE=sqlite
+      #      - DB_TYPE=sqlite
       - DB_TYPE=${DB_TYPE:-postgresdb}
       - DB_POSTGRESDB_HOST=${DB_HOST:-postgres}
       - DB_POSTGRESDB_PORT=${DB_PORT:-5432}
@@ -79,7 +79,7 @@ services:
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - N8N_RUNNERS_ENABLED=true
-#      - NODE_ENV=production
+      #      - NODE_ENV=production
       - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
       - N8N_SECURE_COOKIE=false
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
@@ -90,10 +90,10 @@ services:
       - N8N_CORS_ALLOWED_ORIGINS=https://receipt-insights-bot.vercel.app/
       - N8N_PROXY_HOPS=1
       - EXECUTIONS_DATA_PRUNE=true
-      - EXECUTIONS_DATA_MAX_AGE=168   # 7 дней
+      - EXECUTIONS_DATA_MAX_AGE=168 # 7 дней
       - EXECUTIONS_DATA_SAVE_ON_ERROR=all
-      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none # Экономит кучу места. 'info' - компромисс
-      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false # <-- Исправлено на false для скорости!
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
+      - EXECUTIONS_DATA_SAVE_ON_PROGRESS=false
       - NODE_OPTIONS=--max-old-space-size=2048
       - NODE_FUNCTION_ALLOW_BUILTIN=crypto
       - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
@@ -122,9 +122,9 @@ services:
       resources:
         limits:
           cpus: '1.5'
-          memory: 1500M    
+          memory: 1500M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost:5000/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -145,6 +145,9 @@ services:
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
       - N8N_WEBHOOK_BASE_URL=${N8N_WEBHOOK_BASE_URL}
+      - WORKERMAN_HOST=workerman
+      - WORKERMAN_PORT=${WORKERMAN_PORT:-1234}
+      - WORKERMAN_TOKEN=${WORKERMAN_TOKEN}
     volumes:
       - ./site:/var/www/html
     networks:
@@ -167,13 +170,16 @@ services:
     container_name: workerman
     restart: unless-stopped
     # Команда запуска консольной команды Yii2
-    command: php yii socket/start 
+    command: php yii socket/start start
     environment:
       - POSTGRES_HOST=${DB_HOST:-postgres}
       - POSTGRES_PORT=${DB_PORT:-5432}
       - POSTGRES_DATA_DB=${DB_DATABASE_DATA:-n8n_data}
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
+      - WORKERMAN_HOST=0.0.0.0
+      - WORKERMAN_PORT=${WORKERMAN_PORT:-1234}
+      - WORKERMAN_TOKEN=${WORKERMAN_TOKEN}
     volumes:
       - ./site:/var/www/html
     networks:

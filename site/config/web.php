@@ -85,6 +85,7 @@ $config = [
                 'GET document/<action>/<id:\d+>' => 'document/<action>',
                 'GET auth' => 'site/login',
                 'GET <controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'GET <controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
 
                 'POST reminder/tax-calendar/<month:[\w\-]+>' => 'reminder/tax-calendar',
                 'POST reminder/tax-calendar-table/<month:[\w\-]+>' => 'reminder/tax-calendar-table',

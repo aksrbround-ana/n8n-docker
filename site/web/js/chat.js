@@ -5,64 +5,66 @@ const ChatApp = {
     socket: null,
     chatContainerId: 'chat-display',
 
-    // Инициализация чата (вызывается при клике на кнопку открытия)
+    // Инициализация чата
     init: function () {
         console.log('Подключение к чату...');
 
         // 1. Сначала загружаем историю из БД
         this.loadHistory().then(() => {
-            // 2. Только после загрузки истории подключаем сокеты для новых сообщений
+            // 2. Только ПОСЛЕ загрузки истории подключаем сокет
+            // Вся настройка теперь внутри этого метода
             this.connectWebSocket();
         });
+    },
 
-        // 2. Устанавливаем соединение через Traefik (wss)
+    connectWebSocket: function () {
+        // Создаем соединение
         this.socket = new WebSocket(`wss://${window.location.host}/ws`);
 
+        // Настраиваем обработчики ПРЯМО ЗДЕСЬ, когда socket точно не null
         this.socket.onopen = () => {
             console.log('Соединение с WebSocket установлено');
         };
 
         this.socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            this.renderMessage(data);
+            console.dir(['От WebSocket получено сообщение:', data]);
+            this.renderMessage(data, true);
         };
 
         this.socket.onclose = () => {
             console.log('Соединение с WebSocket закрыто');
         };
-    },
 
-    connectWebSocket: function () {
-        this.socket = new WebSocket(`wss://${window.location.host}/ws`);
-
-        this.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            this.renderMessage(data, true); // true — плавный скролл для нового сообщения
+        this.socket.onerror = (error) => {
+            console.error('Ошибка WebSocket:', error);
         };
-
-        // ... остальные обработчики (onopen, onclose) ...
     },
 
+    // Загрузка истории сообщений из БД через AJAX
     loadHistory: async function () {
-        try {
-            const response = await fetch('/chat/history');
-            const data = await response.json();
+        let id = $('#chat-id').val();
+        if (id) {
+            try {
+                const response = await fetch('/chat/history/' + id);
+                const data = await response.json();
 
-            const container = document.getElementById(this.chatContainerId);
-            if (!container) return;
+                const container = document.getElementById(this.chatContainerId);
+                if (!container) return;
 
-            // Очищаем контейнер (если там было что-то лишнее)
-            container.innerHTML = '';
+                // Очищаем контейнер (если там было что-то лишнее)
+                container.innerHTML = '';
 
-            // Отрисовываем старые сообщения
-            data.forEach(msg => {
-                this.renderMessage(msg, false); // false — не скроллим плавно на каждом сообщении
-            });
+                // Отрисовываем старые сообщения
+                data.forEach(msg => {
+                    this.renderMessage(msg, false); // false — не скроллим плавно на каждом сообщении
+                });
 
-            // Один раз скроллим в самый низ после загрузки всей пачки
-            container.scrollTop = container.scrollHeight;
-        } catch (e) {
-            console.error('Ошибка загрузки истории:', e);
+                // Один раз скроллим в самый низ после загрузки всей пачки
+                container.scrollTop = container.scrollHeight;
+            } catch (e) {
+                console.error('Ошибка загрузки истории:', e);
+            }
         }
     },
 
@@ -76,37 +78,39 @@ const ChatApp = {
     },
 
     // Отрисовка сообщения в DOM
-    renderMessage: function (data, smoothScroll = true) {
-        const container = document.getElementById(this.chatContainerId);
-        if (!container) return;
+    // renderMessage: function (data, smoothScroll = true) {
+    //     const container = document.getElementById(this.chatContainerId);
+    //     if (!container) return;
 
-        const messageClass = data.is_my ? 'outgoing' : 'incoming';
-        const msgHtml = `
-            <div class="message ${messageClass}">
-                ${data.is_my ? '' : `<strong>${data.username}</strong>`}
-                <div class="text">${data.text}</div>
-                <span class="meta">${data.date}</span>
-            </div>
-        `;
+    //     const messageClass = data.is_my ? 'outgoing' : 'incoming';
+    //     const msgHtml = `
+    //         <div class="message ${messageClass}">
+    //             ${data.is_my ? '' : `<strong>${data.username}</strong>`}
+    //             <div class="text">${data.text}</div>
+    //             <span class="meta">${data.date}</span>
+    //         </div>
+    //     `;
 
-        container.insertAdjacentHTML('beforeend', msgHtml);
+    //     container.insertAdjacentHTML('beforeend', msgHtml);
 
-        if (smoothScroll) {
-            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-        }
-    },
+    //     if (smoothScroll) {
+    //         container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    //     }
+    // },
 
     // Отправка сообщения на бэкенд Yii2 (через AJAX)
     sendMessage: function (text) {
         if (!text.trim()) return;
 
+        let chat_id = $('#chat-id').val();
+
         fetch('/chat/send', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-Token': yii.getCsrfToken() // Обязательно для Yii2
+                // 'X-CSRF-Token': yii.getCsrfToken() // Обязательно для Yii2
             },
-            body: JSON.stringify({ message: text })
+            body: JSON.stringify({ message: text, chat_id: chat_id })
         })
             .then(response => response.json())
             .then(data => {
@@ -155,16 +159,24 @@ function handleSendClick() {
     }
 }
 
+$(document).on('click', '#send-message-button', (e) => {
+    handleSendClick();
+});
+
 // --- Пример использования в вашем коде ---
 
 // При клике на "Открыть чат"
-document.getElementById('open-chat-btn').addEventListener('click', () => {
+$(document).on('click', '#company-chat', (e) => {
+    // document.getElementById('company-chat').addEventListener('click', () => {
     // 1. Подгружаете ваш HTML...
     // 2. Запускаете чат:
     ChatApp.init();
 });
 
-// При клике на "Закрыть чат / Перейти в другой раздел"
-document.getElementById('other-section-btn').addEventListener('click', () => {
+// При клике на "Перейти в другой раздел"
+$(document).on('click', 'button[data-chat-close="yes"]', (e) => {
     ChatApp.destroy();
 });
+// document.getElementById('other-section-btn').addEventListener('click', () => {
+//     ChatApp.destroy();
+// });

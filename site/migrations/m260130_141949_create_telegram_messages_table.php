@@ -1,5 +1,6 @@
 <?php
 
+use app\models\TelegramMessage;
 use yii\db\Migration;
 
 /**
@@ -9,7 +10,7 @@ class m260130_141949_create_telegram_messages_table extends Migration
 {
     public function safeUp()
     {
-        $this->createTable('{{%telegram_messages}}', [
+        $this->createTable(TelegramMessage::tableName(), [
             'id' => $this->primaryKey(),
             // Тип сообщения: incoming (из ТГ) или outgoing (с сайта)
             'message_type' => $this->string(20)->notNull(),
@@ -27,20 +28,20 @@ class m260130_141949_create_telegram_messages_table extends Migration
         // Индексы для быстрого поиска сообщений в конкретном чате
         $this->createIndex(
             'idx-telegram_messages-chat_id',
-            '{{%telegram_messages}}',
+            TelegramMessage::tableName(),
             'chat_id'
         );
 
         // Индекс для фильтрации по типу (если сообщений станет очень много)
         $this->createIndex(
             'idx-telegram_messages-message_type',
-            '{{%telegram_messages}}',
+            TelegramMessage::tableName(),
             'message_type'
         );
     }
 
     public function safeDown()
     {
-        $this->dropTable('{{%telegram_messages}}');
+        $this->dropTable(TelegramMessage::tableName());
     }
 }
