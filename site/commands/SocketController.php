@@ -12,46 +12,48 @@ use yii\helpers\Json;
  */
 class SocketController extends Controller
 {
+    // 1. Создаем статическое хранилище
+    public static $connections = [];
+
     public function actionStart()
     {
-        // 1. Создаем WebSocket-сервер для браузеров (вход через Traefik)
-        // Порт должен совпадать с тем, что указан в labels traefik (2346)
+        // 1. Запускаем Channel-сервер (внутренняя шина)
+        $channelServer = new \Channel\Server('0.0.0.0', 2206);
+
+        // 2. WebSocket сервер
         $wsWorker = new Worker("websocket://0.0.0.0:2346");
         $wsWorker->count = 1;
-        $wsWorker->connections = [];
+        $wsWorker->name = 'ChatWS';
 
-        $wsWorker->onConnect = function ($connection) use (&$wsWorker) {
-            echo "New connection established. ID: {$connection->id}\n";
-            // ОБЯЗАТЕЛЬНО добавляем соединение в список, иначе foreach будет пустым
-            $wsWorker->connections[$connection->id] = $connection;
+        $wsWorker->onWorkerStart = function () {
+            // Подключаемся к локальной шине Channel
+            \Channel\Client::connect('127.0.0.1', 2206);
+
+            // Подписываемся на событие "broadcast"
+            \Channel\Client::on('send_to_all', function ($data) {
+                global $wsWorker;
+                foreach ($wsWorker->connections as $connection) {
+                    $connection->send($data);
+                }
+            });
         };
 
-        // Также стоит удалять их при отключении, чтобы не копить мусор
-        $wsWorker->onClose = function ($connection) use (&$wsWorker) {
-            echo "Connection closed. ID: {$connection->id}\n";
-            unset($wsWorker->connections[$connection->id]);
-        };
-
-        // 2. Создаем внутренний TCP-сервер для приема данных от Yii2 (внутри Docker сети)
-        // Слушаем 0.0.0.0, чтобы принимать запросы из контейнера php-site
+        // 3. Внутренний API сервер (принимает данные от n8n)
         $innerWorker = new Worker("text://0.0.0.0:1234");
         $innerWorker->count = 1;
+        $innerWorker->name = 'InternalAPI';
 
-        $innerWorker->onMessage = function ($connection, $buffer) use (&$wsWorker) {
-            echo "Received data from backend: $buffer\n";
+        $innerWorker->onWorkerStart = function () {
+            \Channel\Client::connect('127.0.0.1', 2206);
+        };
 
-            // Workerman сам наполняет $wsWorker->connections
-            $allConnections = $wsWorker->connections;
-            echo "Total connections: " . count($allConnections) . "\n";
-
-            foreach ($allConnections as $clientConnection) {
-                echo "Sending to connection {$clientConnection->id}\n";
-                $clientConnection->send($buffer);
-            }
+        $innerWorker->onMessage = function ($connection, $buffer) {
+            echo "Received from n8n: $buffer\n";
+            // Просто пушим данные в шину Channel
+            \Channel\Client::publish('send_to_all', $buffer);
             $connection->send("ok");
         };
 
-        // Запускаем оба воркера
         Worker::runAll();
     }
 }

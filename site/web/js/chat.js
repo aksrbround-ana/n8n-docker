@@ -7,40 +7,35 @@ const ChatApp = {
 
     // Инициализация чата
     init: function () {
-        console.log('Подключение к чату...');
-
-        // 1. Сначала загружаем историю из БД
+        console.log('Запуск инициализации чата...');
+        // Сначала история, потом сокет. И только ОДИН раз.
         this.loadHistory().then(() => {
-            // 2. Только ПОСЛЕ загрузки истории подключаем сокет
-            // Вся настройка теперь внутри этого метода
             this.connectWebSocket();
         });
     },
 
     connectWebSocket: function () {
-        // Создаем соединение
+        // Закрываем старый сокет, если он вдруг был
+        if (this.socket) {
+            this.socket.close();
+        }
+
         this.socket = new WebSocket(`wss://${window.location.host}/ws`);
 
-        // Настраиваем обработчики ПРЯМО ЗДЕСЬ, когда socket точно не null
         this.socket.onopen = () => {
-            console.log('Соединение с WebSocket установлено');
+            console.log('Успех: Соединение установлено и стабильно');
         };
 
         this.socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.dir(['От WebSocket получено сообщение:', data]);
+            console.log('Пришли данные:', data);
             this.renderMessage(data, true);
         };
 
-        this.socket.onclose = () => {
-            console.log('Соединение с WebSocket закрыто');
-        };
-
-        this.socket.onerror = (error) => {
-            console.error('Ошибка WebSocket:', error);
+        this.socket.onclose = (e) => {
+            console.log('Соединение закрыто. Код:', e.code);
         };
     },
-
     // Загрузка истории сообщений из БД через AJAX
     loadHistory: async function () {
         let id = $('#chat-id').val();
@@ -76,27 +71,6 @@ const ChatApp = {
         }
         console.log('Чат деактивирован');
     },
-
-    // Отрисовка сообщения в DOM
-    // renderMessage: function (data, smoothScroll = true) {
-    //     const container = document.getElementById(this.chatContainerId);
-    //     if (!container) return;
-
-    //     const messageClass = data.is_my ? 'outgoing' : 'incoming';
-    //     const msgHtml = `
-    //         <div class="message ${messageClass}">
-    //             ${data.is_my ? '' : `<strong>${data.username}</strong>`}
-    //             <div class="text">${data.text}</div>
-    //             <span class="meta">${data.date}</span>
-    //         </div>
-    //     `;
-
-    //     container.insertAdjacentHTML('beforeend', msgHtml);
-
-    //     if (smoothScroll) {
-    //         container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-    //     }
-    // },
 
     // Отправка сообщения на бэкенд Yii2 (через AJAX)
     sendMessage: function (text) {
@@ -167,9 +141,6 @@ $(document).on('click', '#send-message-button', (e) => {
 
 // При клике на "Открыть чат"
 $(document).on('click', '#company-chat', (e) => {
-    // document.getElementById('company-chat').addEventListener('click', () => {
-    // 1. Подгружаете ваш HTML...
-    // 2. Запускаете чат:
     ChatApp.init();
 });
 
@@ -177,6 +148,3 @@ $(document).on('click', '#company-chat', (e) => {
 $(document).on('click', 'button[data-chat-close="yes"]', (e) => {
     ChatApp.destroy();
 });
-// document.getElementById('other-section-btn').addEventListener('click', () => {
-//     ChatApp.destroy();
-// });
