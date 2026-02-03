@@ -17,6 +17,11 @@ $config = [
     'sourceLanguage' => 'ru-RU',
 
     'components' => [
+        'telegram' => [
+            'class' => 'app\components\TelegramComponent',
+            'botToken' => getenv('TELEGRAM_BOT_TOKEN'),
+        ],
+
         'request' => [
             'cookieValidationKey' => '567893-946589-985497-927359',
             'enableCsrfValidation' => false,
@@ -85,6 +90,7 @@ $config = [
                 'GET document/<action>/<id:\d+>' => 'document/<action>',
                 'GET auth' => 'site/login',
                 'GET <controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                'GET <controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
 
                 'POST reminder/tax-calendar/<month:[\w\-]+>' => 'reminder/tax-calendar',
                 'POST reminder/tax-calendar-table/<month:[\w\-]+>' => 'reminder/tax-calendar-table',
