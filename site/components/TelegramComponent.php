@@ -27,34 +27,24 @@ class TelegramComponent extends Component
             return;
         }
 
-        $chatId = $message->getChat()->getId();
-        $topicId = $message['chat_id'] ?? null;
+        $chatId = $message['chat_id'] ?? null;
+        $topicId = $message['topic'] ? $message['topic']['message_thread_id'] : null;
         $userId = $message['tg_id'] ?? null;
-        $userName = $message->getFrom()->getUsername() ?: $message->getFrom()->getFirstName();
+        $userName = $message['user']['username'] ?? 'unknown';
 
         // Сохраняем чат
         $chat = TelegramChat::findOne(['chat_id' => $chatId]);
         if (!$chat) {
             $chat = new TelegramChat();
             $chat->chat_id = $chatId;
-            $chat->title = $message->getChat()->getTitle() ?? '@' . $userName;
-            $chat->type = $message->getChat()->getType();
+            $chat->title = $message['chat_title'] ?? '@' . $userName;
+            $chat->type = $message['chat_type'] ?? 'private';
             $chat->save();
         }
 
         // Сохраняем тему (если есть)
         if ($topicId) {
-            $replyToMessage = $message->getReplyToMessage() ? $message->getReplyToMessage() : null;
-            if ($replyToMessage) {
-                $forumTopicCreated = $replyToMessage->getForumTopicCreated() ? $replyToMessage->getForumTopicCreated() : null;
-                if ($forumTopicCreated) {
-                    $topicName = $forumTopicCreated->getName();
-                } else {
-                    $topicName = 'Тема #' . $topicId;
-                }
-            } else {
-                $topicName = 'Тема #' . $topicId;
-            }
+            $topicName = $message['topic']['name'] ?? 'Topic ' . $topicId;
             $topic = TelegramTopic::findOne(['chat_id' => $chatId, 'topic_id' => $topicId]);
             if (!$topic) {
                 $topic = new TelegramTopic();
@@ -67,12 +57,12 @@ class TelegramComponent extends Component
 
         // Сохраняем сообщение
         $msg = new TelegramMessage();
-        $msg->message_id = $message->getMessageId();
+        $msg->message_id = $message['message_id'] ?? null;
         $msg->chat_id = $chatId;
         $msg->topic_id = $topicId;
         $msg->user_id = $userId;
         $msg->username = $userName;
-        $msg->text = $message->getText();
+        $msg->text = $message['text'] ?? null;
         $msg->created_at = date('Y-m-d H:i:s');//, $message->getDate());
         $msg->is_outgoing = 0;
         $msg->save();
