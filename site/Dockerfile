@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Установка необходимых расширений для Yii2
 RUN apt-get update && apt-get install -y \
