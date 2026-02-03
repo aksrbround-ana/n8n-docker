@@ -322,7 +322,13 @@ class DictionaryService
             'rs' => 'Сербский',
             'ru' => 'Русский',
             'no' => 'Нет',
-            'dragDropCaption' => 'Для загрузки документа кликните здесь или перетащите файл'
+            'dragDropCaption' => 'Для загрузки документа кликните здесь или перетащите файл',
+
+            // Telegram chat
+            'telegramChat' => 'Чат поддержки Telegram',
+            'sendMessage' => 'Отправить',
+            'writeMessage' => 'Напишите сообщение...',
+            'chatList' => 'Список чатов',
 
         ],
         'rs' =>   [
@@ -624,6 +630,11 @@ class DictionaryService
             'no' => 'Nema',
             'dragDropCaption' => 'Да бисте отпремили документ, кликните овде или превуците и испустите датотеку.',
 
+            // Telegram chat
+            'telegramChat' => 'Telegram podrška ćaskanje',
+            'sendMessage' => 'Pošalji',
+            'writeMessage' => 'Napišite poruku...',
+            'chatList' => 'Lista ćaskanja',
         ],
         'en' =>   [
             // Months
@@ -923,6 +934,11 @@ class DictionaryService
             'no' => 'No',
             'dragDropCaption' => 'To upload a document, click here or drag and drop the file.',
 
+            // Telegram chat
+            'telegramChat' => 'Telegram Support Chat',
+            'sendMessage' => 'Send',
+            'writeMessage' => 'Write a message...',
+            'chatList' => 'Chat List',
         ],
     ];
 

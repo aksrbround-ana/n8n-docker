@@ -145,6 +145,7 @@ services:
       - POSTGRES_USER=${DB_USER:-postgres}
       - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
       - N8N_WEBHOOK_BASE_URL=${N8N_WEBHOOK_BASE_URL}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
     volumes:
       - ./site:/var/www/html
     networks:
