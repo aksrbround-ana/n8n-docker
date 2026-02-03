@@ -2,10 +2,8 @@
 
 namespace app\components;
 
-use Yii;
 use yii\base\Component;
 use TelegramBot\Api\BotApi;
-use TelegramBot\Api\Types\Update;
 use app\models\TelegramMessage;
 use app\models\TelegramChat;
 use app\models\TelegramTopic;
