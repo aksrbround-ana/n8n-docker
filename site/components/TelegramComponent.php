@@ -19,55 +19,17 @@ class TelegramComponent extends Component
     {
         parent::init();
         $this->bot = new BotApi($this->botToken);
-        $hostName = Yii::$app->request->getHostName();
-        $isSecure = Yii::$app->request->isSecureConnection;
-        $protocol = $isSecure ? 'https' : 'http';
-        $url = "{$protocol}://{$hostName}/telegram/webhook";
-        $this->setWebHook($url);
     }
 
-    public function setWebHook($url)
+    public function processWebhook($message)
     {
-        $webHookInfo = $this->getWebhookInfo();
-        if (isset($webHookInfo['result']['url']) && $webHookInfo['result']['url'] === $url) {
-            return;
-        }
-        $botToken = $this->botToken;
-        $webhookUrl = "https://api.telegram.org/bot{$botToken}/setWebhook?url={$url}";
-        try {
-            $this->bot->setWebhook($url);
-        } catch (\Exception $e) {
-            // Логируем ошибку
-            Yii::error("Failed to set webhook: " . $e->getMessage());
-            try {
-                // Пытаемся установить webhook через прямой запрос
-                file_get_contents($webhookUrl);
-            } catch (\Exception $ex) {
-                Yii::error("Failed to set webhook via direct request: " . $ex->getMessage());
-            }
-        }
-    }
-
-    public function getWebhookInfo()
-    {
-        $botToken = $this->botToken;
-        $webhookInfoUrl = "https://api.telegram.org/bot{$botToken}/getWebhookInfo";
-        $response = file_get_contents($webhookInfoUrl);
-        return json_decode($response, true);
-    }
-
-    public function processWebhook($data)
-    {
-        $update = Update::fromResponse($data);
-        $message = $update->getMessage();
-
         if (!$message) {
             return;
         }
 
         $chatId = $message->getChat()->getId();
-        $topicId = $message->getMessageThreadId(); // ID темы
-        $userId = $message->getFrom()->getId();
+        $topicId = $message['chat_id'] ?? null;
+        $userId = $message['tg_id'] ?? null;
         $userName = $message->getFrom()->getUsername() ?: $message->getFrom()->getFirstName();
 
         // Сохраняем чат
