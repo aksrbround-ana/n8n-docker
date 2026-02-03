@@ -26,7 +26,7 @@ class TelegramController extends Controller
         $data = json_decode(file_get_contents('php://input'), true);
 
         if ($data) {
-            Yii::$app->telegram->processWebhook($data);
+            Yii::$app->telegram->processWebhook($data[0]);
         }
 
         return 'OK';
