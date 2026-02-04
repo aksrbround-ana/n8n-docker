@@ -134,8 +134,8 @@ const ChatApp = {
             .then(data => {
                 if (!data.status == 'success') {
                     showError('Sending error');
-                } else {
-                    this.renderMessage(data.message);
+                // } else {
+                //     this.renderMessage(data.message);
                 }
             });
     },
