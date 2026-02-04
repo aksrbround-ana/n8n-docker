@@ -138,6 +138,7 @@ class DictionaryService
             'byOverdue' => 'По просроченным задачам',
             'byOpenTasks' => 'По открытым задачам',
             'companyEditing' => 'Редактирование компании',
+            'companySearch' => 'Поиск компании…',
 
             // Company statuses
             'statusActive' =>  'Активная',
@@ -444,6 +445,7 @@ class DictionaryService
             'byOverdue' => 'Po zakasnelim zadacima',
             'byOpenTasks' => 'Po otvorenim zadacima',
             'companyEditing' => 'Уређивање компаније',
+            'companySearch' => 'Pretraga kompanije…',
 
             // Company statuses
             'statusActive' =>  'Aktivna',
@@ -749,6 +751,7 @@ class DictionaryService
             'byOverdue' => 'By overdue',
             'byOpenTasks' => 'By open tasks',
             'companyEditing' => 'Company editing',
+            'companySearch' => 'Company search…',
 
             // Company statuses
             'statusActive' =>  'Active',
