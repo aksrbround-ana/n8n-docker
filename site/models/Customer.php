@@ -9,7 +9,6 @@ use Yii;
  *
  * @property int $id
  * @property int|null $tg_id
- * @property int|null $company_id
  * @property string|null $firstname
  * @property string|null $lastname
  * @property string|null $username
@@ -18,6 +17,8 @@ use Yii;
 class Customer extends \yii\db\ActiveRecord
 {
 
+    const CUSTOMER_STATUS_NEW = 'new';
+    const CUSTOMER_STATUS_ACTIVE = 'active';
 
     /**
      * {@inheritdoc}
@@ -33,11 +34,12 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tg_id', 'company_id', 'firstname', 'lastname', 'username'], 'default', 'value' => null],
+            [['tg_id', 'firstname', 'lastname', 'username'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'new'],
-            [['tg_id', 'company_id'], 'default', 'value' => null],
-            [['tg_id', 'company_id'], 'integer'],
-            [['firstname', 'lastname', 'username', 'status'], 'string', 'max' => 32],
+            [['tg_id',], 'default', 'value' => null],
+            [['tg_id',], 'integer'],
+            [['firstname', 'lastname', 'status'], 'string', 'max' => 32],
+            [['username'], 'string', 'max' => 128],
         ];
     }
 
@@ -49,12 +51,10 @@ class Customer extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'tg_id' => 'Tg ID',
-            'company_id' => 'Company ID',
             'firstname' => 'Firstname',
             'lastname' => 'Lastname',
             'username' => 'Username',
             'status' => 'Status',
         ];
     }
-
 }

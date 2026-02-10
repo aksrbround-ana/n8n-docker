@@ -33,7 +33,7 @@ use yii\debug\models\timeline\Svg;
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t">
         <!-- <div class="flex items-center gap-2">
             <?= SvgService::svg('location-gray') ?>
-            <span class="text-sm">Белград</span>
+            <span class="text-sm">Нови Сад</span>
         </div> -->
         <?php
         if (count($customers) > 0) {
