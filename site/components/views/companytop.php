@@ -1,6 +1,7 @@
 <?php
 
 use app\components\MakeTelegramLinkWidget;
+use app\models\Company;
 use app\services\DictionaryService;
 use app\services\SvgService;
 use yii\debug\models\timeline\Svg;
@@ -15,9 +16,11 @@ use yii\debug\models\timeline\Svg;
             <div>
                 <div class="flex items-center gap-3">
                     <h1 class="text-2xl font-heading font-bold"><?= $company['name'] ?></h1>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">
+                    <?php
+                    $statusName = 'status' . ucfirst($company['status']);
+                    ?>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= Company::$statusStyles[$company['status']] ?>">
                         <?php
-                        $statusName = 'status' . ucfirst($company['status']);
                         echo DictionaryService::getWord($statusName, $user->lang);
                         ?>
                     </span>

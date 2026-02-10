@@ -2,9 +2,6 @@
 
 namespace app\models;
 
-use Yii;
-use yii\db\Query;
-
 /**
  * This is the model class for table "company".
  *
@@ -42,6 +39,13 @@ class Company extends \yii\db\ActiveRecord
         self::COMPANY_STATUS_INACTIVE,
     ];
 
+    public static $statusStyles = [
+        'active'     => 'bg-warning/10 text-warning border-warning/20',
+        'onboarding' => 'bg-info/10 text-info border-info/20',
+        'paused'     => 'bg-destructive/10 text-destructive border-destructive/20',
+        'inactive'   => 'bg-muted/10 text-muted border-muted/20',
+    ];
+
     public static $types = [
         'DOO',
         'Knigaš',
@@ -56,13 +60,22 @@ class Company extends \yii\db\ActiveRecord
         return 'company';
     }
 
+    public static function getStatuses()
+    {
+        return self::$statuses;
+    }
+
+    public function getStatusStyle()
+    {
+        return self::$statusStyles[$this->status] ?? '';
+    }
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['name', 'name_tg', 'type_id', 'activity_id', 'pib', ], 'default', 'value' => null],
+            [['name', 'name_tg', 'type_id', 'activity_id', 'pib',], 'default', 'value' => null],
             [['is_pdv'], 'default', 'value' => 0],
             [['status'], 'default', 'value' => 'onboarding'],
             [['type_id', 'activity_id', 'pib'], 'default', 'value' => null],

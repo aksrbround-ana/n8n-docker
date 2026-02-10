@@ -60,7 +60,7 @@ class CompanyController extends BaseController
             $companiesQuery->andWhere(['LIKE', 'c.name', $filters['name']]);
         }
         if ($filters['status'] ?? null) {
-            $companiesQuery->andWhere(['c.status' => $status]);
+            $companiesQuery->andWhere(['c.status' => $filters['status']]);
         }
         if ($filters['accountant'] ?? null) {
             $companiesQuery->innerJoin(['cc' => CompanyAccountant::tableName()], 'cc.company_id = c.id');
@@ -113,6 +113,10 @@ class CompanyController extends BaseController
             'back' => $status !== null,
             'filterStatus' => $filterStatus,
             'filterAccountant' => $filterAccountantQuery->all(),
+            // 'debug' => [
+            //     'filters' => $filters,
+            //     'query' => $companiesQuery->createCommand()->getRawSql(),
+            // ],
         ];
         return $data;
     }
