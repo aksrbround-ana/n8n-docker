@@ -91,7 +91,7 @@ class TelegramComponent extends Component
         $msg->chat_id = $chatId;
         $msg->topic_id = $topicId;
         $msg->user_id = $result->getFrom()->getId();
-        $msg->username = 'Bot';
+        $msg->username = 'Buhgalterija';
         $msg->text = $text;
         $msg->created_at = date('Y-m-d H:i:s');
         $msg->is_outgoing = 1;
