@@ -39,6 +39,7 @@ class Document extends \yii\db\ActiveRecord
 
     const OCR_STATUS_TODO = 'todo';
     const OCR_STATUS_PROCESSING = 'processing';
+    const OCR_STATUS_MANUALLY = 'manually';
     const OCR_STATUS_DONE = 'done';
     const OCR_STATUS_NONE = 'none';
 
