@@ -2,8 +2,7 @@
 
 use app\services\DictionaryService;
 use yii\helpers\Html;
-use yii\helpers\Url;
-//Нет активных чатов. Убедитесь, что бот добавлен в группы и webhook настроен.
+
 $this->title = DictionaryService::getWord('chatList', $user->lang);
 ?>
 

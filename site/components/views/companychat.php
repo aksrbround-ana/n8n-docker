@@ -9,6 +9,7 @@ use app\models\TelegramTopic;
         <div class="flex items-center gap-4 pb-4 border-b">
             <?php
             echo $this->render('@app/views/chat/view', [
+                'user' => $user,
                 'topic' => new TelegramTopic(),
                 'chat' => new TelegramChat(),
                 'messages' => [],

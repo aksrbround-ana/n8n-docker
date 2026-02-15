@@ -329,6 +329,8 @@ class DictionaryService
             'telegramChat' => 'Чат поддержки Telegram',
             'sendMessage' => 'Отправить',
             'writeMessage' => 'Напишите сообщение...',
+            'putMessage' => 'Введите сообщение...',
+            'noMessages' => 'Нет сообщений',
             'chatList' => 'Список чатов',
 
         ],
@@ -636,6 +638,8 @@ class DictionaryService
             'telegramChat' => 'Telegram podrška ćaskanje',
             'sendMessage' => 'Pošalji',
             'writeMessage' => 'Napišite poruku...',
+            'putMessage' => 'Unesite poruku...',
+            'noMessages' => 'Nema poruka',
             'chatList' => 'Lista ćaskanja',
         ],
         'en' =>   [
@@ -941,6 +945,8 @@ class DictionaryService
             'telegramChat' => 'Telegram Support Chat',
             'sendMessage' => 'Send',
             'writeMessage' => 'Write a message...',
+            'putMessage' => 'Enter a message...',
+            'noMessages' => 'No messages',
             'chatList' => 'Chat List',
         ],
     ];

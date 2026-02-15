@@ -21,23 +21,29 @@ class ChatController extends BaseController
 
     public function actionView($chatId, $topicId = null)
     {
-        $query = TelegramMessage::find()
-            ->where(['chat_id' => $chatId])
-            ->orderBy(['created_at' => SORT_ASC]);
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $query = TelegramMessage::find()
+                ->where(['chat_id' => $chatId])
+                ->orderBy(['created_at' => SORT_ASC]);
 
-        if ($topicId) {
-            $query->andWhere(['topic_id' => $topicId]);
+            if ($topicId) {
+                $query->andWhere(['topic_id' => $topicId]);
+            }
+
+            $messages = $query->all();
+            $chat = TelegramChat::findOne(['chat_id' => $chatId]);
+
+            return $this->render('view', [
+                'user' => $accountant,
+                'messages' => $messages,
+                'chat' => $chat,
+                'chatId' => $chatId,
+                'topicId' => $topicId,
+            ]);
+        } else {
+            return $this->renderLogout();
         }
-
-        $messages = $query->all();
-        $chat = TelegramChat::findOne(['chat_id' => $chatId]);
-
-        return $this->render('view', [
-            'messages' => $messages,
-            'chat' => $chat,
-            'chatId' => $chatId,
-            'topicId' => $topicId,
-        ]);
     }
 
     public function actionSend()
