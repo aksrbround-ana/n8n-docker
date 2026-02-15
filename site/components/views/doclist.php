@@ -43,22 +43,7 @@ use Codeception\Lib\Di;
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $doc->getCompany() ? $doc->getCompany()->name : DictionaryService::getWord('unknown', $user->lang) ?></td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= DictionaryService::getWord('docType' . ucfirst($doc->getType()->name), $user->lang) ?></td>
                 <!-- <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Q3 2024</td> -->
-                <?php
-                switch ($doc->status) {
-                    case 'uploaded':
-                        $statusClass = 'bg-info/10 text-info border-info/20';
-                        break;
-                    case 'checked':
-                        $statusClass = 'bg-success/10 text-success border-success/20';
-                        break;
-                    case 'needsRevision':
-                        $statusClass = 'bg-warning/10 text-warning border-warning/20';
-                        break;
-                    default:
-                        $statusClass = 'bg-secondary/10 text-secondary border-secondary/20';
-                }
-                ?>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $statusClass ?>"><?= DictionaryService::getWord('docStatus' . ucfirst($doc->status), $user->lang) ?></span></td>
+                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $doc->getStatusStyle() ?>"><?= DictionaryService::getWord($doc->getStatusName(), $user->lang) ?></span></td>
                 <!-- <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ольга Сидорова</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">28.10.2024</td>
                 <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">

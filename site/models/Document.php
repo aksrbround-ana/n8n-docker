@@ -69,6 +69,13 @@ class Document extends \yii\db\ActiveRecord
         'processing' => self::STATUS_PROCESSING,
     ];
 
+    public static $statusStyles = [
+        self::STATUS_UPLOADED => 'bg-info/10 text-info border-info/20',
+        self::STATUS_CHECKED => 'bg-success/10 text-success border-success/20',
+        self::STATUS_NEEDS_REVISION => 'bg-warning/10 text-warning border-warning/20',
+        self::STATUS_PROCESSING => 'bg-secondary/10 text-secondary border-secondary/20',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -193,6 +200,14 @@ class Document extends \yii\db\ActiveRecord
         }
         $status = str_replace(' ', '', ucwords(str_replace('_', ' ', $status)));
         return DictionaryService::getWord('docStatus' . ucfirst($status), $lang);
+    }
+
+    public function getStatusStyle($status = null)
+    {
+        if ($status === null) {
+            $status = $this->status;
+        }
+        return self::$statusStyles[$status] ?? 'bg-secondary/10 text-secondary border-secondary/20';
     }
 
     public function getLength($format = true)
