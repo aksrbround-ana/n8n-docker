@@ -218,6 +218,12 @@ $(document).on('click', '#chat-send-button', (e) => {
     handleSendClick();
 });
 
+$(document).on('keydown', '#message-text', (e) => {
+    if (e.key === 'Enter') {
+        handleSendClick();
+    }
+});
+
 // При клике на "Открыть чат"
 $(document).on('click', '#company-chat', (e) => {
     ChatApp.init();
