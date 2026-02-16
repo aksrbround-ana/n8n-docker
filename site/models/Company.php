@@ -84,7 +84,7 @@ class Company extends \yii\db\ActiveRecord
             [['created_at', 'updated_at'], 'safe'],
             [['name', 'name_tg'], 'string', 'max' => 512],
             [['status'], 'string', 'max' => 32],
-            [['pib'], 'unique'],
+            // [['pib'], 'unique'],
             [['activity_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyActivities::class, 'targetAttribute' => ['activity_id' => 'id']],
             [['type_id'], 'exist', 'skipOnError' => true, 'targetClass' => CompanyType::class, 'targetAttribute' => ['type_id' => 'id']],
         ];

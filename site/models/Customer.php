@@ -19,6 +19,7 @@ class Customer extends \yii\db\ActiveRecord
 
     const CUSTOMER_STATUS_NEW = 'new';
     const CUSTOMER_STATUS_ACTIVE = 'active';
+    const CUSTOMER_STATUS_INACTIVE = 'inactive';
 
     /**
      * {@inheritdoc}
