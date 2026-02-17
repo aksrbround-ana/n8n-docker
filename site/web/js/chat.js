@@ -180,6 +180,10 @@ const ChatApp = {
     },
 
     checkNewMessages: function () {
+        if ($('#chat-last-message-id').length == 0) {
+            this.destroy();
+            return;
+        }
         const user = getUser();
         let userId = $('#chat-user-id').val();
         let chatId = $('#chat-id').val();
