@@ -36,7 +36,12 @@ div.chat-index {
     overflow-x: hidden;
     overflow-y: auto;
     background: #fff;
+    width: 100%;
 }
+
+/* #chat-list, #chat-summary-container {
+    width: 50%;
+} */
 
 div.chat-index h1 {
     text-align: center;
@@ -103,11 +108,24 @@ div.message-input-container {
 button.send-button {
     border-radius: 10px;
     padding: 10px 25px;
+    color: white;
     background-color: #419fd9;
+    border: none;
+    cursor: pointer;
+}
+
+button.send-button.chat-summary {
+    background-color: rgb(225, 67, 55);
 }
 
 button.send-button:hover {
-    background-color: #357ebd;
+    background-color: rgb(229, 231, 235);
+}
+
+button.send-button:disabled {
+    color: gray;
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 #message-text {

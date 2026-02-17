@@ -332,6 +332,8 @@ class DictionaryService
             'putMessage' => 'Введите сообщение...',
             'noMessages' => 'Нет сообщений',
             'chatList' => 'Список чатов',
+            'chatSummary' => 'Резюме чата',
+            'chatSummaryFor24Hours' => 'Резюме за последние 24 часа',
 
         ],
         'rs' =>   [
@@ -641,6 +643,8 @@ class DictionaryService
             'putMessage' => 'Unesite poruku...',
             'noMessages' => 'Nema poruka',
             'chatList' => 'Lista ćaskanja',
+            'chatSummary' => 'Rezime ćaskanja',
+            'chatSummaryFor24Hours' => 'Rezime za poslednjih 24 sata',
         ],
         'en' =>   [
             // Months
@@ -948,6 +952,8 @@ class DictionaryService
             'putMessage' => 'Enter a message...',
             'noMessages' => 'No messages',
             'chatList' => 'Chat List',
+            'chatSummary' => 'Chat Summary',
+            'chatSummaryFor24Hours' => 'Summary for the last 24 hours',
         ],
     ];
 
