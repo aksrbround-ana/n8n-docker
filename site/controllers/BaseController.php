@@ -41,7 +41,6 @@ class BaseController extends Controller
 
     protected function getN8nWebhookBaseUrl()
     {
-        return 'https://n8n.acround.com/webhook/';
         return getenv('N8N_WEBHOOK_BASE_URL');
     }
 
@@ -55,9 +54,12 @@ class BaseController extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
         ]);
-        $response = curl_exec($ch);
-        if ($response) {
-            $response = json_decode($response, true);
+        $responseRaw = curl_exec($ch);
+        if ($responseRaw !== false) {
+            $response = json_decode($responseRaw, true);
+            if (!$response) {
+                $response = $responseRaw;
+            }
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $finalResponse = [
                 'status' => $code == 200 ? 'success' : 'error',
@@ -70,11 +72,11 @@ class BaseController extends Controller
                 $finalResponse['hint'] = $response['hint'];
             }
             $finalResponse['data'] = $response;
-            $finalResponse['debug'] = [
-                'url' => $url,
-                'data' => $data,
-                'curl_info' => curl_getinfo($ch),
-            ];
+            // $finalResponse['debug'] = [
+            //     'url' => $url,
+            //     'data' => $data,
+            //     'curl_info' => curl_getinfo($ch),
+            // ];
             return $finalResponse;
         } else {
             return [

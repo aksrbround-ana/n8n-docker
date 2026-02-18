@@ -5,7 +5,7 @@ namespace app\components;
 use app\models\TaxCalendar;
 use yii\base\Widget;
 
-class RegRemindersTableWidget extends Widget
+class RemindersRegTableWidget extends Widget
 {
     public $user;
     public $reminders;

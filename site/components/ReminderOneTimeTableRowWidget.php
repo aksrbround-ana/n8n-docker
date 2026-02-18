@@ -2,10 +2,9 @@
 
 namespace app\components;
 
-use app\models\TaxCalendar;
 use yii\base\Widget;
 
-class RegReminderTableRowWidget extends Widget
+class ReminderOneTimeTableRowWidget extends Widget
 {
     public $user;
     public $reminder;
@@ -13,7 +12,7 @@ class RegReminderTableRowWidget extends Widget
 
     public function run()
     {
-        return $this->render('regremindertablerow', [
+        return $this->render('reminderonetimetableRow', [
             'user' => $this->user,
             'reminder' => $this->reminder,
             'class' => $this->class,

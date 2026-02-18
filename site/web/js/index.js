@@ -198,7 +198,7 @@ function putLangDependentWords() {
   $('.btn-save').text(dictionaryLookup('save', lang));
 }
 
-function loadCompanyListModal(id, url, trFunction) {
+function loadCompanyListModal(id, url, trFunction, type) {
   let user = getUser();
   let token = user ? user?.token : '';
   $.ajax({
@@ -206,7 +206,8 @@ function loadCompanyListModal(id, url, trFunction) {
     type: 'POST',
     data: {
       token: token,
-      id: id
+      id: id,
+      type: type
     },
     success: function (response) {
       if (response.status === 'success') {
@@ -264,7 +265,7 @@ function makeCompanyListTr(listItem) {
     '<td><input id="company_ps_reminder_' + listItem.id + '" type="checkbox" value="' + listItem.id + '"' + (listItem.count > 0 ? ' checked' : '') + ' /></td></tr>';
 }
 
-function makeCompanyListRegReminderTr(listItem) {
+function makeCompanyReminderList(listItem) {
   return '<tr><td><label for="company_reg_reminder_' + listItem.id + '">' + listItem.name + '</label></td>' +
     '<td><input id="company_reg_reminder_' + listItem.id + '" type="checkbox" value="' + listItem.id + '"' + (listItem.count > 0 ? ' checked' : '') + ' /></td></tr>';
 }
@@ -1025,19 +1026,39 @@ $(document).on('click', '#tax-calendar-month-load', function (e) {
 });
 
 let regReminderModal = null;
-$(document).on('click', '#reg-reminder-create', function (e) {
+$(document).on('click', 'button.reminder-create', function (e) {
   let user = getUser();
+  let reminderType;
+  let titleName;
+  let url = '/reminder/reminder-create/';
+  let buttonId = $(this).attr('id');
+  switch (buttonId) {
+    case 'reg-reminder-create':
+      reminderType = 'regular';
+      titleName = 'createRegReminder';
+      break;
+    case 'yearly-reminder-create':
+      reminderType = 'yearly';
+      titleName = 'createYearlyReminder';
+      break;
+    case 'one-time-reminder-create':
+      reminderType = 'one-time';
+      titleName = 'createOneTimeReminder';
+      break;
+  }
   let data = {
     token: user.token,
+    reminderType: reminderType
   };
   $.ajax({
-    url: '/reminder/reg-reminder-create/',
+    url: url,
     type: 'POST',
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        let title = dictionaryLookup('createReminder', user.lang);
+        let title = dictionaryLookup(titleName, user.lang);
         regReminderModal = new Modal('modal-create-reg-reminder', title, 'reminder');
+        $(regReminderModal.modal).find('input.reminder-type').val(reminderType);
         regReminderModal.setContent(response.data);
         regReminderModal.open();
       } else if (response.status === 'logout') {
@@ -1067,7 +1088,7 @@ $(document).on('click', '.edit-reg-reminder-btn', function (e) {
     data: data,
     success: function (response) {
       if (response.status === 'success') {
-        let title = dictionaryLookup('createReminder', user.lang);
+        let title = dictionaryLookup('createRegReminder', user.lang);
         regReminderModal = new Modal('modal-create-reg-reminder', title, 'reminder');
         regReminderModal.setContent(response.data);
         regReminderModal.open();
@@ -1085,75 +1106,29 @@ $(document).on('click', '.edit-reg-reminder-btn', function (e) {
   return false;
 });
 
-/*
-function fieldTranslate(fieldFrom, fieldTo, langFrom, langTo) {
-  let textOriginal = $(fieldFrom).val();
-  let user = getUser();
-  let data = {
-    token: user.token,
-    text: textOriginal,
-    from: langFrom,
-    to: langTo
-  };
-  $.ajax({
-    url: '/util/translate/',
-    type: 'POST',
-    data: data,
-    success: function (response) {
-      if (response.status === 'success') {
-        $(fieldTo).val(response.data.translation);
-      } else if (response.status === 'logout') {
-        clearUser();
-        loadContent();
-      } else {
-        showError(dictionaryLookup('error', user.lang), response.message);
-      }
-    },
-    error: function (e) {
-      showError(dictionaryLookup('error', user.lang), e.message);
-    }
-  });
-  return false;
-}
-*/
-
-// $(document).on('change', '#modal-create-reg-reminder input[name=type_ru]', function (e) {
-//   return fieldTranslate('#modal-create-reg-reminder input[name=type_ru]', '#modal-create-reg-reminder input[name=type_rs]', 'ru', 'rs');
-// });
-
-// $(document).on('change', '#modal-create-reg-reminder input[name=type_rs]', function (e) {
-//   return fieldTranslate('#modal-create-reg-reminder input[name=type_rs]', '#modal-create-reg-reminder input[name=type_ru]', 'rs', 'ru');
-// });
-
-// $(document).on('change', '#modal-create-reg-reminder input[name=text_ru]', function (e) {
-//   return fieldTranslate('#modal-create-reg-reminder input[name=text_ru]', '#modal-create-reg-reminder input[name=text_rs]', 'ru', 'rs');
-// });
-
-// $(document).on('change', '#modal-create-reg-reminder input[name=text_rs]', function (e) {
-//   return fieldTranslate('#modal-create-reg-reminder input[name=text_rs]', '#modal-create-reg-reminder input[name=text_ru]', 'rs', 'ru');
-// });
-
-$(document).on('click', '#save-reg-reminder', function (e) {
+$(document).on('click', '#save-reminder', function (e) {
   let user = getUser();
   let modalBody = $(this).closest('.modal-window').find('.modal-body');
+  const reminderType = $(modalBody).find('input[name="reminder-type"]').val();
   let data = {
     token: user.token,
     id: $(modalBody).find('input[name="reminderId"]').val(),
     lang: $(modalBody).find('input[name="reminder-lang"]').val(),
+    reminderType: reminderType,
     deadLine: $(modalBody).find('input[name="deadlineDay"]').val(),
     topic: $(modalBody).find('input[name="topic"]').val(),
     text: $(modalBody).find('input[name="text"]').val(),
   };
   $.ajax({
-    url: '/reminder/reg-reminder-save/',
+    url: '/reminder/reminder-save/',
     type: 'POST',
     data: data,
     success: function (response) {
       if (response.status === 'success') {
         if (response.action === 'created') {
-          $('#reg-reminder-table-body').append(response.data);
+          $('#' + reminderType + '-reminder-table-body').append(response.data);
         } else if (response.action === 'updated') {
-          let row = $('#reg-reminder-row-' + response.reminder.id);
+          let row = $('#' + reminderType + '-reminder-row-' + response.reminder.id);
           $(row).replaceWith(response.data);
         }
         regReminderModal.close();
@@ -1237,9 +1212,10 @@ $(document).on('click', '.cancel-reg-reminder-btn', function (e) {
 $(document).on('click', 'button.company-tax-reminder-btn', function (e) {
   let id = $(this).data('item-id');
   const title = $(this).closest('tr').find('.calendar-text').text();
+  const type = $(this).data('type');
   companyListModal = new Modal('modal-overlay', title);
   companyListModal.setDoUrl('/company/update-calendar-reminders/');
-  loadCompanyListModal(id, '/company/list-to-calendar', makeCompanyListTr);
+  loadCompanyListModal(id, '/company/list-to-calendar', makeCompanyListTr, type);
   companyListModal.open(this);
 });
 
@@ -1247,9 +1223,35 @@ $(document).on('click', 'button.company-reg-reminder-btn', function (e) {
   let user = getUser();
   let id = $(this).data('item-id');
   let title = dictionaryLookup('regularReminders', user.lang);
+  const type = $(this).data('type');
   companyListModal = new Modal('modal-overlay', title);
-  companyListModal.setDoUrl('/company/update-list-to-regular/');
-  loadCompanyListModal(id, '/company/list-to-regular', makeCompanyListRegReminderTr);
+  companyListModal.setDoUrl('/company/update-reminders-list/');
+  companyListModal.setReminderType('regular');
+  loadCompanyListModal(id, '/company/list-to-regular', makeCompanyReminderList, type);
+  companyListModal.open(this);
+});
+
+$(document).on('click', 'button.company-yearly-reminder-btn', function (e) {
+  let user = getUser();
+  let id = $(this).data('item-id');
+  let title = dictionaryLookup('yearlyReminders', user.lang);
+  const type = $(this).data('type');
+  companyListModal = new Modal('modal-overlay', title);
+  companyListModal.setDoUrl('/company/update-reminders-list/');
+  companyListModal.setReminderType('yearly');
+  loadCompanyListModal(id, '/company/list-to-regular', makeCompanyReminderList, type);
+  companyListModal.open(this);
+});
+
+$(document).on('click', 'button.company-onetime-reminder-btn', function (e) {
+  let user = getUser();
+  let id = $(this).data('item-id');
+  let title = dictionaryLookup('oneTimeReminders', user.lang);
+  const type = $(this).data('type');
+  companyListModal = new Modal('modal-overlay', title);
+  companyListModal.setDoUrl('/company/update-reminders-list/');
+  companyListModal.setReminderType('one-time');
+  loadCompanyListModal(id, '/company/list-to-regular', makeCompanyReminderList, type);
   companyListModal.open(this);
 });
 
@@ -1327,7 +1329,8 @@ $(document).on('click', '#do-action-btn', function (e) {
   });
   let user = getUser();
   let token = user ? user?.token : '';
-  let doActionUrl = $(companyListModal.modal).find('#do-action-url').val();
+  let doActionUrl = $(companyListModal.modal).find('input.do-action-url').val();
+  let reminderType = $(companyListModal.modal).find('input.reminder-table-type').val();
   if (doActionUrl) {
     $.ajax({
       url: doActionUrl,
@@ -1336,7 +1339,8 @@ $(document).on('click', '#do-action-btn', function (e) {
         token: token,
         reminder_id: reminder_id,
         checked_companies: checkedCompanies,
-        uncheked_companies: unchekedCompanies
+        uncheked_companies: unchekedCompanies,
+        reminder_type: reminderType
       },
       success: function (response) {
         if (response.status === 'success') {
@@ -1365,6 +1369,7 @@ $(document).on('click', '.accordeon-item', function (e) {
 $(document).on('click', 'button.stop-reminder-btn', function (e) {
   const button = $(this);
   const user = getUser();
+  const type = $(this).data('reminder-type');
   const reminderId = $(this).attr('data-rm-id');
   const scheduleId = $(this).attr('data-sc-id');
   const companyId = $(this).attr('data-co-id');
@@ -1373,7 +1378,8 @@ $(document).on('click', 'button.stop-reminder-btn', function (e) {
     token: token,
     reminder_id: reminderId,
     schedule_id: scheduleId,
-    company_id: companyId
+    company_id: companyId,
+    type: type,
   };
   $.ajax({
     url: '/reminder/stop-reminder',
@@ -1400,6 +1406,7 @@ $(document).on('click', 'button.stop-reminder-btn', function (e) {
 $(document).on('click', 'input.reminder-activity', function (e) {
   const input = $(this);
   const user = getUser();
+  const type = $(this).data('reminder-type');
   const reminderId = $(this).data('rm-id');
   const scheduleId = $(this).data('sc-id');
   const companyId = $(this).data('co-id');
@@ -1407,6 +1414,7 @@ $(document).on('click', 'input.reminder-activity', function (e) {
   const token = user ? user?.token : '';
   const data = {
     token: token,
+    type: type,
     reminder_id: reminderId,
     schedule_id: scheduleId,
     company_id: companyId,

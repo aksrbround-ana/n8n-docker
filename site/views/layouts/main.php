@@ -27,32 +27,28 @@ $centrifugoUrl = getenv('CENTRIFUGO_URL');
     <title>BUHGALTERIJA - Бэк-офис</title>
     <meta name="description" content="Внутренняя система управления бухгалтерской компанией BUHGALTERIJA">
     <meta name="author" content="BUHGALTERIJA">
+    <meta name="csrf-token" content="<?= Yii::$app->request->csrfToken ?>">
+    <?php $this->registerCsrfMetaTags() ?>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;📊&lt;/text&gt;&lt;/svg&gt;">
-    <script src="/js/jquery.js"></script>
-    <script src="/js/index.js"></script>
-    <script src="/js/dictionary.js"></script>
-    <script src="/js/modal.js"></script>
-    <script src="/js/tiff.min.js"></script>
-    <script src="/js/select.js"></script>
-    <script src="https://unpkg.com/centrifuge@3.1.0/dist/centrifuge.js"></script>
-    <script>
-        const centrifuge = new Centrifuge('ws://<?= $centrifugoUrl ?>:8000/connection/websocket');
-        const sub = centrifuge.newSubscription('public:messages');
-        sub.on('publication', function(ctx) {
-            const msg = ctx.data.text;
-            // Добавляем сообщение в верстку
-            document.getElementById('chat-box').innerHTML += `<p>${msg}</p>`;
-        });
-        sub.subscribe();
-        centrifuge.connect();
-    </script>
+    <?php
+    $this->registerJsFile('@web/js/jquery.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/index.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/dictionary.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/modal.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/tiff.min.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/select.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/chat.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    ?>
     <link rel="stylesheet" href="/css/site.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/select.css">
+    <!-- <link rel="stylesheet" href="/css/chat.css"> -->
+    <link rel="stylesheet" href="/css/chat-cl.css">
 </head>
 
 <body>
+    <?php $this->beginBody() ?>
     <div id="root"></div>
     <div id="error-tab" role="region" aria-label="Notifications (F8)" tabindex="-1" style="pointer-events: none;">
         <ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"></ol>
@@ -67,6 +63,7 @@ $centrifugoUrl = getenv('CENTRIFUGO_URL');
     <?= ModalCreateRegReminderWidget::widget([
         'user' => Yii::$app->view->params['accountant'],
     ]) ?>
+    <?php $this->endBody() ?>
 </body>
 
 </html>

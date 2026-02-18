@@ -3,15 +3,19 @@
 namespace app\components;
 
 use app\models\Company;
+use app\models\ReminderOneTime;
+use app\models\ReminderOnetimeCompany;
 use yii\db\Query;
 use yii\db\Expression;
 use app\models\ReminderRegular;
 use app\models\ReminderRegularCompany;
 use app\models\ReminderSchedule;
+use app\models\ReminderYearly;
+use app\models\ReminderYearlyCompany;
 use app\models\TaxCalendar;
 use yii\base\Widget;
 
-class CompanyRemindersListWidget extends Widget
+class CompanyRemindersListWidget extends Widget 
 {
     public $user;
     public $company;
@@ -47,7 +51,70 @@ class CompanyRemindersListWidget extends Widget
             ->from(ReminderRegular::tableName())
             ->leftJoin(ReminderRegularCompany::tableName(), implode(' AND ', $on2Company))
             ->leftJoin(ReminderSchedule::tableName(), implode(' AND ', $on2Schedule))
-            ->orderBy([ReminderSchedule::tableName() . '.deadline_date' => SORT_ASC]);
+            ->orderBy([ReminderRegular::tableName() . '.deadline_day' => SORT_ASC]);
+
+        $on2Company = [
+            ReminderYearlyCompany::tableName() . '.reminder_id = ' . ReminderYearly::tableName() . '.id',
+            ReminderYearlyCompany::tableName() . '.company_id = ' . $this->company->id,
+        ];
+        $on2Schedule = [
+            ReminderSchedule::tableName() . '.template_id = ' . ReminderYearly::tableName() . '.id',
+            ReminderSchedule::tableName() . '.company_id = ' . $this->company->id,
+            ReminderSchedule::tableName() . '.type = \'' . ReminderSchedule::TYPE_REGULAR . '\'',
+            ReminderSchedule::tableName() . '.target_month = \'' . date('Y-m') . '-01\'',
+        ];
+        $yearlyRemindersQuery = (new Query())
+            ->select([
+                'reminder_id' => ReminderYearly::tableName() . '.id',
+                'company_link_id' => ReminderYearlyCompany::tableName() . '.id',
+                'schedule_id' => ReminderSchedule::tableName() . '.id',
+                ReminderYearly::tableName() . '.type_ru',
+                ReminderYearly::tableName() . '.type_rs',
+                ReminderYearly::tableName() . '.text_ru',
+                ReminderYearly::tableName() . '.text_rs',
+                ReminderYearly::tableName() . '.deadline_month',
+                ReminderYearly::tableName() . '.deadline_day',
+                ReminderSchedule::tableName() . '.deadline_date',
+                ReminderSchedule::tableName() . '.last_notified_type',
+                ReminderSchedule::tableName() . '.status',
+                'company_id' => new Expression($this->company->id),
+                'type' => new Expression('\'rr\''),
+            ])
+            ->from(ReminderYearly::tableName())
+            ->leftJoin(ReminderYearlyCompany::tableName(), implode(' AND ', $on2Company))
+            ->leftJoin(ReminderSchedule::tableName(), implode(' AND ', $on2Schedule))
+            ->orderBy([ReminderYearly::tableName() . '.deadline_month' => SORT_ASC, ReminderYearly::tableName() . '.deadline_day' => SORT_ASC]);
+
+        $on2Company = [
+            ReminderOnetimeCompany::tableName() . '.reminder_id = ' . ReminderOneTime::tableName() . '.id',
+            ReminderOnetimeCompany::tableName() . '.company_id = ' . $this->company->id,
+        ];
+        $on2Schedule = [
+            ReminderSchedule::tableName() . '.template_id = ' . ReminderOneTime::tableName() . '.id',
+            ReminderSchedule::tableName() . '.company_id = ' . $this->company->id,
+            ReminderSchedule::tableName() . '.type = \'' . ReminderSchedule::TYPE_REGULAR . '\'',
+            ReminderSchedule::tableName() . '.target_month = \'' . date('Y-m') . '-01\'',
+        ];
+        $onetimeRemindersQuery = (new Query())
+            ->select([
+                'reminder_id' => ReminderOneTime::tableName() . '.id',
+                'company_link_id' => ReminderOnetimeCompany::tableName() . '.id',
+                'schedule_id' => ReminderSchedule::tableName() . '.id',
+                ReminderOneTime::tableName() . '.type_ru',
+                ReminderOneTime::tableName() . '.type_rs',
+                ReminderOneTime::tableName() . '.text_ru',
+                ReminderOneTime::tableName() . '.text_rs',
+                ReminderOneTime::tableName() . '.deadline',
+                ReminderSchedule::tableName() . '.deadline_date',
+                ReminderSchedule::tableName() . '.last_notified_type',
+                ReminderSchedule::tableName() . '.status',
+                'company_id' => new Expression($this->company->id),
+                'type' => new Expression('\'rr\''),
+            ])
+            ->from(ReminderOneTime::tableName())
+            ->leftJoin(ReminderOnetimeCompany::tableName(), implode(' AND ', $on2Company))
+            ->leftJoin(ReminderSchedule::tableName(), implode(' AND ', $on2Schedule))
+            ->orderBy([ReminderOneTime::tableName() . '.deadline' => SORT_ASC]);
 
         $taxCalendarRemindersQuery = (new Query())
             ->select([
@@ -71,6 +138,8 @@ class CompanyRemindersListWidget extends Widget
             'user' => $this->user,
             'company' => $this->company,
             'regReminders' => $regularRemindersQuery->all(),
+            'yearlyReminders' => $yearlyRemindersQuery->all(),
+            'onetimeReminders' => $onetimeRemindersQuery->all(),
             'taxCalendarReminders' => $taxCalendarRemindersQuery->all(),
         ]);
     }

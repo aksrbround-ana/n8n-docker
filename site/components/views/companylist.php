@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Company;
 use app\services\DictionaryService;
 use app\services\SvgService;
 
@@ -11,24 +12,18 @@ foreach ($companies as $company) {
                 <div class="flex-1 min-w-0">
                     <h3 class="font-heading font-semibold text-base truncate group-hover:text-primary transition-colors"><?= $company['company_name'] ?></h3>
                     <p class="text-xs text-muted-foreground mt-0.5"><?= DictionaryService::getWord('pib', $user->lang) ?>: <?= $company['pib'] ?></p>
-                    <?php
-                    $statusName = 'status' . ucfirst($company['company_status']);
-                    ?>
                 </div>
                 <?php
-                if ($user->rule == 'ceo') {
+                $statusName = 'status' . ucfirst($company['company_status']);
                 ?>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20"><?= DictionaryService::getWord($statusName, $user->lang) ?></span>
-                <?php
-                }
-                ?>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= Company::$statusStyles[$company['company_status']] ?>"><?= DictionaryService::getWord($statusName, $user->lang) ?></span>
             </div>
         </div>
         <div class="p-4 space-y-3">
             <div class="space-y-2 text-sm">
                 <div class="flex items-center gap-2 text-muted-foreground">
                     <?= SvgService::svg('location') ?>
-                    <span class="truncate">Белград</span>
+                    <span class="truncate">Нови Сад</span>
                 </div>
                 <div class="flex items-center gap-2 text-muted-foreground">
                     <?= SvgService::svg('activity') ?>

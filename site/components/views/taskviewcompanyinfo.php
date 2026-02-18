@@ -25,8 +25,8 @@ $company = $task->getCompany();
         </button>
         <div class="space-y-2 text-sm">
             <div class="flex justify-between"><span class="text-muted-foreground">ПИБ:</span><span class="font-mono"><?= $company->pib ?></span></div>
-            <div class="flex justify-between"><span class="text-muted-foreground">Город:</span><span>Белград</span></div>
-            <div class="flex justify-between"><span class="text-muted-foreground">Сектор:</span><span><?= $company->getActivity()->name ?></span></div>
+            <div class="flex justify-between"><span class="text-muted-foreground">Город:</span><span>Нови Сад</span></div>
+            <div class="flex justify-between"><span class="text-muted-foreground">Сектор:</span><span><?= $company->getActivity() ? $company->getActivity()->name : '' ?></span></div>
         </div>
         <div data-orientation="horizontal" role="none" class="shrink-0 bg-border h-[1px] w-full"></div>
         <?php

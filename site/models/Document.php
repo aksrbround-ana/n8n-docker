@@ -39,6 +39,7 @@ class Document extends \yii\db\ActiveRecord
 
     const OCR_STATUS_TODO = 'todo';
     const OCR_STATUS_PROCESSING = 'processing';
+    const OCR_STATUS_MANUALLY = 'manually';
     const OCR_STATUS_DONE = 'done';
     const OCR_STATUS_NONE = 'none';
 
@@ -66,6 +67,13 @@ class Document extends \yii\db\ActiveRecord
         'checked' =>  self::STATUS_CHECKED,
         'needsRevision' =>  self::STATUS_NEEDS_REVISION,
         'processing' => self::STATUS_PROCESSING,
+    ];
+
+    public static $statusStyles = [
+        self::STATUS_UPLOADED => 'bg-info/10 text-info border-info/20',
+        self::STATUS_CHECKED => 'bg-success/10 text-success border-success/20',
+        self::STATUS_NEEDS_REVISION => 'bg-warning/10 text-warning border-warning/20',
+        self::STATUS_PROCESSING => 'bg-secondary/10 text-secondary border-secondary/20',
     ];
 
     /**
@@ -192,6 +200,14 @@ class Document extends \yii\db\ActiveRecord
         }
         $status = str_replace(' ', '', ucwords(str_replace('_', ' ', $status)));
         return DictionaryService::getWord('docStatus' . ucfirst($status), $lang);
+    }
+
+    public function getStatusStyle($status = null)
+    {
+        if ($status === null) {
+            $status = $this->status;
+        }
+        return self::$statusStyles[$status] ?? 'bg-secondary/10 text-secondary border-secondary/20';
     }
 
     public function getLength($format = true)
