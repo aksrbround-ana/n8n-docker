@@ -36,8 +36,17 @@ switch ($user->lang) {
                 <?php
                     break;
                 case 'yearly':
+                    $day = $reminder->deadline_day;
+                    if ($day < 10) {
+                        $day = '0' . $day;
+                    }
+                    $month = $reminder->deadline_month;
+                    if ($month < 10) {
+                        $month = '0' . $month;
+                    }
+                    $date = date('Y') . '-' . $month . '-' . $day;
                 ?>
-                    <input class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" style="width: 100%;" name="deadlineDay" type="date" value="<?= $reminder->deadline_day ?>" />
+                    <input class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" style="width: 100%;" name="deadlineDay" type="date" value="<?= $date ?>" />
                 <?php
                     break;
                 case 'one-time':

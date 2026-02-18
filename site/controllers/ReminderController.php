@@ -140,7 +140,7 @@ class ReminderController extends BaseController
         }
     }
 
-    public function actionRegReminderUpdate()
+    public function actionReminderUpdate()
     {
         $this->layout = false;
         $request = \Yii::$app->request;
@@ -181,6 +181,7 @@ class ReminderController extends BaseController
             $html = ReminderCreateUpdateContentWidget::widget([
                 'user' => $accountant,
                 'reminder' => $reminder,
+                'type' => $type,
             ]);
             $response = \Yii::$app->response;
             $response->format = \yii\web\Response::FORMAT_JSON;

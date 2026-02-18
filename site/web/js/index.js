@@ -1075,15 +1075,17 @@ $(document).on('click', 'button.reminder-create', function (e) {
   return false;
 });
 
-$(document).on('click', '.edit-reg-reminder-btn', function (e) {
+$(document).on('click', '.edit-reminder-btn', function (e) {
   let user = getUser();
   let id = $(this).data('item-id');
+  let type = $(this).data('reminder-type');
   let data = {
     token: user.token,
-    id: id
+    id: id,
+    reminderType: type,
   };
   $.ajax({
-    url: '/reminder/reg-reminder-update/',
+    url: '/reminder/reminder-update/',
     type: 'POST',
     data: data,
     success: function (response) {
