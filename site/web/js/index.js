@@ -1110,6 +1110,7 @@ $(document).on('click', '.edit-reminder-btn', function (e) {
 
 $(document).on('click', '#save-reminder', function (e) {
   let user = getUser();
+  let button = this;
   let modalBody = $(this).closest('.modal-window').find('.modal-body');
   const reminderType = $(modalBody).find('input[name="reminder-type"]').val();
   let data = {
@@ -1121,6 +1122,7 @@ $(document).on('click', '#save-reminder', function (e) {
     topic: $(modalBody).find('input[name="topic"]').val(),
     text: $(modalBody).find('input[name="text"]').val(),
   };
+  button.disabled = true;
   $.ajax({
     url: '/reminder/reminder-save/',
     type: 'POST',
@@ -1140,9 +1142,11 @@ $(document).on('click', '#save-reminder', function (e) {
       } else {
         showError(dictionaryLookup('error', user.lang), response.message);
       }
+      button.disabled = false;
     },
     error: function (e) {
       showError(dictionaryLookup('error', user.lang), e.message);
+      button.disabled = false;
     }
   });
   return false;
