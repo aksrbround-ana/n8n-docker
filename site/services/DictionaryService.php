@@ -4,6 +4,12 @@ namespace app\services;
 
 class DictionaryService
 {
+
+    const LANG_RUSSIAN = 'ru';
+    const LANG_SERBIAN = 'rs';
+    const LANG_ENGLISH = 'en';
+    const LANG_DEFAULT = self::LANG_RUSSIAN;
+
     static array $prioritySign = [
         'low' => '↓',
         'normal' => '●',
@@ -47,7 +53,6 @@ class DictionaryService
             'documents' =>  'Документы',
             'reports' =>  'Отчёты',
             'settings' =>  'Настройки',
-            'reminders' => 'Напоминания',
             'users' =>  'Пользователи',
 
             // Roles
@@ -287,10 +292,15 @@ class DictionaryService
             'reminderType' => 'Тип напоминания',
             'taxCalendar' => 'Налоговый календарь',
             'regularReminders' => 'Регулярные напоминания',
+            'reminders' => 'Напоминания',
+            'yearlyReminders' => 'Годовые напоминания',
+            'oneTimeReminders' => 'Разовые напоминания',
             'thisMonthReminders' => 'Напоминания этого месяца',
             'loadTaxCalendarPage' => 'Загрузить страницу налогового календаря',
             'editReminder' => 'Редактировать напоминание',
-            'createReminder' => 'Создать регулярное напоминание',
+            'createRegReminder' => 'Создать регулярное напоминание',
+            'createYearlyReminder' => 'Создать годовое напоминание',
+            'createOneTimeReminder' => 'Создать разовое напоминание',
             'topic' => 'Тема',
             'text' => 'Текст',
 
@@ -358,7 +368,6 @@ class DictionaryService
             'documents' =>  'Dokumenti',
             'reports' =>  'Izveštaji',
             'settings' =>  'Podešavanja',
-            'reminders' => 'Podsetnici',
             'users' =>  'Korisnici',
 
             // Roles
@@ -532,7 +541,7 @@ class DictionaryService
             'docTypeUnknown' =>  'Nepoznato',
             'docTypeInvoice' =>  'Faktura',
             'docTypeBill' =>  'Račun',
-            'docTypeReceipt'=>'Priznanica',
+            'docTypeReceipt' => 'Priznanica',
             'docTypeBankStatement' =>  'Izvod iz banke',
             'docTypePayroll' =>  'Platni spisak',
             'docTypeContract' =>  'Ugovor',
@@ -597,11 +606,16 @@ class DictionaryService
             'reminderText' => 'Tekst podsećanja',
             'reminderType' => 'Tip podsećanja',
             'taxCalendar' => 'Poreski kalendar',
+            'reminders' => 'Podsetnici',
             'regularReminders' => 'Redovna podsećanja',
+            'yearlyReminders' => 'Godišnja podsećanja',
+            'oneTimeReminders' => 'Jednokratna podsećanja',
             'thisMonthReminders' => 'Podsećanja za ovaj mesec',
             'loadTaxCalendarPage' => 'Učitaj stranicu poreskog kalendara',
             'editReminder' => 'Izmeni podsećanje',
-            'createReminder' => 'Kreiraj stalno podsećanje',
+            'createRegReminder' => 'Kreiraj stalno podsećanje',
+            'createYearlyReminder' => 'Kreiraj godišnje podsećanje',
+            'createOneTimeReminder' => 'Kreiraj jednokratno podsećanje',
             'topic' => 'Tema',
             'text' => 'Tekst',
 
@@ -668,7 +682,6 @@ class DictionaryService
             'documents' =>  'Documents',
             'reports' =>  'Reports',
             'settings' =>  'Settings',
-            'reminders' => 'Reminders',
             'users' =>  'Users',
 
             // Roles
@@ -903,14 +916,19 @@ class DictionaryService
             'notAssigned' => 'Not Assigned',
             'stopped' => 'Stopped',
             'activityType' => 'Activity Type',
+            'reminders' => 'Reminders',
+            'regularReminders' => 'Regular Reminders',
+            'yearlyReminders' => 'Yearly Reminders',
+            'oneTimeReminders' => 'One-time Reminders',
             'reminderText' => 'Reminder Text',
             'reminderType' => 'Reminder Type',
             'taxCalendar' => 'Tax Calendar',
-            'regularReminders' => 'Regular Reminders',
             'thisMonthReminders' => 'This Month\'s Reminders',
             'loadTaxCalendarPage' => 'Load Tax Calendar Page',
             'editReminder' => 'Edit Reminder',
-            'createReminder' => 'Create Regular Reminder',
+            'createRegReminder' => 'Create Regular Reminder',
+            'createYearlyReminder' => 'Create Yearly Reminder',
+            'createOneTimeReminder' => 'Create One-time Reminder',
             'topic' => 'Topic',
             'text' => 'Text',
 

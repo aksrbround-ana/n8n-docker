@@ -8,8 +8,8 @@ use app\services\DictionaryService;
     <div class="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow">
         <div class="flex flex-col space-y-1.5 p-6 pb-3">
             <div class="flex items-center gap-3 grid grid-cols-3">
-                <div class="ml-auto align-left">
-                    <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('taxCalendar', $user->lang) ?></h1>
+                <div class="">
+                    <h3 class="font-semibold tracking-tight text-base"><?= DictionaryService::getWord('taxCalendar', $user->lang) ?></h3>
                 </div>
                 <div class="align-left">
                     <select id="tax-calendar-month" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background w-48">

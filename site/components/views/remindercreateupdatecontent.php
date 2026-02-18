@@ -5,12 +5,12 @@ use app\services\DictionaryService;
 $topic = '';
 $text = '';
 switch ($user->lang) {
-    case 'ru':
+    case DictionaryService::LANG_RUSSIAN:
         $topic = $reminder->type_ru;
         $text = $reminder->text_ru;
         break;
 
-    case 'rs':
+    case DictionaryService::LANG_SERBIAN:
         $topic = $reminder->type_rs;
         $text = $reminder->text_rs;
         break;
@@ -23,10 +23,31 @@ switch ($user->lang) {
 ?>
 <input type="hidden" name="reminderId" value="<?= $reminder->id ?>" />
 <input type="hidden" name="reminder-lang" value="<?= $user->lang ?>" />
+<input type="hidden" name="reminder-type" value="<?= $type ?>" />
 <table class="w-full table-auto">
     <tr class="bg-muted/50">
-        <th class="p-6 text-left text-sm font-semibold tracking-tight" width="20%"><?= DictionaryService::getWord('deadlineDay', $user->lang) ?>:</th>
-        <td class="p-6 pt-0"><input class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" style="width: 100%;" name="deadlineDay" type="text" value="<?= $reminder->deadline_day ?>" /></td>
+        <th class="p-6 text-left text-sm font-semibold tracking-tight" width="20%"><?= DictionaryService::getWord('reminderDate', $user->lang) ?>:</th>
+        <td class="p-6 pt-0">
+            <?php
+            switch ($type) {
+                case 'regular':
+            ?>
+                    <input class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" style="width: 100%;" name="deadlineDay" type="text" value="<?= $reminder->deadline_day ?>" />
+                <?php
+                    break;
+                case 'yearly':
+                ?>
+                    <input class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" style="width: 100%;" name="deadlineDay" type="date" value="<?= $reminder->deadline_day ?>" />
+                <?php
+                    break;
+                case 'one-time':
+                ?>
+                    <input class="flex h-10 w-full rounded-md border border-input px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" style="width: 100%;" name="deadlineDay" type="date" value="<?= $reminder->deadline ?>" />
+            <?php
+                    break;
+            }
+            ?>
+        </td>
     </tr>
     <tr class="bg-muted/50">
         <th class="p-6 text-left text-sm font-semibold tracking-tight"><?= DictionaryService::getWord('topic', $user->lang) ?>:</th>

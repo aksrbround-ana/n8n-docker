@@ -2,20 +2,21 @@
 
 namespace app\components;
 
+use app\models\TaxCalendar;
 use yii\base\Widget;
 
-class ReminderCreateUpdateContentWidget extends Widget
+class ReminderYearlyTableRowWidget extends Widget
 {
     public $user;
     public $reminder;
-    public $type;
+    public $class = [];
 
     public function run()
     {
-        return $this->render('remindercreateupdatecontent', [
+        return $this->render('reminderyearlytablerow', [
             'user' => $this->user,
             'reminder' => $this->reminder,
-            'type' => $this->type,
+            'class' => $this->class,
         ]);
     }
 }

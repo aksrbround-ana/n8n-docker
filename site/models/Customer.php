@@ -12,6 +12,7 @@ use Yii;
  * @property string|null $firstname
  * @property string|null $lastname
  * @property string|null $username
+ * @property string|null $lang
  * @property string|null $status
  */
 class Customer extends \yii\db\ActiveRecord
@@ -37,6 +38,7 @@ class Customer extends \yii\db\ActiveRecord
         return [
             [['tg_id', 'firstname', 'lastname', 'username'], 'default', 'value' => null],
             [['status'], 'default', 'value' => 'new'],
+            [['lang'], 'default', 'value' => 'ru'],
             [['tg_id',], 'default', 'value' => null],
             [['tg_id',], 'integer'],
             [['firstname', 'lastname', 'status'], 'string', 'max' => 32],
@@ -55,6 +57,7 @@ class Customer extends \yii\db\ActiveRecord
             'firstname' => 'Firstname',
             'lastname' => 'Lastname',
             'username' => 'Username',
+            'lang' => 'Language',
             'status' => 'Status',
         ];
     }
