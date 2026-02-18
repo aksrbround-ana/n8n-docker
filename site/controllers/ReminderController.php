@@ -358,7 +358,7 @@ class ReminderController extends BaseController
         }
     }
 
-    public function actionCancelRegular()
+    public function actionCancelReminder()
     {
         $this->layout = false;
         $request = \Yii::$app->request;
@@ -366,13 +366,31 @@ class ReminderController extends BaseController
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         if ($accountant->isValid()) {
             $id = $request->post('id');
-            $reminder = ReminderRegular::findOne($id);
+            $type = $request->post('type');
+            switch ($type) {
+                case 'regular':
+                    $reminder = ReminderRegular::findOne($id);
+                    break;
+                case 'yearly':
+                    $reminder = ReminderYearly::findOne($id);
+                    break;
+                case 'one-time':
+                    $reminder = ReminderOneTime::findOne($id);
+                    break;
+                    // default:
+                    //     $reminder = ReminderRegular::findOne($id);
+            }
+            // $reminder = ReminderRegular::findOne($id);
             if ($reminder) {
-                $reminder->delete();
+                $r = $reminder->delete();
                 $response = \Yii::$app->response;
                 $response->format = \yii\web\Response::FORMAT_JSON;
                 $response->data = [
                     'status' => 'success',
+                    'r' => $r,
+                    'errors' => $reminder->getErrors(),
+                    'class' => get_class($reminder),
+                    'reminder' => $reminder,
                 ];
                 return $response;
             } else {

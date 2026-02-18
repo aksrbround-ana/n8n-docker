@@ -1179,17 +1179,19 @@ $(document).on('click', '#reminders-button-list button', function (e) {
   return false;
 });
 
-$(document).on('click', '.cancel-reg-reminder-btn', function (e) {
+$(document).on('click', '.cancel-reminder-btn', function (e) {
   if (confirm('Are you sure you want to delete this reminder?')) {
     let user = getUser();
     let reminderId = $(this).data('item-id');
+    let type = $(this).data('reminder-type');
     let data = {
       token: user.token,
-      id: reminderId
+      id: reminderId,
+      type: type,
     }
     let row = $(this).closest('tr');
     $.ajax({
-      url: '/reminder/cancel-regular',
+      url: '/reminder/cancel-reminder',
       type: 'POST',
       data: data,
       success: function (response) {

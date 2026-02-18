@@ -183,7 +183,7 @@ class Document extends \yii\db\ActiveRecord
         return DocumentType::find()->where(['id' => $this->type_id])->one();
     }
 
-    public function getTypeName($lang = 'ru')
+    public function getTypeName($lang = DictionaryService::LANG_RUSSIAN)
     {
         $type = $this->getType();
         if ($type) {
@@ -193,7 +193,7 @@ class Document extends \yii\db\ActiveRecord
         }
     }
 
-    public function getStatusName($lang = 'ru', $status = null)
+    public function getStatusName($lang = DictionaryService::LANG_RUSSIAN, $status = null)
     {
         if ($status === null) {
             $status = $this->status;

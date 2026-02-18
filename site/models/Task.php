@@ -82,12 +82,12 @@ class Task extends \yii\db\ActiveRecord
         return 'task';
     }
 
-    public static function getAnyPriorityText($priority, $lang = 'ru')
+    public static function getAnyPriorityText($priority, $lang = DictionaryService::LANG_RUSSIAN)
     {
         return $priority ? DictionaryService::getWord('priority' . ucfirst($priority), $lang) : '';
     }
 
-    public static function getAnyStatusText($status, $lang = 'ru')
+    public static function getAnyStatusText($status, $lang = DictionaryService::LANG_RUSSIAN)
     {
         return $status ? DictionaryService::getWord('taskStatus' . ucfirst($status), $lang) : '';
     }
@@ -188,12 +188,12 @@ class Task extends \yii\db\ActiveRecord
         return $this->priority ? 'priority' . ucfirst($this->priority) : '';
     }
 
-    public function getPriorityText($lang = 'ru')
+    public function getPriorityText($lang = DictionaryService::LANG_RUSSIAN)
     {
         return DictionaryService::getWord($this->getPriorityWord(), $lang);
     }
 
-    public function getStatusText($lang = 'ru')
+    public function getStatusText($lang = DictionaryService::LANG_RUSSIAN)
     {
         return $this->status ? DictionaryService::getWord('taskStatus' . ucfirst($this->status), $lang) : '';
     }
