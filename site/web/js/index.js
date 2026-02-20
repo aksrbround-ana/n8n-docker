@@ -1494,14 +1494,6 @@ $(document).on('click', 'input.tax-activity', function (e) {
   });
 });
 
-$(document).on('click', 'button.filters-on-off-button', function (e) {
-  if ($('div.filter-box').hasClass('hidden')) {
-    $('div.filter-box').removeClass('hidden');
-  } else {
-    $('div.filter-box').addClass('hidden');
-  }
-});
-
 $(document).on('click', 'button.reset-filters-button', function (e) {
   $(this).closest('div.filter-box').find('select').val('');
 });

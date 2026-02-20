@@ -5,13 +5,13 @@ use app\services\DictionaryService;
 <table class="w-full caption-bottom text-sm">
     <thead class="[&amp;_tr]:border-b bg-secondary/50 sticky top-0">
         <tr class="border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50">
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-20">ID</th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('taskType', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('status', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('priority', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('dueDate', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0"><?= DictionaryService::getWord('assignedTo', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-20">ID</th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('taskType', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('priority', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('dueDate', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('assignedTo', $user->lang) ?></th>
         </tr>
     </thead>
     <tbody class="[&amp;_tr:last-child]:border-0">
@@ -21,21 +21,21 @@ use app\services\DictionaryService;
             $company = $task->getCompany();
         ?>
             <tr class="task-row border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors<?php if ($task->status == 'done') echo ' bg-destructive/5'; ?>" data-task-id="<?= $task->id ?>">
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs"><?= $task->id ?></td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                <td class="p-4 align-middle font-mono text-xs"><?= $task->id ?></td>
+                <td class="p-4 align-middle">
                     <div>
                         <p class="font-medium text-sm"><?= $company->name ?></p>
                         <p class="text-xs text-muted-foreground"><?= $company->pib ?></p>
                     </div>
                 </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $task->category ?></td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $task->getStatusStyle() ?>"><?= $task->getStatusText($user->lang) ?></span></td>
+                <td class="p-4 align-middle text-sm"><?= $task->category ?></td>
+                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $task->getStatusStyle() ?>"><?= $task->getStatusText($user->lang) ?></span></td>
                 <?php
                 $priorityWord = $task->getPriorityWord();
                 $prioritySign = DictionaryService::$prioritySign[$task->priority];
                 ?>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span><?= $prioritySign ?></span><?= DictionaryService::getWord($priorityWord, $user->lang) ?></span></td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span><?= $prioritySign ?></span><?= DictionaryService::getWord($priorityWord, $user->lang) ?></span></td>
+                <td class="p-4 align-middle">
                     <?php
                     if ($task->due_date > date('Y-m-d')) {
                     ?>
@@ -56,7 +56,7 @@ use app\services\DictionaryService;
                     $accountant = $task->getAccountant();
                     ?>
                 </td>
-                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm"><?= $accountant->firstname . ' ' . $accountant->lastname ?></td>
+                <td class="p-4 align-middle text-sm"><?= $accountant->firstname . ' ' . $accountant->lastname ?></td>
             </tr>
         <?php
         }

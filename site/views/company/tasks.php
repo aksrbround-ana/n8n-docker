@@ -43,43 +43,43 @@
                     <table class="w-full caption-bottom text-sm">
                         <thead class="[&amp;_tr]:border-b bg-secondary/50 sticky top-0">
                             <tr class="border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50">
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-12"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-20">ID</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Название компании</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Тип задачи</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Период</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Статус</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Приоритет</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Срок</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Исполнитель</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Обновлено</th>
-                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-12"></th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-12"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-20">ID</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Название компании</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Тип задачи</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Период</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Статус</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Приоритет</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Срок</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Исполнитель</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Обновлено</th>
+                                <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-12"></th>
                             </tr>
                         </thead>
                         <tbody class="[&amp;_tr:last-child]:border-0">
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors bg-destructive/5">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-007</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-007</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">Restoran Balkan</p>
                                         <p class="text-xs text-muted-foreground">334567890</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">НДС декларация</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Октябрь 2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-destructive/10 text-destructive border-destructive/20">Просрочена</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">НДС декларация</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">Октябрь 2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-destructive/10 text-destructive border-destructive/20">Просрочена</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm text-destructive font-medium"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" x2="12" y1="8" y2="12"></line>
                                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
                                         </svg>15.11.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Марина Иванова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">20.11, 16:30</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Марина Иванова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">20.11, 16:30</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><span class="flex items-center gap-0.5 text-xs text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-3.5 w-3.5">
                                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                             </svg>7</span><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r156:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
@@ -90,28 +90,28 @@
                                 </td>
                             </tr>
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors bg-destructive/5">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-001</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-001</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">TechStart DOO</p>
                                         <p class="text-xs text-muted-foreground">112345678</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">НДС декларация</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Ноябрь 2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-destructive/10 text-destructive border-destructive/20">Просрочена</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">НДС декларация</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">Ноябрь 2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-destructive/10 text-destructive border-destructive/20">Просрочена</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm text-destructive font-medium"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" x2="12" y1="8" y2="12"></line>
                                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
                                         </svg>25.11.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Марина Иванова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">26.11, 10:30</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Марина Иванова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">26.11, 10:30</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><span class="flex items-center gap-0.5 text-xs text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-3.5 w-3.5">
                                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                             </svg>3</span><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r158:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
@@ -122,24 +122,24 @@
                                 </td>
                             </tr>
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-008</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-008</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">Global Trade SRB</p>
                                         <p class="text-xs text-muted-foreground">223456789</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Сверка</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Ноябрь 2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Выполнена</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-info"><span>●</span>Обычный</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Сверка</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">Ноябрь 2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Выполнена</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-info"><span>●</span>Обычный</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm">25.11.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ольга Сидорова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">24.11, 17:00</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Ольга Сидорова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">24.11, 17:00</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><span class="flex items-center gap-0.5 text-xs text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-3.5 w-3.5">
                                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                             </svg>2</span><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r15a:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
@@ -150,28 +150,28 @@
                                 </td>
                             </tr>
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors bg-destructive/5">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-003</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-003</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">Restoran Balkan</p>
                                         <p class="text-xs text-muted-foreground">334567890</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">НДС декларация</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Ноябрь 2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-purple-100 text-purple-700 border-purple-200">Ожидание документов</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">НДС декларация</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">Ноябрь 2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-purple-100 text-purple-700 border-purple-200">Ожидание документов</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm text-destructive font-medium"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" x2="12" y1="8" y2="12"></line>
                                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
                                         </svg>01.12.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Марина Иванова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">25.11, 09:00</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Марина Иванова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">25.11, 09:00</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><span class="flex items-center gap-0.5 text-xs text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-3.5 w-3.5">
                                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                             </svg>5</span><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r15c:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
@@ -182,28 +182,28 @@
                                 </td>
                             </tr>
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors bg-destructive/5">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-002</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-002</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">Global Trade SRB</p>
                                         <p class="text-xs text-muted-foreground">223456789</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Зарплата</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Ноябрь 2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20">В работе</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-info"><span>●</span>Обычный</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Зарплата</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">Ноябрь 2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20">В работе</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-info"><span>●</span>Обычный</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm text-destructive font-medium"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" x2="12" y1="8" y2="12"></line>
                                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
                                         </svg>05.12.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ольга Сидорова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">27.11, 14:15</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Ольга Сидорова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">27.11, 14:15</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><span class="flex items-center gap-0.5 text-xs text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-3.5 w-3.5">
                                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                             </svg>1</span><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r15e:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
@@ -214,28 +214,28 @@
                                 </td>
                             </tr>
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors bg-destructive/5">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-004</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-004</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">MediCare Plus</p>
                                         <p class="text-xs text-muted-foreground">445678901</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Сверка</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Q4 2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-info/10 text-info border-info/20">Новая</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground"><span>↓</span>Низкий</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Сверка</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">Q4 2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-info/10 text-info border-info/20">Новая</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground"><span>↓</span>Низкий</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm text-destructive font-medium"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" x2="12" y1="8" y2="12"></line>
                                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
                                         </svg>15.12.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Елена Козлова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">20.11, 11:00</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Елена Козлова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">20.11, 11:00</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r15g:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
                                                 <circle cx="12" cy="12" r="1"></circle>
                                                 <circle cx="19" cy="12" r="1"></circle>
@@ -244,28 +244,28 @@
                                 </td>
                             </tr>
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors bg-destructive/5">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-006</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-006</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">TechStart DOO</p>
                                         <p class="text-xs text-muted-foreground">112345678</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Зарплата</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Декабрь 2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-info/10 text-info border-info/20">Новая</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-info"><span>●</span>Обычный</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Зарплата</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">Декабрь 2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-info/10 text-info border-info/20">Новая</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-info"><span>●</span>Обычный</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm text-destructive font-medium"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" x2="12" y1="8" y2="12"></line>
                                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
                                         </svg>28.12.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Марина Иванова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">28.11, 09:00</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Марина Иванова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">28.11, 09:00</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r15i:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
                                                 <circle cx="12" cy="12" r="1"></circle>
                                                 <circle cx="19" cy="12" r="1"></circle>
@@ -274,28 +274,28 @@
                                 </td>
                             </tr>
                             <tr class="border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors bg-destructive/5">
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-mono text-xs">T-005</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle"><button type="button" role="checkbox" aria-checked="false" data-state="unchecked" value="on" class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"></button></td>
+                                <td class="p-4 align-middle font-mono text-xs">T-005</td>
+                                <td class="p-4 align-middle">
                                     <div>
                                         <p class="font-medium text-sm">BuildPro Construccije</p>
                                         <p class="text-xs text-muted-foreground">556789012</p>
                                     </div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Годовой отчёт</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">2024</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20">В работе</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Годовой отчёт</td>
+                                <td class="p-4 align-middle text-sm text-muted-foreground">2024</td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20">В работе</span></td>
+                                <td class="p-4 align-middle"><span class="inline-flex items-center gap-1 text-xs font-medium text-destructive"><span>↑</span>Высокий</span></td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1 text-sm text-destructive font-medium"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-3.5 w-3.5">
                                             <circle cx="12" cy="12" r="10"></circle>
                                             <line x1="12" x2="12" y1="8" y2="12"></line>
                                             <line x1="12" x2="12.01" y1="16" y2="16"></line>
                                         </svg>31.12.2024</div>
                                 </td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ольга Сидорова</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-xs text-muted-foreground">28.11, 08:45</td>
-                                <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                <td class="p-4 align-middle text-sm">Ольга Сидорова</td>
+                                <td class="p-4 align-middle text-xs text-muted-foreground">28.11, 08:45</td>
+                                <td class="p-4 align-middle">
                                     <div class="flex items-center gap-1"><span class="flex items-center gap-0.5 text-xs text-muted-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-3.5 w-3.5">
                                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                             </svg>2</span><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r15k:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
