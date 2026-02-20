@@ -175,6 +175,7 @@ class DictionaryService
             'taskEditing' => 'Редактирование задачи',
             'taskCreation' => 'Создание задачи',
             'finishTask' =>  'Отметить выполненной',
+            'archiveTask' => 'Поместить в архив',
 
             // Task statuses
             'taskStatusTodo' =>  'К выполнению',
@@ -493,6 +494,7 @@ class DictionaryService
             'taskEditing' => 'Уређивање задатка',
             'taskCreation' => 'Креирање задатка',
             'finishTask' =>  'Означи као готово',
+            'archiveTask' =>  'Архивирај задатак',
 
             // Task statuses
             'taskStatusTodo' => 'Za obaviti',
@@ -810,6 +812,7 @@ class DictionaryService
             'taskEditing' => 'Task editing',
             'taskCreation' => 'Task creation',
             'finishTask' =>  'Mark done',
+            'archiveTask' => 'Mark archived',
 
             // Task statuses
             'taskStatusTodo' =>  'To Do',
