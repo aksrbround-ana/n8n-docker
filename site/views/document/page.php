@@ -18,10 +18,10 @@ use app\services\SvgService;
             ?>
             <div>
                 <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('documents', $user->lang) ?></h1>
-                <p class="text-muted-foreground mt-1">5 <?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?></p>
+                <p class="text-muted-foreground mt-1"><span id="docsCount"><?= count($documents) ?></span> <?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?></p>
             </div>
         </div>
-        <!-- @todo Фильтры для документов -->
+
         <div class="flex flex-wrap items-center gap-3">
             <div class="relative flex-1 max-w-md">
                 <?= SvgService::svg('search') ?>
@@ -42,9 +42,9 @@ use app\services\SvgService;
             <select id="documentType-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
                 <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                 <?php
-                foreach ($filterDocumentType as $company) {
+                foreach ($filterDocumentType as $type) {
                 ?>
-                    <option value="<?= $company['id'] ?>"><?= $company['name'] ?></option>
+                    <option value="<?= $type['id'] ?>"><?= DictionaryService::getWord('docType' . ucfirst($type['name']), $user->lang) ?></option>
                 <?php
                 }
                 ?>

@@ -14,7 +14,7 @@ use Codeception\Lib\Di;
 ?>
 
 <table class="w-full caption-bottom text-sm">
-    <thead class="[&amp;_tr]:border-b bg-secondary/50">
+    <thead class="bg-secondary/50">
         <tr class="border-b transition-colors hover:bg-muted/50">
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('fileName', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
@@ -22,7 +22,7 @@ use Codeception\Lib\Di;
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('documentStatus', $user->lang) ?></th>
         </tr>
     </thead>
-    <tbody class="[&amp;_tr:last-child]:border-0">
+    <tbody class="">
         <?php
         foreach ($docs as $doc) {
         $class = $doc->status == Document::STATUS_ARCHIVED ? 'doc-no-open' : 'doc-row cursor-pointer';

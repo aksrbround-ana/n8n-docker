@@ -64,10 +64,11 @@ class Document extends \yii\db\ActiveRecord
     ];
 
     public static $statuses = [
-        'uploaded' =>  self::STATUS_UPLOADED,
-        'checked' =>  self::STATUS_CHECKED,
-        'needsRevision' =>  self::STATUS_NEEDS_REVISION,
-        'processing' => self::STATUS_PROCESSING,
+        self::STATUS_UPLOADED,
+        self::STATUS_CHECKED,
+        self::STATUS_NEEDS_REVISION,
+        self::STATUS_PROCESSING,
+        self::STATUS_ARCHIVED
     ];
 
     public static $statusStyles = [

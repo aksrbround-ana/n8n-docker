@@ -23,7 +23,7 @@
         <div class="border rounded-lg overflow-hidden">
             <div class="relative w-full overflow-auto">
                 <table class="w-full caption-bottom text-sm">
-                    <thead class="[&amp;_tr]:border-b bg-secondary/50">
+                    <thead class="bg-secondary/50">
                         <tr class="border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50">
                             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Имя файла</th>
                             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Название компании</th>
@@ -35,7 +35,7 @@
                             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-12"></th>
                         </tr>
                     </thead>
-                    <tbody class="[&amp;_tr:last-child]:border-0">
+                    <tbody class="">
                         <tr class="border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
                             <td class="p-4 align-middle">
                                 <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 text-destructive">

@@ -3,7 +3,7 @@
 use app\services\DictionaryService;
 ?>
 <table class="w-full caption-bottom text-sm">
-    <thead class="[&amp;_tr]:border-b bg-secondary/50 sticky top-0">
+    <thead class="bg-secondary/50 sticky top-0">
         <tr class="border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50">
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-20">ID</th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
@@ -14,7 +14,7 @@ use app\services\DictionaryService;
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('assignedTo', $user->lang) ?></th>
         </tr>
     </thead>
-    <tbody class="[&amp;_tr:last-child]:border-0">
+    <tbody class="">
 
         <?php
         foreach ($tasks as $task) {

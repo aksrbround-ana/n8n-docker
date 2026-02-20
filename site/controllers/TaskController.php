@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Yii;
 use yii\db\Query;
 use yii\web\Response;
 use app\controllers\BaseController;
@@ -105,7 +106,7 @@ class TaskController extends BaseController
     public function actionPage($status = null)
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
@@ -119,7 +120,7 @@ class TaskController extends BaseController
     public function actionFilter()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
@@ -156,12 +157,13 @@ class TaskController extends BaseController
                 $taskQuery->andWhere(['accountant_id' => $assignedTo]);
             }
             $tasks = $taskQuery->all();
-            $response = \Yii::$app->response;
+            $response = Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             $response->data = [
                 'status' => 'success',
                 'data' => TaskListWidget::widget(['user' => $accountant, 'tasks' => $tasks, 'company' => null]),
+                'count' => count($tasks),
             ];
             return $response;
         } else {
@@ -172,7 +174,7 @@ class TaskController extends BaseController
     public function actionView()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
@@ -190,7 +192,7 @@ class TaskController extends BaseController
     public function actionEdit()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
@@ -213,13 +215,13 @@ class TaskController extends BaseController
     public function actionDocuments()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
             $id = $request->post('id');
             $task = $id ? Task::findOne(['id' => $id]) : (new Task());
-            $response = \Yii::$app->response;
+            $response = Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             if ($task) {
@@ -246,12 +248,13 @@ class TaskController extends BaseController
     public function actionSave()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
             $id = $request->post('id');
             $task = $id ? Task::findOne(['id' => $id]) : (new Task());
+            $oldStatus = $task->status;
             $task->category = $request->post('category');
             $task->request = $request->post('request');
             $task->status = $request->post('status');
@@ -259,7 +262,7 @@ class TaskController extends BaseController
             $task->due_date = $request->post('due_date');
             $task->company_id = $request->post('company_id');
             $task->accountant_id = $request->post('accountant_id');
-            $response = \Yii::$app->response;
+            $response = Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             if ($task->save()) {
@@ -268,6 +271,20 @@ class TaskController extends BaseController
                     foreach ($documents as $document) {
                         $document->status = Document::STATUS_ARCHIVED;
                         $document->save();
+                    }
+                } elseif (($oldStatus == Task::STATUS_ARCHIVED) && ($task->status != Task::STATUS_ARCHIVED)) {
+                    $documents = $task->getDocuments();
+                    foreach ($documents as $document) {
+                        $command = Yii::$app->db
+                            ->createCommand()
+                            ->update(Document::tableName(), ['status' => Document::STATUS_CHECKED], 'id = ' . $document['id']);
+                        $transaction = Yii::$app->db->beginTransaction();
+                        try {
+                            $command->execute();
+                            $transaction->commit();
+                        } catch (\Exception $e) {
+                            $transaction->rollBack();
+                        }
                     }
                 }
                 $id = $task->id;
@@ -292,7 +309,7 @@ class TaskController extends BaseController
     public function actionComment()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
@@ -316,14 +333,14 @@ class TaskController extends BaseController
     public function actionFinish()
     {
         $this->layout = false;
-        $request = \Yii::$app->request;
+        $request = Yii::$app->request;
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
             $id = $request->post('id');
             $task = Task::findOne(['id' => $id]);
             $task->status = Task::STATUS_DONE;
-            $response = \Yii::$app->response;
+            $response = Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             if ($task->save()) {
@@ -335,6 +352,51 @@ class TaskController extends BaseController
                 $response->data = [
                     'status' => 'error',
                     // 'message' => implode("\n", $task->getErrors()),
+                    'message' => $task->getErrors(),
+                    'task' => $task,
+                ];
+            }
+            return $response;
+        } else {
+            return $this->renderLogout($accountant);
+        }
+    }
+
+    public function actionArchive()
+    {
+        $this->layout = false;
+        $request = Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            $task = Task::findOne(['id' => $id]);
+            $task->status = Task::STATUS_ARCHIVED;
+            $response = Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $saving = $task->save();
+            if ($saving) {
+                $documents = $task->getDocuments();
+                foreach ($documents as $document) {
+                    $command = Yii::$app->db
+                        ->createCommand()
+                        ->update(Document::tableName(), ['status' => Document::STATUS_ARCHIVED], 'id = ' . $document['id']);
+                    $transaction = Yii::$app->db->beginTransaction();
+                    try {
+                        $command->execute();
+                        $transaction->commit();
+                    } catch (\Exception $e) {
+                        $transaction->rollBack();
+                    }
+                }
+                $response->data = [
+                    'status' => 'success',
+                    'task' => Task::findOne(['id' => $id]),
+                ];
+            } else {
+                $response->data = [
+                    'status' => 'error',
                     'message' => $task->getErrors(),
                     'task' => $task,
                 ];

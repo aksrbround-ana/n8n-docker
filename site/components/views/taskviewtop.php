@@ -42,7 +42,7 @@ use app\services\SvgService;
         }
         $completeButtonStatus = in_array($task->status, Task::getStatusesCompleted()) ? ' disabled' : '';
         ?>
-            <button id='finish-task'<?= $completeButtonStatus ?> data-task-id="<?= $task->id ?>" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+            <button id="finish-task"<?= $completeButtonStatus ?> data-task-id="<?= $task->id ?>" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                 <?= SvgService::svg('finish') ?>
                 <?= DictionaryService::getWord('finishTask', $user->lang) ?>
             </button>
@@ -50,7 +50,7 @@ use app\services\SvgService;
         if ($user->rule == Accountant::RULE_CEO) {
             $arhiveButtonStatus = in_array($task->status, [Task::STATUS_DONE, Task::STATUS_CLOSED]) ? '' : ' disabled';
         ?>
-            <button id='archive-task'<?= $arhiveButtonStatus ?> data-task-id="<?= $task->id ?>" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+            <button id="archive-task"<?= $arhiveButtonStatus ?> data-task-id="<?= $task->id ?>" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                 <?= SvgService::svg('finish') ?>
                 <?= DictionaryService::getWord('archiveTask', $user->lang) ?>
             </button>

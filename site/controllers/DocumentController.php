@@ -10,6 +10,7 @@ use app\models\Accountant;
 use app\models\Company;
 use app\models\Document;
 use app\models\DocumentComment;
+use app\models\DocumentType;
 use app\models\Task;
 use app\models\TaskDocument;
 use Exception;
@@ -49,7 +50,7 @@ class DocumentController extends BaseController
             ->select(['t.id', 't.name'])
             ->distinct()
             ->from(['d' => Document::tableName()])
-            ->innerJoin(['t' => 'document_types'], 't.id = d.type_id')
+            ->innerJoin(['t' => DocumentType::tableName()], 't.id = d.type_id')
             ->orderBy('t.name ASC');
 
         $filterStatusQuery = (new Query())
@@ -113,6 +114,7 @@ class DocumentController extends BaseController
             $status = $request->post('status');
             $priority = $request->post('priority');
             $company = $request->post('company');
+            $type = $request->post('type');
             $docsQuery = Document::find()
                 ->select(['d.*'])
                 ->distinct()
@@ -142,6 +144,9 @@ class DocumentController extends BaseController
             if ($company) {
                 $docsQuery->andWhere(['d.company_id' => $company]);
             }
+            if ($type) {
+                $docsQuery->andWhere(['d.type_id' => $type]);
+            }
             $docs = $docsQuery->all();
             $response = \Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
@@ -149,6 +154,7 @@ class DocumentController extends BaseController
             $response->data = [
                 'status' => 'success',
                 'data' => DocListWidget::widget(['user' => $accountant, 'documents' => $docs, 'company' => null]),
+                'count' => count($docs),
             ];
             return $response;
         } else {
@@ -168,7 +174,7 @@ class DocumentController extends BaseController
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             $id = $request->post('task_id');
             $file = $_FILES['document'] ?? null;
-            if ($id && $file) {
+            if ($id && $file && ($file['error'] == UPLOAD_ERR_OK)) {
                 try {
                     $task = Task::findOne(['id' => $id]);
                     $errors = [];

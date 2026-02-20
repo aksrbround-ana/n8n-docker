@@ -755,6 +755,34 @@ $(document).on('click', '#finish-task', function (e) {
   return false;
 });
 
+$(document).on('click', '#archive-task', function (e) {
+  const taskId = $(this).data('task-id');
+  const user = getUser();
+  const data = {
+    token: user.token,
+    id: taskId
+  };
+  $.ajax({
+    url: '/task/archive',
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        loadPage('/task/view', { id: taskId }, 0);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError(dictionaryLookup('error', user.lang), response.message);
+      }
+    },
+    error: function () {
+      showError(dictionaryLookup('error', user.lang), 'Unknown error');
+    }
+  });
+  return false;
+});
+
 $(document).on('click', '#sendComment', function (e) {
   const taskId = $(this).data('task-id');
   const commentText = $('#commentInput').val();
@@ -1574,6 +1602,7 @@ $(document).on('click', '#task-find-button', function (e) {
     success: function (response) {
       if (response.status === 'success') {
         $('#task-list').html(response.data);
+        $('#tasksCount').text(response.count);
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();
@@ -1617,6 +1646,7 @@ $(document).on('click', '#doc-find-button', function (e) {
     success: function (response) {
       if (response.status === 'success') {
         $('#doc-list').html(response.data);
+        $('#docsCount').text(response.count);
       } else if (response.status === 'logout') {
         clearUser();
         loadContent();
