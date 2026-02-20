@@ -9,6 +9,7 @@ use app\components\TaskListWidget;
 use app\components\TaskViewDocumentListWidget;
 use app\models\Accountant;
 use app\models\Company;
+use app\models\Document;
 use app\models\Task;
 use app\models\TaskComment;
 use app\services\AuthService;
@@ -17,7 +18,7 @@ use yii\db\Expression;
 class TaskController extends BaseController
 {
 
-    public function getDataForPage($accountant, $status = null)
+    public function getDataForPage($accountant, $status = null, $back)
     {
         $taskQuery = Task::find();
         if ($accountant->rule !== Accountant::RULE_CEO) {
@@ -29,6 +30,8 @@ class TaskController extends BaseController
             } else {
                 $taskQuery->andWhere(['status' => $status]);
             }
+        } else {
+            $taskQuery->andWhere(['status' => Task::getStatusesInProgress()]);
         }
         $tasks = $taskQuery->all();
 
@@ -38,6 +41,26 @@ class TaskController extends BaseController
             ->distinct()
             ->from('task')
             ->orderBy('status');
+        if ($accountant->rule !== Accountant::RULE_CEO) {
+            $filterStatusQuery->where(['accountant_id' => $accountant->id]);
+        }
+        $filterStatusRaw = [];
+        foreach ($filterStatusQuery->all() as $item) {
+            $filterStatusRaw[] = $item['status'];
+        };
+        $filterStatus = [];
+        $filterStatus[] = '-';
+        foreach (Task::getStatusesInProgress() as $status) {
+            if (in_array($status, $filterStatusRaw)) {
+                $filterStatus[] = $status;
+            }
+        }
+        $filterStatus[] = '-';
+        foreach (Task::getStatusesCompleted() as $status) {
+            if (in_array($status, $filterStatusRaw)) {
+                $filterStatus[] = $status;
+            }
+        }
 
         $filterPriorityQuery = (new Query())
             ->select('priority')
@@ -45,6 +68,7 @@ class TaskController extends BaseController
             ->distinct()
             ->from('task')
             ->orderBy('priority');
+
 
         $filterCompanyQuery = (new Query())
             ->select('c.*')
@@ -69,12 +93,12 @@ class TaskController extends BaseController
         $data = [
             'user' => $accountant,
             'tasks' => $tasks,
-            'filterStatus' => $filterStatusQuery->all(),
+            'filterStatus' => $filterStatus,
             'filterPriority' => $filterPriorityQuery->all(),
             'filterCompany' => $filterCompanyQuery->all(),
             'filterAssignedTo' => $filterAssignedTo,
+            'back' => $back,
         ];
-        $data['back'] = $status !== null;
         return $data;
     }
 
@@ -85,7 +109,7 @@ class TaskController extends BaseController
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
-            $data = $this->getDataForPage($accountant, $status);
+            $data = $this->getDataForPage($accountant, $status, $status !== null);
             return $this->renderPage($data);
         } else {
             return $this->renderLogout([$accountant, $accountant->isValid()]);
@@ -101,6 +125,9 @@ class TaskController extends BaseController
         if ($accountant->isValid()) {
             $name = $request->post('name');
             $status = $request->post('status');
+            if (!$status) {
+                $status = Task::getStatusesInProgress();
+            }
             $priority = $request->post('priority');
             $company = $request->post('company');
             $assignedTo = $request->post('assignedTo');
@@ -236,6 +263,13 @@ class TaskController extends BaseController
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             if ($task->save()) {
+                if ($task->status == Task::STATUS_ARCHIVED) {
+                    $documents = $task->getDocuments();
+                    foreach ($documents as $document) {
+                        $document->status = Document::STATUS_ARCHIVED;
+                        $document->save();
+                    }
+                }
                 $id = $task->id;
                 $response->data = [
                     'status' => 'success',

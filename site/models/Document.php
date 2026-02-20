@@ -36,6 +36,7 @@ class Document extends \yii\db\ActiveRecord
     const STATUS_CHECKED = 'checked';
     const STATUS_NEEDS_REVISION = 'needs_revision';
     const STATUS_PROCESSING = 'processing';
+    const STATUS_ARCHIVED = 'archived';
 
     const OCR_STATUS_TODO = 'todo';
     const OCR_STATUS_PROCESSING = 'processing';

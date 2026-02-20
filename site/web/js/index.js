@@ -720,7 +720,7 @@ $(document).on('click', 'tr.doc-row', function (e) {
   loadPage('/document/view', data, true);
 });
 
-$(document).on('click', 'a.document-view', function (e) {
+$(document).on('click', 'div.document-view', function (e) {
   const id = $(this).data('doc-id');
   const data = { id: id };
   loadPage('/document/view', data, true);

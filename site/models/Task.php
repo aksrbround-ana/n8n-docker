@@ -49,10 +49,20 @@ class Task extends \yii\db\ActiveRecord
             self::STATUS_NEW,
             self::STATUS_IN_PROGRESS,
             self::STATUS_WAITING,
-            self::STATUS_DONE,
             self::STATUS_OVERDUE,
+            self::STATUS_DONE,
             self::STATUS_CLOSED,
             self::STATUS_ARCHIVED,
+        ];
+    }
+
+    public static function getStatusesInProgress()
+    {
+        return [
+            self::STATUS_NEW,
+            self::STATUS_IN_PROGRESS,
+            self::STATUS_WAITING,
+            self::STATUS_OVERDUE,
         ];
     }
 

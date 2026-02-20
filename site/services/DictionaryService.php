@@ -54,13 +54,14 @@ class DictionaryService
             'reports' =>  'Отчёты',
             'settings' =>  'Настройки',
             'users' =>  'Пользователи',
+            'accountants' =>  'Бухгалтеры',
+            'archive' => 'Архив',
 
             // Roles
             'role' => 'Роль',
             'ceo' =>  'Руководитель',
             'admin' =>  'Администратор',
             'accountant' =>  'Бухгалтер',
-            'accountants' =>  'Бухгалтеры',
             'accountantCreate' => 'Создание учетной записи',
             'accountantEdit' => 'Редактирование учетной записи',
 
@@ -176,6 +177,7 @@ class DictionaryService
             'finishTask' =>  'Отметить выполненной',
 
             // Task statuses
+            'taskStatusTodo' =>  'К выполнению',
             'taskStatusNew' =>  'Новая',
             'taskStatusInProgress' =>  'В работе',
             'taskStatusWaiting' =>  'Ожидание документов',
@@ -238,6 +240,7 @@ class DictionaryService
             'docStatusChecked' =>  'Проверен',
             'docStatusNeedsRevision' =>  'Требует правки',
             'docStatusProcessing' => 'В обработке',
+            'docStatusArchived' => 'Архивирован',
 
             // Notes
             'addNote' => 'Добавить заметку',
@@ -369,13 +372,14 @@ class DictionaryService
             'reports' =>  'Izveštaji',
             'settings' =>  'Podešavanja',
             'users' =>  'Korisnici',
+            'accountants' => 'Knjigovođe',
+            'archive' => 'Arhiva',
 
             // Roles
             'role' => 'Uloga',
             'ceo' =>  'Direktor',
             'admin' =>  'Administrator',
             'accountant' =>  'Knjigovođa',
-            'accountants' => 'Knjigovođe',
             'accountantCreate' => 'Креирање налога',
             'accountantEdit' => 'Уређивање налога',
 
@@ -491,6 +495,7 @@ class DictionaryService
             'finishTask' =>  'Означи као готово',
 
             // Task statuses
+            'taskStatusTodo' => 'Za obaviti',
             'taskStatusNew' =>  'Novi',
             'taskStatusInProgress' =>  'U toku',
             'taskStatusWaiting' =>  'Čeka dokumente',
@@ -553,6 +558,7 @@ class DictionaryService
             'docStatusChecked' =>  'Proveren',
             'docStatusNeedsRevision' =>  'Potrebna ispravka',
             'docStatusProcessing' => 'U obradi',
+            'docStatusArchived' => 'Arhiviran',
 
             // Notes
             'addNote' => 'Dodaj belešku',
@@ -683,13 +689,14 @@ class DictionaryService
             'reports' =>  'Reports',
             'settings' =>  'Settings',
             'users' =>  'Users',
+            'accountants' => 'Accountants',
+            'archive' => 'Archive',
 
             // Roles
             'role' => 'Role',
             'ceo' =>  'CEO',
             'admin' =>  'Administrator',
             'accountant' =>  'Accountant',
-            'accountants' => 'Accountants',
             'accountantCreate' => 'Create an account',
             'accountantEdit' => 'Editing an account',
 
@@ -805,6 +812,7 @@ class DictionaryService
             'finishTask' =>  'Mark done',
 
             // Task statuses
+            'taskStatusTodo' =>  'To Do',
             'taskStatusNew' =>  'New',
             'taskStatusInProgress' =>  'In Progress',
             'taskStatusWaiting' =>  'Waiting for Documents',
@@ -867,6 +875,7 @@ class DictionaryService
             'docStatusChecked' =>  'Checked',
             'docStatusNeedsRevision' =>  'Needs Revision',
             'docStatusProcessing' => 'Processing',
+            'docStatusArchived' => 'Archived',
 
             // Notes
             'addNote' => 'Add Note',

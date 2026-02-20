@@ -123,3 +123,7 @@ a.desc:after {
 table.accountant-page td {
     color:grey;
 }
+
+div.document-view {
+    cursor: pointer;
+}

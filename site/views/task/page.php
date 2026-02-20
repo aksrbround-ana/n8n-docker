@@ -44,13 +44,18 @@ use app\services\SvgService;
             <div class="filter-box hidden flex flex-wrap items-center gap-3 p-4 bg-secondary/50 rounded-lg animate-fade-in">
                 <?= DictionaryService::getWord('status', $user->lang) ?>
                 <select id="status-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
-                    <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
+                    <option value=""><?= DictionaryService::getWord('taskStatusTodo', $user->lang) ?></option>
                     <?php
-                    foreach ($filterStatus as $row) {
-                        $status = $row['status'];
+                    foreach ($filterStatus as $status) {
+                        if ($status == '-') {
+                    ?>
+                        <option value="" disabled>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</option>
+                    <?php
+                        } else {
                     ?>
                         <option value="<?= $status ?>"><?= DictionaryService::getWord('taskStatus' . ucfirst($status), $user->lang) ?></option>
                     <?php
+                        }
                     }
                     ?>
                 </select>
