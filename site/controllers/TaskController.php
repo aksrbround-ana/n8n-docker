@@ -26,11 +26,7 @@ class TaskController extends BaseController
             $taskQuery->where(['accountant_id' => $accountant->id]);
         }
         if ($status !== null) {
-            if ($status == Task::STATUS_OVERDUE) {
-                $taskQuery->andWhere(['status' => Task::STATUS_OVERDUE]);
-            } else {
-                $taskQuery->andWhere(['status' => $status]);
-            }
+            $taskQuery->andWhere(['status' => $status]);
         } else {
             $taskQuery->andWhere(['status' => Task::getStatusesInProgress()]);
         }

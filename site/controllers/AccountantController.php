@@ -38,7 +38,9 @@ class AccountantController extends BaseController
         if ($viewer->isValid()) {
             $accountant = Accountant::findOne($id);
             if ($accountant) {
-                $taskQuery = Task::find()->where(['accountant_id' => $accountant->id]);
+                $taskQuery = Task::find()
+                    ->where(['accountant_id' => $accountant->id])
+                    ->andWhere(['status' => Task::getStatusesInProgress()]);
                 $tasks = $taskQuery->all();
                 if (empty($tasks)) {
                     $tasks = [];
