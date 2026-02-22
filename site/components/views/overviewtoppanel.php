@@ -40,11 +40,11 @@ use app\services\DictionaryService;
             </div>
         </div>
     </div>
-    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-destructive/5 border-destructive/20 cursor-pointer" data-link="/task/page/overdue" data-count="<?= count($data['overdueTasks']) ?>">
+    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-destructive/5 border-destructive/20 cursor-pointer" data-link="/task/page/overdue" data-count="<?= $data['overdueTasks'] ?>">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-muted-foreground font-medium"><?= DictionaryService::getWord('overdueTasks', $user->lang) ?></p>
-                <p class="mt-2 text-3xl font-bold font-heading"><?= count($data['overdueTasks']) ?></p>
+                <p class="mt-2 text-3xl font-bold font-heading"><?= $data['overdueTasks'] ?></p>
             </div>
             <div class="rounded-lg p-2.5 bg-destructive/10 text-destructive">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert h-5 w-5">

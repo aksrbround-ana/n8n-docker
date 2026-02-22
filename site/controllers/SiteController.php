@@ -113,6 +113,9 @@ class SiteController extends BaseController
             ->andWhere(['!=', 'a.rule', 'ceo'])
             ->groupBy('a.id')
             ->orderBy(['a.id' => SORT_ASC]);
+        if ($accountant->rule !== 'ceo') {
+            $overdueTasksQuery->andWhere('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+        }
         if ($viewAccountants) {
             $taskOnCondition = [
                 't.accountant_id = c.id',
@@ -123,7 +126,7 @@ class SiteController extends BaseController
                 ->select(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email', 'COUNT(t.id) AS tasks'])
                 ->from(['c' => Accountant::tableName()])
                 ->leftJoin(['t' => Task::tableName()], implode(' AND ', $taskOnCondition))
-                ->where(['c.rule'=> Accountant::RULE_ACCOUNTANT])
+                ->where(['c.rule' => Accountant::RULE_ACCOUNTANT])
                 ->groupBy(['c.id', 'c.firstname', 'c.lastname', 'c.rule', 'c.lang', 'c.email'])
                 ->orderBy(['tasks' => SORT_DESC, 'c.lastname' => SORT_ASC, 'c.firstname' => SORT_ASC]);
             $accountantsRaw = $accountantQuery->all();
@@ -132,9 +135,6 @@ class SiteController extends BaseController
                 $accountants[$accountantOne['id']] = $accountantOne;
             }
 
-            if ($accountant->rule !== 'ceo') {
-                $overdueTasksQuery->andWhere('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
-            }
             $recentActivity = [];
         } else {
             $accountants = [];
@@ -183,7 +183,7 @@ class SiteController extends BaseController
         $activeTasks = $activeTasksQuery->count();
 
         $overdueTasksQuery = Task::find()
-            ->where(['t.status' => Task::STATUS_OVERDUE]);
+            ->where(['status' => Task::STATUS_OVERDUE]);
         if ($accountant->rule !== 'ceo') {
             $overdueTasksQuery->andWhere('accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
@@ -203,7 +203,7 @@ class SiteController extends BaseController
                 'accountants' => $accountants,
                 'clents' => $companies,
                 'activeTasks' => $activeTasks,
-                'overdueTasks' => $overdueTasks,
+                'overdueTasks' => $overdueTasksQuery->count(),
                 'upcomingDeadlines' => $upcomingDeadlines,
                 'docsToCheck' => $docsToCheck,
                 'activities' => $recentActivity,
