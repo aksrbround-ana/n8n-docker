@@ -10,7 +10,7 @@ use app\services\SvgService;
         <div id="page-header" class="flex items-center gap-4">
             <div>
                 <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('documents', $user->lang) ?></h1>
-                <p class="text-muted-foreground mt-1"><span id="docsCount"><?= count($documents) ?></span> <?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?></p>
+                <p class="text-muted-foreground mt-1"><span id="docsCount"><?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?>: <?= $total ?></span></p>
             </div>
         </div>
 

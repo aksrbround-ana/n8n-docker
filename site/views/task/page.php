@@ -11,7 +11,7 @@ use app\services\SvgService;
         <div id="page-header" class="flex items-center gap-4">
             <div>
                 <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('tasks', $user->lang) ?></h1>
-                <p class="text-muted-foreground mt-1"><span id="tasksCount"><?= count($tasks) ?></span> <?= strtolower(DictionaryService::getWord('tasks', $user->lang)) ?></p>
+                <p class="text-muted-foreground mt-1"><?= strtolower(DictionaryService::getWord('tasks', $user->lang)) ?>: <span id="tasksCount"><?= $total ?></span></p>
             </div>
         </div>
         <div class="space-y-4">

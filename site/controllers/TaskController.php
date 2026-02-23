@@ -215,7 +215,7 @@ class TaskController extends BaseController
             $response->data = [
                 'status' => 'success',
                 'data' => TaskListWidget::widget(['user' => $accountant, 'tasks' => $tasks, 'company' => null, 'total' => $tasksTotal, 'page' => $page, 'limit' => self::PAGE_LENGTH]),
-                'count' => count($tasks),
+                'count' => $tasksTotal,
             ];
             return $response;
         } else {

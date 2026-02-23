@@ -176,6 +176,7 @@ class DocumentController extends BaseController
             ];
             $docsQuery = $this->getDocumentQuery($accountant, $filters);
             $total = $docsQuery->count();
+            $filters['total'] = $total;
             $page = $filters['page'] ?? 1;
             $offset = ($page - 1) * self::PAGE_LENGTH;
             $docsQuery->offset($offset)->limit(self::PAGE_LENGTH);
@@ -186,7 +187,7 @@ class DocumentController extends BaseController
             $response->data = [
                 'status' => 'success',
                 'data' => DocListWidget::widget(['user' => $accountant, 'documents' => $docs, 'company' => null, 'filters' => $filters, 'total' => $total, 'limit' => self::PAGE_LENGTH]),
-                'count' => count($docs),
+                'count' => $total,
             ];
             return $response;
         } else {
