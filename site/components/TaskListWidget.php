@@ -10,6 +10,9 @@ class TaskListWidget extends Widget
     public $user;
     public $company;
     public $tasks;
+    public $total;
+    public $page;
+    public $limit;
 
     public function run()
     {
@@ -28,6 +31,9 @@ class TaskListWidget extends Widget
             'user' => $this->user,
             'company' => $this->company,
             'tasks' => $this->tasks,
+            'total' => $this->total,
+            'page' => $this->page,
+            'limit' => $this->limit,
         ]);
     }
 }

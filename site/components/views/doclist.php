@@ -1,15 +1,17 @@
 <?php
 
+use app\controllers\BaseController;
 use app\models\Document;
 use app\services\DictionaryService;
 use app\services\SvgService;
-use Codeception\Lib\Di;
 
 /**
  * @var $user app\model\Accountant
  * @var $docs [app\model\Document]
  * @var $doc app\model\Document
  */
+
+$limit = $limit ?? $filters['limit'] ?? BaseController::PAGE_LENGTH;
 
 ?>
 
@@ -46,3 +48,18 @@ use Codeception\Lib\Di;
         ?>
     </tbody>
 </table>
+<div class="pagination">
+    <?php
+    $pages = floor($total / $limit);
+    if (($total % $limit) > 0) {
+        $pages++;
+    }
+    if ($pages > 1) {
+        for ($i = 1; $i <= $pages; $i++) {
+    ?>
+            <button data-page="<?= $i ?>" class="doc-page inline-block w-8 h-8 text-center leading-8 border rounded-md mx-1 <?= ($i == $filters['page'] ? 'active bg-primary text-primary-foreground' : 'hover:bg-secondary')  ?>"><?= $i ?></button>
+    <?php
+        }
+    }
+    ?>
+</div>

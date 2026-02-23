@@ -19,18 +19,39 @@ use yii\db\Expression;
 class TaskController extends BaseController
 {
 
-    public function getDataForPage($accountant, $status = null, $back)
+    public function getDataForPage($accountant, $filters = [], $back)
     {
         $taskQuery = Task::find();
         if ($accountant->rule !== Accountant::RULE_CEO) {
-            $taskQuery->where(['accountant_id' => $accountant->id]);
+            $taskQuery->where(['accountant_id' => $accountant->id])
+                ->orderBy(['status' => SORT_ASC, 'id' => SORT_ASC]);
         }
-        if ($status !== null) {
-            $taskQuery->andWhere(['status' => $status]);
+        if (isset($filters['status']) && $filters['status']) {
+            $taskQuery->andWhere(['status' => $filters['status']]);
         } else {
             $taskQuery->andWhere(['status' => Task::getStatusesInProgress()]);
         }
-        $tasks = $taskQuery->all();
+        if (isset($filters['priority'])) {
+            $taskQuery->andWhere(['priority' => $filters['priority']]);
+        }
+        if (isset($filters['assignedTo'])) {
+            $taskQuery->andWhere(['accountant_id' => $filters['assignedTo']]);
+        }
+
+        if (isset($filters['name'])) {
+            $taskQuery
+                ->andWhere([
+                    'or',
+                    ['ilike', 'category', $filters['name']],
+                    ['ilike', 'request', $filters['name']],
+                ]);
+        }
+        if ($filters['company']) {
+            $taskQuery->andWhere(['company_id' => $filters['company']]);
+        }
+
+        $totalTasks = $taskQuery->count();
+        $tasks = $taskQuery->limit(self::PAGE_LENGTH)->offset($filters['offset'])->all();
 
         $filterStatusQuery = (new Query())
             ->select('status')
@@ -90,6 +111,14 @@ class TaskController extends BaseController
         $data = [
             'user' => $accountant,
             'tasks' => $tasks,
+            'total' => $totalTasks,
+            'name' => $filters['name'] ?? '',
+            'page' => $filters['page'] ?? 1,
+            'status' => $filters['status'] ?? '',
+            'company' => $filters['company'] ?? '',
+            'priority' => $filters['priority'] ?? '',
+            'assignedTo' => $filters['assignedTo'] ?? '',
+            'limit' => self::PAGE_LENGTH,
             'filterStatus' => $filterStatus,
             'filterPriority' => $filterPriorityQuery->all(),
             'filterCompany' => $filterCompanyQuery->all(),
@@ -106,7 +135,27 @@ class TaskController extends BaseController
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
-            $data = $this->getDataForPage($accountant, $status, $status !== null);
+            $back = $status !== null;
+            $page = $request->post('page') ?? 1;
+            $offset = ($page - 1) * self::PAGE_LENGTH;
+            $name = $request->post('name');
+            $status = $status ?? $request->post('status');
+            if (!$status) {
+                $status = Task::getStatusesInProgress();
+            }
+            $priority = $request->post('priority');
+            $company = $request->post('company');
+            $assignedTo = $request->post('assignedTo');
+            $filters = [
+                'name' => $name,
+                'status' => $status,
+                'priority' => $priority,
+                'company' => $company,
+                'assignedTo' => $assignedTo,
+                'offset' => $offset,
+                'page' => $page,
+            ];
+            $data = $this->getDataForPage($accountant, $filters, $back);
             return $this->renderPage($data);
         } else {
             return $this->renderLogout([$accountant, $accountant->isValid()]);
@@ -120,6 +169,8 @@ class TaskController extends BaseController
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
+            $page = $request->post('page') ?? 1;
+            $offset = ($page - 1) * self::PAGE_LENGTH;
             $name = $request->post('name');
             $status = $request->post('status');
             if (!$status) {
@@ -152,13 +203,18 @@ class TaskController extends BaseController
             if ($assignedTo) {
                 $taskQuery->andWhere(['accountant_id' => $assignedTo]);
             }
+            $tasksTotal = $taskQuery->count();
+            $taskQuery
+                ->limit(self::PAGE_LENGTH)
+                ->offset($offset)
+                ->orderBy(['status' => SORT_ASC, 'id' => SORT_ASC]);
             $tasks = $taskQuery->all();
             $response = Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             $response->data = [
                 'status' => 'success',
-                'data' => TaskListWidget::widget(['user' => $accountant, 'tasks' => $tasks, 'company' => null]),
+                'data' => TaskListWidget::widget(['user' => $accountant, 'tasks' => $tasks, 'company' => null, 'total' => $tasksTotal, 'page' => $page, 'limit' => self::PAGE_LENGTH]),
                 'count' => count($tasks),
             ];
             return $response;

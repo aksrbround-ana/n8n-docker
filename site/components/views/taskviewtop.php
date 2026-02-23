@@ -1,6 +1,5 @@
 <?php
 
-use app\components\ButtonBackWidget;
 use app\models\Accountant;
 use app\models\Task;
 use app\services\DictionaryService;
@@ -10,9 +9,8 @@ use app\services\SvgService;
 /** @var app\models\Task $task */
 /** @var app\models\Accountant $user */
 ?>
-<div class="flex items-center justify-between">
+<div id="page-header" class="flex items-center justify-between">
     <div class="flex items-center gap-4">
-        <?= ButtonBackWidget::widget(['user' => $user]) ?>
         <div>
             <div class="flex items-center gap-3">
                 <h1 class="text-2xl font-bold"><?= $task->category ?></h1>

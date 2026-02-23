@@ -38,7 +38,7 @@ class CompanyController extends BaseController
         'statusInactive',
     ];
 
-    protected function getDataForPage($accountant, $status = null, $filters = [])
+    protected function getDataForPage($accountant, $filters = [])
     {
         $select = [
             'c.id AS company_id',
@@ -115,8 +115,9 @@ class CompanyController extends BaseController
         $data = [
             'user' => $accountant,
             'companies' => $companies,
-            'back' => $status !== null,
+            // 'back' => $status !== null,
             'filterStatus' => $filterStatus,
+            'filters' => $filters,
             'filterAccountant' => $filterAccountantQuery->all(),
             // 'debug' => [
             //     'filters' => $filters,
@@ -133,7 +134,13 @@ class CompanyController extends BaseController
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
         if ($accountant->isValid()) {
-            $data = $this->getDataForPage($accountant, $status);
+            $filters = [
+                'name' => $request->post('name'),
+                'status' => $status ?? $request->post('status'),
+                'accountant' => $request->post('accountant'),
+                'sort' => $request->post('sort'),
+            ];
+            $data = $this->getDataForPage($accountant, $filters);
             return $this->renderPage($data);
         } else {
             return $this->renderLogout();
@@ -149,11 +156,11 @@ class CompanyController extends BaseController
         if ($accountant->isValid()) {
             $filters = [
                 'name' => $request->post('name'),
-                'status' => $request->post('status'),
+                'status' => $pageStatus ?? $request->post('status'),
                 'accountant' => $request->post('accountant'),
                 'sort' => $request->post('sort'),
             ];
-            $data = $this->getDataForPage($accountant, $pageStatus, $filters);
+            $data = $this->getDataForPage($accountant, $filters);
 
             $response = \Yii::$app->response;
             $response->format = Response::FORMAT_JSON;

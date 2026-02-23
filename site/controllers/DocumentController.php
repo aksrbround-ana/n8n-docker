@@ -18,9 +18,46 @@ use Exception;
 class DocumentController extends BaseController
 {
 
-    public function getDataForPage($accountant, $status = null)
+    protected function getDocumentQuery($accountant, $filters)
     {
-        $docsQuery = Document::find();
+        $docsQuery = Document::find()
+            ->select(['d.*'])
+            ->distinct()
+            ->from(['d' => Document::tableName()]);
+        if ($accountant->rule !== 'ceo') {
+            $docsQuery
+                ->leftJoin(['td' => TaskDocument::tableName()], 'd.id = td.document_id')
+                ->leftJoin(['t' => Task::tableName()], 'td.task_id = t.id')
+                ->leftJoin(['a' => Accountant::tableName()], 't.accountant_id = a.id')
+                ->where('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
+        }
+        if ($filters['name']) {
+            $docsQuery->andWhere([
+                'OR',
+                ['ilike', 'd.filename', $filters['name']],
+                ['ilike', 'd.ocr_text', $filters['name']],
+                ['ilike', 'd.summary', $filters['name']],
+                ['ilike', 'd.category', $filters['name']],
+            ]);
+        }
+        if ($filters['status']) {
+            $docsQuery->andWhere(['d.status' => $filters['status']]);
+        }
+        if ($filters['priority']) {
+            $docsQuery->andWhere(['d.priority' => $filters['priority']]);
+        }
+        if ($filters['company']) {
+            $docsQuery->andWhere(['d.company_id' => $filters['company']]);
+        }
+        if ($filters['type']) {
+            $docsQuery->andWhere(['d.type_id' => $filters['type']]);
+        }
+        return $docsQuery;
+    }
+
+    public function getDataForPage($accountant, $filters = [], $back = false)
+    {
+        $docsQuery = $this->getDocumentQuery($accountant, $filters);
         if ($accountant->rule !== 'ceo') {
             $docsQuery
                 ->leftJoin(['td' => TaskDocument::tableName()], 'documents.id = td.document_id')
@@ -28,9 +65,10 @@ class DocumentController extends BaseController
                 ->leftJoin(['a' => Accountant::tableName()], 't.accountant_id = a.id')
                 ->where('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
         }
-        if ($status !== null) {
-            $docsQuery->andWhere(['documents.status' => $status]);
-        }
+        $total = $docsQuery->count();
+        $page = $filters['page'] ?? 1;
+        $offset = ($page - 1) * self::PAGE_LENGTH;
+        $docsQuery->offset($offset)->limit(self::PAGE_LENGTH);
         $docs = $docsQuery->all();
 
         $filterCompanyQuery = (new Query())
@@ -61,11 +99,13 @@ class DocumentController extends BaseController
         $data = [
             'user' => $accountant,
             'documents' => $docs,
-            'status' => $status,
+            'total' => $total,
+            'limit' => self::PAGE_LENGTH,
+            'filters' => $filters,
             'filterCompany' => $filterCompanyQuery->all(),
             'filterDocumentType' => $filterDocumentTypeQuery->all(),
             'filterStatus' => $filterStatusQuery->all(),
-            'back' => $status !== null,
+            'back' => $back,
         ];
         return $data;
     }
@@ -77,7 +117,19 @@ class DocumentController extends BaseController
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
-            $data = $this->getDataForPage($accountant, $status);
+            $back = $status !== null;
+            $page = $request->post('page') ?? 1;
+            $offset = ($page - 1) * self::PAGE_LENGTH;
+            $filters = [
+                'name' => $request->post('name'),
+                'status' => $status ?? $request->post('status'),
+                'priority' => $request->post('priority'),
+                'company' => $request->post('company'),
+                'type' => $request->post('type'),
+                'page' => $page,
+                'offset' => $offset,
+            ];
+            $data = $this->getDataForPage($accountant, $filters, $back);
             return $this->renderPage($data);
         } else {
             return $this->renderLogout();
@@ -103,6 +155,7 @@ class DocumentController extends BaseController
         }
     }
 
+
     public function actionFilter()
     {
         $this->layout = false;
@@ -110,50 +163,29 @@ class DocumentController extends BaseController
         $token = $request->post('token');
         $accountant = Accountant::findIdentityByAccessToken($token);
         if ($accountant->isValid()) {
-            $name = $request->post('name');
-            $status = $request->post('status');
-            $priority = $request->post('priority');
-            $company = $request->post('company');
-            $type = $request->post('type');
-            $docsQuery = Document::find()
-                ->select(['d.*'])
-                ->distinct()
-                ->from(['d' => Document::tableName()]);
-            if ($accountant->rule !== 'ceo') {
-                $docsQuery
-                    ->leftJoin(['td' => TaskDocument::tableName()], 'd.id = td.document_id')
-                    ->leftJoin(['t' => Task::tableName()], 'td.task_id = t.id')
-                    ->leftJoin(['a' => Accountant::tableName()], 't.accountant_id = a.id')
-                    ->where('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
-            }
-            if ($name) {
-                $docsQuery->andWhere([
-                    'OR',
-                    ['ilike', 'd.filename', $name],
-                    ['ilike', 'd.ocr_text', $name],
-                    ['ilike', 'd.summary', $name],
-                    ['ilike', 'd.category', $name],
-                ]);
-            }
-            if ($status) {
-                $docsQuery->andWhere(['d.status' => $status]);
-            }
-            if ($priority) {
-                $docsQuery->andWhere(['d.priority' => $priority]);
-            }
-            if ($company) {
-                $docsQuery->andWhere(['d.company_id' => $company]);
-            }
-            if ($type) {
-                $docsQuery->andWhere(['d.type_id' => $type]);
-            }
+            $page = $request->post('page') ?? 1;
+            $offset = ($page - 1) * self::PAGE_LENGTH;
+            $filters = [
+                'name' => $request->post('name'),
+                'status' => $request->post('status'),
+                'priority' => $request->post('priority'),
+                'company' => $request->post('company'),
+                'type' => $request->post('type'),
+                'page' => $page,
+                'offset' => $offset,
+            ];
+            $docsQuery = $this->getDocumentQuery($accountant, $filters);
+            $total = $docsQuery->count();
+            $page = $filters['page'] ?? 1;
+            $offset = ($page - 1) * self::PAGE_LENGTH;
+            $docsQuery->offset($offset)->limit(self::PAGE_LENGTH);
             $docs = $docsQuery->all();
             $response = \Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             $response->data = [
                 'status' => 'success',
-                'data' => DocListWidget::widget(['user' => $accountant, 'documents' => $docs, 'company' => null]),
+                'data' => DocListWidget::widget(['user' => $accountant, 'documents' => $docs, 'company' => null, 'filters' => $filters, 'total' => $total, 'limit' => self::PAGE_LENGTH]),
                 'count' => count($docs),
             ];
             return $response;
@@ -273,16 +305,6 @@ class DocumentController extends BaseController
             'document' => $document,
         ]);
     }
-    //     if ($document) {
-    //         $response->format = Response::FORMAT_RAW;
-    //         $response->headers->add('Content-Type', $document->mimetype);
-    //         $response->headers->add('Content-Disposition', "inline; filename=\"{$document->filename}\"");
-    //         $response->content = stream_get_contents($document->content);
-    //         return $response;
-    //     } else {
-    //         throw new \yii\web\NotFoundHttpException('Document not found');
-    //     }
-    // }
 
     public function actionChangeStatus()
     {

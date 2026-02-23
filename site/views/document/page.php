@@ -1,6 +1,5 @@
 <?php
 
-use app\components\ButtonBackWidget;
 use app\components\DocListWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
@@ -8,14 +7,7 @@ use app\services\SvgService;
 ?>
 <div class="p-6">
     <div class="space-y-6">
-        <div class="flex items-center gap-4">
-            <?php
-            if ($back) {
-            ?>
-                <?= ButtonBackWidget::widget(['user' => $user]) ?>
-            <?php
-            }
-            ?>
+        <div id="page-header" class="flex items-center gap-4">
             <div>
                 <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('documents', $user->lang) ?></h1>
                 <p class="text-muted-foreground mt-1"><span id="docsCount"><?= count($documents) ?></span> <?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?></p>
@@ -25,15 +17,16 @@ use app\services\SvgService;
         <div class="flex flex-wrap items-center gap-3">
             <div class="relative flex-1 max-w-md">
                 <?= SvgService::svg('search') ?>
-                <input id="search" type="search" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10" placeholder="Поиск документы...">
+                <input id="search" type="search" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10" placeholder="<?= DictionaryService::getWord('documentSearch', $user->lang) ?>" value="<?= $filters['name'] ?>">
             </div>
             <?= DictionaryService::getWord('companyName', $user->lang) ?>
             <select id="companyName-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
                 <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                 <?php
                 foreach ($filterCompany as $company) {
+                    $select = $filters['company'] == $company['id'] ? ' selected' : '';
                 ?>
-                    <option value="<?= $company['id'] ?>"><?= $company['name'] ?></option>
+                    <option value="<?= $company['id'] ?>"<?= $select ?>><?= $company['name'] ?></option>
                 <?php
                 }
                 ?>
@@ -43,8 +36,9 @@ use app\services\SvgService;
                 <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                 <?php
                 foreach ($filterDocumentType as $type) {
+                    $select = $filters['type'] == $type['id'] ? ' selected' : '';
                 ?>
-                    <option value="<?= $type['id'] ?>"><?= DictionaryService::getWord('docType' . ucfirst($type['name']), $user->lang) ?></option>
+                    <option value="<?= $type['id'] ?>"<?= $select ?>><?= DictionaryService::getWord('docType' . ucfirst($type['name']), $user->lang) ?></option>
                 <?php
                 }
                 ?>
@@ -55,8 +49,9 @@ use app\services\SvgService;
                 <?php
                 foreach ($filterStatus as $row) {
                     $status = $row['status'];
+                    $select = $filters['status'] == $status ? ' selected' : '';
                 ?>
-                    <option value="<?= $status ?>"><?= DictionaryService::getWord('docStatus' . ucfirst($status), $user->lang) ?></option>
+                    <option value="<?= $status ?>"<?= $select ?>><?= DictionaryService::getWord('docStatus' . str_replace(' ', '', ucwords(str_replace('_', ' ', $status))), $user->lang) ?></option>
                 <?php
                 }
                 ?>
@@ -68,7 +63,7 @@ use app\services\SvgService;
         </div>
         <div class="border rounded-lg overflow-hidden">
             <div id="doc-list" class="relative w-full overflow-auto">
-                <?= DocListWidget::widget(['user' => $user, 'company' => null, 'documents' => $documents]); ?>
+                <?= DocListWidget::widget(['user' => $user, 'company' => null, 'documents' => $documents, 'filters' => $filters, 'total' => $total, 'limit' => $limit]); ?>
             </div>
         </div>
     </div>

@@ -1,14 +1,14 @@
 <?php
 
-use app\components\ButtonBackWidget;
 use app\components\SelectWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
 
 ?>
 <div class="p-6">
-    <?= ButtonBackWidget::widget(['user' => $user]) ?>
-    <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('companyEditing', $user->lang) ?></h1>
+    <div id="page-header" class="flex items-center gap-4">
+        <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('companyEditing', $user->lang) ?></h1>
+    </div>
     <div class="space-y-6">
         <table id="company-edit-table" class="w-full caption-bottom text-sm">
             <input type="hidden" name="id" value="<?= $company->id ?>" />

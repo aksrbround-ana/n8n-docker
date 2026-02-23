@@ -70,6 +70,7 @@ function loadContent() {
     success: function (response) {
       $('#root').html(response.data);
       userMenuResize();
+      addBackButton();
     },
     error: function (e) {
       showError('Load error', e);
@@ -96,6 +97,35 @@ function showTiff() {
 
 }
 
+function startPageHistory(itemHistory) {
+  const pageHistory = [itemHistory];
+  localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+}
+
+function addPageHistory(itemHistory) {
+  let pageHistory = localStorage.getItem('pageHistory');
+  pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+  if (pageHistory.length > 0) {
+    let lastPage = pageHistory[pageHistory.length - 1];
+    if (lastPage.url !== itemHistory.url || JSON.stringify(lastPage.data) !== JSON.stringify(itemHistory.data)) {
+      pageHistory.push(itemHistory);
+    }
+  } else {
+    pageHistory.push(itemHistory);
+  }
+  localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+}
+
+function clearPageHistory(count) {
+  let pageHistory = localStorage.getItem('pageHistory');
+  pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+  while ((count > 0) && (pageHistory.length > 0)) {
+    count--;
+    pageHistory.pop();
+  }
+  localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+}
+
 function loadPage(url, data = {}, saveHistory = false, success) {
   let user = getUser();
   let token = user ? user?.token : '';
@@ -103,27 +133,16 @@ function loadPage(url, data = {}, saveHistory = false, success) {
     data = {};
   }
   data.token = token;
+
   let itemHistory = { url: url, data: data };
-  let pageHistory = localStorage.getItem('pageHistory');
-  pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
   if (saveHistory === true) {
-    if (pageHistory.length > 0) {
-      let lastPage = pageHistory[pageHistory.length - 1];
-      if (lastPage.url !== itemHistory.url || JSON.stringify(lastPage.data) !== JSON.stringify(itemHistory.data)) {
-        pageHistory.push(itemHistory);
-      }
-    } else {
-      pageHistory.push(itemHistory);
-    }
+    addPageHistory(itemHistory);
   } else if (saveHistory === false) {
-    pageHistory = [itemHistory];
+    startPageHistory(itemHistory);
   } else if (typeof saveHistory === 'number') {
-    while (saveHistory > 0) {
-      saveHistory--;
-      pageHistory.pop();
-    }
+    clearPageHistory(saveHistory);
   }
-  localStorage.setItem('pageHistory', JSON.stringify(pageHistory));
+
   $.ajax({
     url: url,
     type: 'POST',
@@ -136,6 +155,7 @@ function loadPage(url, data = {}, saveHistory = false, success) {
         $('main').html(response.data);
         userMenuResize();
         showTiff();
+        addBackButton();
         if (success && (typeof (success) === 'function')) {
           success();
         }
@@ -151,6 +171,43 @@ function loadPage(url, data = {}, saveHistory = false, success) {
     },
     dataType: 'json'
   })
+}
+
+async function getBackButton() {
+  const user = getUser();
+  let formData = new FormData();
+  formData.append('token', user.token);
+  let response = await fetch('/util/back-button', {
+    method: 'POST',
+    body: formData
+  });
+  return response.button;
+  // return '<button class="back inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 gap-2">' +
+  //   '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left h-4 w-4">' +
+  //   '<path d="m12 19-7-7 7-7"></path>' +
+  //   '<path d="M19 12H5"></path>' +
+  //   '</svg>' +
+  //   dictionaryLookup('back', user.lang) +
+  //   '</button>';
+}
+
+async function addBackButton() {
+  let pageHistory = localStorage.getItem('pageHistory');
+  pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+  if (pageHistory.length > 1) {
+    const user = getUser();
+    $.ajax({
+      url: '/util/back-button',
+      type: 'POST',
+      data: {
+        token: user.token
+      },
+      success: function (response) {
+        let button = response.button
+        $('#page-header').prepend(button);
+      }
+    })
+  }
 }
 
 function goBack() {
@@ -174,6 +231,7 @@ function goBack() {
           $('main').html(response.data);
           userMenuResize();
           showTiff();
+          addBackButton();
         }
       },
       error: function (e) {
@@ -373,8 +431,36 @@ $(document).on('click', '#lang-card-mini', function () {
 
 $(document).on('click', '.company_open_profile', function (e) {
   e.preventDefault();
-  let id = $(this).data('id');
+  let user = getUser();
+  let token = user ? user?.token : '';
   let data = {
+    token: token,
+    page: $('button.task-page.active').data('page') ?? 1,
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let accountant = $('#responsible-filters-select').val();
+  let sort = $('#sorting-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (accountant) {
+    data.accountant = accountant;
+  }
+  if (sort) {
+    data.sort = sort;
+  }
+  let itemHistory = {
+    url: '/company/page',
+    data: data
+  }
+  clearPageHistory(1);
+  addPageHistory(itemHistory);
+  let id = $(this).data('id');
+  data = {
     id: id
   }
   loadPage('/company/profile', data, true);
@@ -559,12 +645,63 @@ $(document).on('click', '#add_note_button', function (e) {
   });
 });
 
-$(document).on('click', 'tr.task-row, div.task-row', function (e) {
+$(document).on('click', 'tr.task-row', function (e) {
+  const url = '/task/page';
+  const user = getUser();
+  const token = user ? user?.token : '';
+  let data = {
+    token: token,
+    page: $('button.task-page.active').data('page') ?? 1,
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let priority = $('#priority-filters-select').val();
+  let assignedTo = $('#assignedTo-filters-select').length > 0 ? $('#assignedTo-filters-select').val() : '';
+  let company = $('#companyName-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (priority) {
+    data.priority = priority;
+  }
+  if (assignedTo) {
+    data.assignedTo = assignedTo;
+  }
+  if (company) {
+    data.company = company;
+  }
+  let itemHistory = {
+    url: url,
+    data: data
+  }
+  clearPageHistory(1);
+  addPageHistory(itemHistory);
+
+  let taskId = $(this).data('task-id');
+  data = {
+    id: taskId
+  }
+  loadPage('/task/view', data, true);
+});
+
+$(document).on('click', 'div.task-row', function (e) {
   let taskId = $(this).data('task-id');
   let data = {
     id: taskId
   }
   loadPage('/task/view', data, true);
+});
+
+
+$(document).on('click', '#task-reset-filters-button', function (e) {
+  $('#search').val('');
+  $('#companyName-filters-select').val('');
+  $('#status-filters-select').val('');
+  $('#priority-filters-select').val('');
+  $('#assignedTo-filters-select').val('');
 });
 
 $(document).on('click', '.go-to-link', function (e) {
@@ -713,8 +850,38 @@ $(document).on('click', 'button.back', function (e) {
 });
 
 $(document).on('click', 'tr.doc-row', function (e) {
-  let docId = $(this).data('doc-id');
+  const url = '/document/page';
+  const user = getUser();
+  const token = user ? user?.token : '';
   let data = {
+    token: token,
+    page: $('button.doc-page.active').data('page'),
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let type = $('#documentType-filters-select').val();
+  let company = $('#companyName-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (type) {
+    data.type = type;
+  }
+  if (company) {
+    data.company = company;
+  }
+  let itemHistory = {
+    url: url,
+    data: data
+  }
+  clearPageHistory(1);
+  addPageHistory(itemHistory);
+
+  let docId = $(this).data('doc-id');
+  data = {
     id: docId
   }
   loadPage('/document/view', data, true);
@@ -1523,6 +1690,7 @@ $(document).on('click', 'input.tax-activity', function (e) {
 });
 
 $(document).on('click', 'button.reset-filters-button', function (e) {
+  $('#search').val('');
   $(this).closest('div.filter-box').find('select').val('');
 });
 
@@ -1569,11 +1737,13 @@ $(document).on('click', '#company-find-button', function (e) {
   });
 });
 
-$(document).on('click', '#task-find-button', function (e) {
+function getTaskList(page = 1) {
+  const url = '/task/filter';
   const user = getUser();
   const token = user ? user?.token : '';
   const data = {
     token: token,
+    page: page,
   };
   let name = $('#search').val();
   let status = $('#status-filters-select').val();
@@ -1595,8 +1765,9 @@ $(document).on('click', '#task-find-button', function (e) {
   if (company) {
     data.company = company;
   }
+
   $.ajax({
-    url: '/task/filter',
+    url: url,
     type: 'POST',
     data: data,
     success: function (response) {
@@ -1615,6 +1786,67 @@ $(document).on('click', '#task-find-button', function (e) {
     },
     type: 'json'
   });
+}
+
+$(document).on('click', '#task-find-button', function (e) {
+  getTaskList();
+});
+
+$(document).on('click', 'button.task-page', function (e) {
+  const page = $(this).data('page');
+  getTaskList(page);
+});
+
+function getDocList(page = 1) {
+  const url = '/document/filter';
+  const user = getUser();
+  const token = user ? user?.token : '';
+  const data = {
+    token: token,
+    page: page,
+  };
+  let name = $('#search').val();
+  let status = $('#status-filters-select').val();
+  let type = $('#documentType-filters-select').val();
+  let company = $('#companyName-filters-select').val();
+  if (name) {
+    data.name = name;
+  }
+  if (status) {
+    data.status = status;
+  }
+  if (type) {
+    data.type = type;
+  }
+  if (company) {
+    data.company = company;
+  }
+
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: data,
+    success: function (response) {
+      if (response.status === 'success') {
+        $('#doc-list').html(response.data);
+        $('#docsCount').text(response.count);
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Select error', response.message ?? '');
+      }
+    },
+    error: function (e) {
+      showError('Select error', e);
+    },
+    type: 'json'
+  });
+}
+
+$(document).on('click', 'button.doc-page', function (e) {
+  const page = $(this).data('page');
+  getDocList(page);
 });
 
 $(document).on('click', '#doc-find-button', function (e) {

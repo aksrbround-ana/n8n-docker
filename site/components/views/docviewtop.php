@@ -1,10 +1,8 @@
 <?php
 
-use app\components\ButtonBackWidget;
 use app\services\DictionaryService;
 ?>
-<div class="flex items-center gap-4">
-    <?= ButtonBackWidget::widget(['user' => $user]) ?>
+<div id="page-header" class="flex items-center gap-4">
     <div class="flex-1">
         <h1 class="text-2xl font-heading font-semibold text-foreground"><?= DictionaryService::getWord('viewDocument', $user->lang) ?></h1>
         <p class="text-sm text-muted-foreground"><?= $document->filename ?></p>

@@ -1,6 +1,9 @@
 <?php
 
+use app\controllers\BaseController;
 use app\services\DictionaryService;
+
+$limit = $limit ?? BaseController::PAGE_LENGTH;
 ?>
 <table class="w-full caption-bottom text-sm">
     <thead class="bg-secondary/50 sticky top-0">
@@ -63,3 +66,18 @@ use app\services\DictionaryService;
         ?>
     </tbody>
 </table>
+<div class="pagination">
+    <?php
+    $pages = floor($total / $limit);
+    if ($total % $limit > 0) {
+        $pages++;
+    }
+    if ($pages > 1) {
+        for ($i = 1; $i <= $pages; $i++) {
+    ?>
+            <button data-page="<?= $i ?>" class="task-page inline-block w-8 h-8 text-center leading-8 border rounded-md mx-1 <?= ($i == $page ? 'active bg-primary text-primary-foreground' : 'hover:bg-secondary')  ?>"><?= $i ?></button>
+    <?php
+        }
+    }
+    ?>
+</div>

@@ -9,6 +9,10 @@ class DocListWidget extends Widget
     public $user;
     public $company;
     public $documents;
+    public $total;
+    public $page;
+    public $limit;
+    public $filters;
 
     public function run()
     {
@@ -18,6 +22,10 @@ class DocListWidget extends Widget
         return $this->render('doclist', [
             'user' => $this->user,
             'docs' => $this->documents,
+            'total' => $this->total,
+            'page' => $this->page,
+            'limit' => $this->limit,
+            'filters' => $this->filters,
         ]);
     }
 }
