@@ -133,7 +133,7 @@ button.sorting {
 }
 
 button.sorting:hover {
-    color: blue;
+    color: #444;
     text-decoration: underline;
 }
 
