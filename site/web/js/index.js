@@ -695,15 +695,6 @@ $(document).on('click', 'div.task-row', function (e) {
   loadPage('/task/view', data, true);
 });
 
-
-$(document).on('click', '#task-reset-filters-button', function (e) {
-  $('#search').val('');
-  $('#companyName-filters-select').val('');
-  $('#status-filters-select').val('');
-  $('#priority-filters-select').val('');
-  $('#assignedTo-filters-select').val('');
-});
-
 $(document).on('click', '.go-to-link', function (e) {
   const link = $(this).data('link');
   const count = $(this).data('count');

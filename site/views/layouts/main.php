@@ -37,13 +37,14 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     $this->registerJsFile('@web/js/tiff.min.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
     $this->registerJsFile('@web/js/select.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
     $this->registerJsFile('@web/js/chat.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/suggestions.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
     ?>
     <link rel="stylesheet" href="/css/site.css">
     <link rel="stylesheet" href="/css/index.css">
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/select.css">
-    <!-- <link rel="stylesheet" href="/css/chat.css"> -->
     <link rel="stylesheet" href="/css/chat-cl.css">
+    <link rel="stylesheet" href="/css/suggestions.css">
 </head>
 
 <body>

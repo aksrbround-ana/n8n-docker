@@ -458,4 +458,43 @@ class TaskController extends BaseController
             return $this->renderLogout($accountant);
         }
     }
+
+    public function actionSuggest()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $query = $request->post('query');
+            $taskQuery = (new Query())
+                ->select(['d.*'])
+                ->distinct()
+                ->from(['d' => Task::tableName()])
+                ->where([
+                    'or',
+                    ['ilike', 'category', $query],
+                    ['ilike', 'request', $query],
+                ])
+                ->limit(self::SUGGESTS_COUNT);
+            $data = $taskQuery->all();
+            $data = array_map(function ($item) {
+                $item['name'] = $item['category'];// . ' / ' . $item['request'];
+                return [
+                    'id' => $item['id'],
+                    'name' => mb_strlen($item['name'], 'utf-8') > 40 ? mb_substr($item['name'], 0, 40, 'utf-8') . '…' : $item['name'],
+                ];
+            }, $data);
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->data =
+                [
+                    'status' => 'success',
+                    'data' => $data,
+                ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
 }

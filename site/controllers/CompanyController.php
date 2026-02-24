@@ -775,4 +775,38 @@ class CompanyController extends BaseController
         return $response;
         // return $this->render('index');
     }
+
+    public function actionSuggest()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $query = $request->post('query');
+            $companiesQuery = Company::find()
+                ->select(['c.id', 'c.name'])
+                ->distinct()
+                ->from(['c' => Company::tableName()])
+                ->where(['ILIKE', 'c.name', $query])
+                ->limit(self::SUGGESTS_COUNT);
+            $data = $companiesQuery->all();
+            $data = array_map(function ($item) {
+                return [
+                    'id' => $item['id'],
+                    'name' => mb_strlen($item['name'], 'utf-8') > 40 ? mb_substr($item['name'], 0, 40, 'utf-8') . '…' : $item['name'],
+                ];
+            }, $data);
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->data =
+                [
+                    'status' => 'success',
+                    'data' => $data,
+                ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
 }

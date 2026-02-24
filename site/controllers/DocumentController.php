@@ -389,4 +389,48 @@ class DocumentController extends BaseController
             return $this->renderLogout($accountant);
         }
     }
+
+    public function actionSuggest()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $accountant = Accountant::findIdentityByAccessToken($token);
+        if ($accountant->isValid()) {
+            $query = $request->post('query');
+            $docsQuery = (new Query())
+                ->select(['d.*'])
+                ->distinct()
+                ->from(['d' => Document::tableName()])
+                ->where([
+                    'OR',
+                    // ['ilike', 'd.filename', $query],
+                    ['ilike', 'd.ocr_text', $query],
+                    ['ilike', 'd.summary', $query],
+                    ['ilike', 'd.category', $query],
+                ])
+                ->limit(self::SUGGESTS_COUNT);
+
+            $data = $docsQuery->all();
+            $data = array_map(function ($item) {
+                $item['name'] = $item['ocr_text'] ?? $item['summary'] ?? $item['category'];
+                $item['name'] = explode('\n', $item['name'])[0];
+                return [
+                    'id' => $item['id'],
+                    'name' => mb_strlen($item['name'], 'utf-8') > 40 ? mb_substr($item['name'], 0, 40, 'utf-8') . '…' : $item['name'],
+                ];
+            }, $data);
+
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->data =
+                [
+                    'status' => 'success',
+                    'data' => $data,
+                ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
 }

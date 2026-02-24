@@ -17,8 +17,12 @@ use app\services\SvgService;
         <div class="space-y-4">
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 max-w-md">
-                    <?= SvgService::svg('search') ?>
-                    <input id="search" type="search" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm pl-10" placeholder="<?= DictionaryService::getWord('taskSearch', $user->lang) ?>" value="<?= $name ?>">
+                    <div class="suggest-container">
+                        <?= SvgService::svg('search') ?>
+                        <input id="search" type="search" data-type="task" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm pl-10" placeholder="<?= DictionaryService::getWord('taskSearch', $user->lang) ?>" value="<?= $name ?>">
+                        <input type="hidden" id="selected_id">
+                        <div id="suggestions" class="suggestions"></div>
+                    </div>
                 </div>
                 <button id="task-find-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                     <?= SvgService::svg('search-button') ?>
@@ -38,7 +42,7 @@ use app\services\SvgService;
                     foreach ($filterCompany as $company) {
                         $selected = $company['id'] == $current ? ' selected' : '';
                     ?>
-                        <option value="<?= $company['id'] ?>"<?= $selected ?>><?= $company['name'] ?></option>
+                        <option value="<?= $company['id'] ?>" <?= $selected ?>><?= $company['name'] ?></option>
                     <?php
                     }
                     ?>
@@ -56,7 +60,7 @@ use app\services\SvgService;
                         } else {
                             $selected = $status == $current ? ' selected' : '';
                         ?>
-                            <option value="<?= $status ?>"<?= $selected ?>><?= DictionaryService::getWord('taskStatus' . ucfirst($status), $user->lang) ?></option>
+                            <option value="<?= $status ?>" <?= $selected ?>><?= DictionaryService::getWord('taskStatus' . ucfirst($status), $user->lang) ?></option>
                     <?php
                         }
                     }
@@ -71,7 +75,7 @@ use app\services\SvgService;
                         $prioriry = $row['priority'];
                         $selected = $prioriry == $current ? ' selected' : '';
                     ?>
-                        <option value="<?= $prioriry ?>"<?= $selected ?>><?= DictionaryService::getWord('priority' . ucfirst($prioriry), $user->lang) ?></option>
+                        <option value="<?= $prioriry ?>" <?= $selected ?>><?= DictionaryService::getWord('priority' . ucfirst($prioriry), $user->lang) ?></option>
                     <?php
                     }
                     ?>
@@ -87,7 +91,7 @@ use app\services\SvgService;
                         foreach ($filterAssignedTo as $accountant) {
                             $selected = $accountant['id'] == $current ? ' selected' : '';
                         ?>
-                            <option value="<?= $accountant['id'] ?>"<?= $selected ?>><?= $accountant['firstname'] . ' ' . $accountant['lastname'] ?></option>
+                            <option value="<?= $accountant['id'] ?>" <?= $selected ?>><?= $accountant['firstname'] . ' ' . $accountant['lastname'] ?></option>
                         <?php
                         }
                         ?>
@@ -95,7 +99,7 @@ use app\services\SvgService;
                 <?php
                 }
                 ?>
-                <button id="task-reset-filters-button" class="reset-filters-button inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3 ml-auto">
+                <button class="reset-filters-button inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    hover:bg-accent hover:text-accent-foreground h-9 rounded-md px-3">
                     <?= SvgService::svg('x') ?>
                     <?= DictionaryService::getWord('clearFilters', $user->lang) ?>
                 </button>
