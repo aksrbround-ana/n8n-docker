@@ -127,3 +127,13 @@ table.accountant-page td {
 div.document-view {
     cursor: pointer;
 }
+
+button.sorting {
+    color: gray;
+}
+
+button.sorting:hover {
+    color: blue;
+    text-decoration: underline;
+}
+

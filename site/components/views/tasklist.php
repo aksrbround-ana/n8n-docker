@@ -2,18 +2,57 @@
 
 use app\controllers\BaseController;
 use app\services\DictionaryService;
+use app\services\SvgService;
+
+/**
+ * @var int $limit
+ */
 
 $limit = $limit ?? BaseController::PAGE_LENGTH;
+$sortType =  'none';
+$sortTypeSign = SvgService::SORT_ARROW_NONE;
+$sortDueDate = 'none';
+$sortDueDateSign = SvgService::SORT_ARROW_NONE;
+foreach ($sorting as $sort) {
+    if ($sort['field'] == 'category') {
+        $sortType = $sort['value'];
+        $sortTypeSign = match ($sort['value']) {
+            'asc' => SvgService::SORT_ARROW_ASC,
+            'desc' => SvgService::SORT_ARROW_DESC,
+            default => SvgService::SORT_ARROW_NONE,
+        };
+    } elseif ($sort['field'] == 'due_date') {
+        $sortDueDate = $sort['value'];
+        $sortDueDateSign = match ($sort['value']) {
+            'asc' => SvgService::SORT_ARROW_ASC,
+            'desc' => SvgService::SORT_ARROW_DESC,
+            default => SvgService::SORT_ARROW_NONE,
+        };
+    }
+}
+
+// echo '<pre>';print_r($sorting);echo '</pre>';
+// echo $sortDueDate,$sortDueDateSign,$sortType,$sortTypeSign;
 ?>
 <table class="w-full caption-bottom text-sm">
     <thead class="bg-secondary/50 sticky top-0">
         <tr class="border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50">
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-20">ID</th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('companyName', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('taskType', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                <button class="sorting" data-entity="task" data-field="category" data-sort="<?= $sortType ?>">
+                    <?= DictionaryService::getWord('taskType', $user->lang) ?>
+                    <span><?= $sortTypeSign ?></span>
+                </button>
+            </th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('priority', $user->lang) ?></th>
-            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('dueDate', $user->lang) ?></th>
+            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                <button class="sorting" data-entity="task" data-field="due_date" data-sort="<?= $sortDueDate ?>">
+                    <?= DictionaryService::getWord('dueDate', $user->lang) ?>
+                    <span><?= $sortDueDateSign ?></span>
+                </button>
+            </th>
             <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('assignedTo', $user->lang) ?></th>
         </tr>
     </thead>

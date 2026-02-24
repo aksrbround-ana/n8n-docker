@@ -50,6 +50,16 @@ class TaskController extends BaseController
             $taskQuery->andWhere(['company_id' => $filters['company']]);
         }
 
+        $sorting = $filters['sorting'] ?? [];
+        $sortArray = [];
+        if (!empty($sorting)) {
+            foreach ($sorting as $sort) {
+                $sortValue = $sort['value'] == 'asc' ? SORT_ASC : SORT_DESC;
+                $sortArray[$sort['field']] = $sortValue;
+            }
+            $taskQuery->orderBy($sortArray);
+        }
+
         $totalTasks = $taskQuery->count();
         $tasks = $taskQuery->limit(self::PAGE_LENGTH)->offset($filters['offset'])->all();
 
@@ -113,6 +123,7 @@ class TaskController extends BaseController
             'tasks' => $tasks,
             'total' => $totalTasks,
             'name' => $filters['name'] ?? '',
+            'sorting' => $filters['sorting'] ?? [],
             'page' => $filters['page'] ?? 1,
             'status' => $filters['status'] ?? '',
             'company' => $filters['company'] ?? '',
@@ -140,6 +151,7 @@ class TaskController extends BaseController
             $offset = ($page - 1) * self::PAGE_LENGTH;
             $name = $request->post('name');
             $status = $status ?? $request->post('status');
+            $sorting = $request->post('sorting') ?? [];
             if (!$status) {
                 $status = Task::getStatusesInProgress();
             }
@@ -152,6 +164,7 @@ class TaskController extends BaseController
                 'priority' => $priority,
                 'company' => $company,
                 'assignedTo' => $assignedTo,
+                'sorting' => $sorting,
                 'offset' => $offset,
                 'page' => $page,
             ];
@@ -203,18 +216,34 @@ class TaskController extends BaseController
             if ($assignedTo) {
                 $taskQuery->andWhere(['accountant_id' => $assignedTo]);
             }
+            $sorting = $request->post('sorting') ?? [];
+            $sortArray = [];
+            if (!empty($sorting)) {
+                foreach ($sorting as $sort) {
+                    $sortValue = $sort['value'] == 'asc' ? SORT_ASC : SORT_DESC;
+                    $sortArray[$sort['field']] = $sortValue;
+                }
+                $taskQuery->orderBy($sortArray);
+            }
             $tasksTotal = $taskQuery->count();
             $taskQuery
                 ->limit(self::PAGE_LENGTH)
-                ->offset($offset)
-                ->orderBy(['status' => SORT_ASC, 'id' => SORT_ASC]);
+                ->offset($offset);
             $tasks = $taskQuery->all();
             $response = Yii::$app->response;
             $response->format = Response::FORMAT_JSON;
             $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
             $response->data = [
                 'status' => 'success',
-                'data' => TaskListWidget::widget(['user' => $accountant, 'tasks' => $tasks, 'company' => null, 'total' => $tasksTotal, 'page' => $page, 'limit' => self::PAGE_LENGTH]),
+                'data' => TaskListWidget::widget([
+                    'user' => $accountant,
+                    'tasks' => $tasks,
+                    'company' => null,
+                    'sorting' => $sorting,
+                    'total' => $tasksTotal,
+                    'page' => $page,
+                    'limit' => self::PAGE_LENGTH
+                ]),
                 'count' => $tasksTotal,
             ];
             return $response;
@@ -403,7 +432,6 @@ class TaskController extends BaseController
             } else {
                 $response->data = [
                     'status' => 'error',
-                    // 'message' => implode("\n", $task->getErrors()),
                     'message' => $task->getErrors(),
                     'task' => $task,
                 ];
@@ -479,7 +507,7 @@ class TaskController extends BaseController
                 ->limit(self::SUGGESTS_COUNT);
             $data = $taskQuery->all();
             $data = array_map(function ($item) {
-                $item['name'] = $item['category'];// . ' / ' . $item['request'];
+                $item['name'] = $item['category'];
                 return [
                     'id' => $item['id'],
                     'name' => mb_strlen($item['name'], 'utf-8') > 40 ? mb_substr($item['name'], 0, 40, 'utf-8') . '…' : $item['name'],

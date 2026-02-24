@@ -9,6 +9,7 @@ use app\services\SvgService;
  * @var $user app\model\Accountant
  * @var $docs [app\model\Document]
  * @var $doc app\model\Document
+ * @var $limit int
  */
 
 $limit = $limit ?? $filters['limit'] ?? BaseController::PAGE_LENGTH;

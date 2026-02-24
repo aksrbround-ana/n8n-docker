@@ -11,6 +11,7 @@ class TaskListWidget extends Widget
     public $company;
     public $tasks;
     public $total;
+    public $sorting;
     public $page;
     public $limit;
 
@@ -32,6 +33,7 @@ class TaskListWidget extends Widget
             'company' => $this->company,
             'tasks' => $this->tasks,
             'total' => $this->total,
+            'sorting' => $this->sorting,
             'page' => $this->page,
             'limit' => $this->limit,
         ]);

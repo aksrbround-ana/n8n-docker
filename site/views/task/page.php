@@ -14,7 +14,9 @@ use app\services\SvgService;
                 <p class="text-muted-foreground mt-1"><?= strtolower(DictionaryService::getWord('tasks', $user->lang)) ?>: <span id="tasksCount"><?= $total ?></span></p>
             </div>
         </div>
-        <div class="space-y-4">
+        <div class="all-filter-box space-y-4">
+            <input type="hidden" class="sorting" data-field="category" value="none" />
+            <input type="hidden" class="sorting" data-field="due_date" value="none" />
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 max-w-md">
                     <div class="suggest-container">
@@ -24,7 +26,7 @@ use app\services\SvgService;
                         <div id="suggestions" class="suggestions"></div>
                     </div>
                 </div>
-                <button id="task-find-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                <button id="task-find-button" class="find-button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
                     <?= SvgService::svg('search-button') ?>
                     <?= DictionaryService::getWord('find', $user->lang) ?>
                 </button>
@@ -115,6 +117,7 @@ use app\services\SvgService;
                             'company' => null,
                             'total' => $total,
                             'page' => $page,
+                            'sorting' => $sorting,
                             'limit' => $limit,
                         ]
                     ); ?>
