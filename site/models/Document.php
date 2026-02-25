@@ -36,6 +36,7 @@ class Document extends \yii\db\ActiveRecord
     const STATUS_CHECKED = 'checked';
     const STATUS_NEEDS_REVISION = 'needs_revision';
     const STATUS_PROCESSING = 'processing';
+    const STATUS_ARCHIVED = 'archived';
 
     const OCR_STATUS_TODO = 'todo';
     const OCR_STATUS_PROCESSING = 'processing';
@@ -63,10 +64,11 @@ class Document extends \yii\db\ActiveRecord
     ];
 
     public static $statuses = [
-        'uploaded' =>  self::STATUS_UPLOADED,
-        'checked' =>  self::STATUS_CHECKED,
-        'needsRevision' =>  self::STATUS_NEEDS_REVISION,
-        'processing' => self::STATUS_PROCESSING,
+        self::STATUS_UPLOADED,
+        self::STATUS_CHECKED,
+        self::STATUS_NEEDS_REVISION,
+        self::STATUS_PROCESSING,
+        self::STATUS_ARCHIVED
     ];
 
     public static $statusStyles = [
@@ -183,7 +185,7 @@ class Document extends \yii\db\ActiveRecord
         return DocumentType::find()->where(['id' => $this->type_id])->one();
     }
 
-    public function getTypeName($lang = 'ru')
+    public function getTypeName($lang = DictionaryService::LANG_RUSSIAN)
     {
         $type = $this->getType();
         if ($type) {
@@ -193,7 +195,7 @@ class Document extends \yii\db\ActiveRecord
         }
     }
 
-    public function getStatusName($lang = 'ru', $status = null)
+    public function getStatusName($lang = DictionaryService::LANG_RUSSIAN, $status = null)
     {
         if ($status === null) {
             $status = $this->status;

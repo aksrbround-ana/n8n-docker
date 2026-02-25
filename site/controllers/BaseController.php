@@ -8,6 +8,10 @@ use yii\web\Response;
 
 class BaseController extends Controller
 {
+
+    const PAGE_LENGTH = 20;
+    const SUGGESTS_COUNT = 10;
+
     public function renderPage($data, $view = 'page')
     {
         $html = $this->renderPartial($view, $data);

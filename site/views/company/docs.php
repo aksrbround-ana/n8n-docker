@@ -15,7 +15,7 @@
                 </svg></button><button type="button" role="combobox" aria-controls="radix-:r16d:" aria-expanded="false" aria-autocomplete="none" dir="ltr" data-state="closed" data-placeholder="" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40"><span style="pointer-events: none;">Статус</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down h-4 w-4 opacity-50" aria-hidden="true">
                     <path d="m6 9 6 6 6-6"></path>
                 </svg></button>
-            <div class="ml-auto"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:r16e:" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus h-4 w-4 mr-2">
+            <div class="ml-auto"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:r16e:" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus h-4 w-4 mr-2">
                         <path d="M5 12h14"></path>
                         <path d="M12 5v14"></path>
                     </svg>Загрузить документы</button></div>
@@ -23,21 +23,21 @@
         <div class="border rounded-lg overflow-hidden">
             <div class="relative w-full overflow-auto">
                 <table class="w-full caption-bottom text-sm">
-                    <thead class="[&amp;_tr]:border-b bg-secondary/50">
+                    <thead class="bg-secondary/50">
                         <tr class="border-b transition-colors data-[state=selected]:bg-muted hover:bg-muted/50">
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Имя файла</th>
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Название компании</th>
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Тип документа</th>
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Период</th>
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Статус</th>
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Загрузил</th>
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Дата загрузки</th>
-                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 w-12"></th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Имя файла</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Название компании</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Тип документа</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Период</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Статус</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Загрузил</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Дата загрузки</th>
+                            <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-12"></th>
                         </tr>
                     </thead>
-                    <tbody class="[&amp;_tr:last-child]:border-0">
+                    <tbody class="">
                         <tr class="border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            <td class="p-4 align-middle">
                                 <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 text-destructive">
                                         <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                         <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -51,20 +51,20 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Global Trade SRB</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Банковская выписка</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Ноябрь 2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-info/10 text-info border-info/20">Загружен</span></td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ольга Сидорова</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">27.11.2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16h:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
+                            <td class="p-4 align-middle text-sm">Global Trade SRB</td>
+                            <td class="p-4 align-middle text-sm">Банковская выписка</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">Ноябрь 2024</td>
+                            <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-info/10 text-info border-info/20">Загружен</span></td>
+                            <td class="p-4 align-middle text-sm">Ольга Сидорова</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">27.11.2024</td>
+                            <td class="p-4 align-middle"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16h:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
                                         <circle cx="12" cy="12" r="1"></circle>
                                         <circle cx="19" cy="12" r="1"></circle>
                                         <circle cx="5" cy="12" r="1"></circle>
                                     </svg></button></td>
                         </tr>
                         <tr class="border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            <td class="p-4 align-middle">
                                 <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 text-destructive">
                                         <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                         <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -78,20 +78,20 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">TechStart DOO</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Счёт-фактура</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Ноябрь 2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Проверен</span></td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Марина Иванова</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">20.11.2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16j:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
+                            <td class="p-4 align-middle text-sm">TechStart DOO</td>
+                            <td class="p-4 align-middle text-sm">Счёт-фактура</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">Ноябрь 2024</td>
+                            <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Проверен</span></td>
+                            <td class="p-4 align-middle text-sm">Марина Иванова</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">20.11.2024</td>
+                            <td class="p-4 align-middle"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16j:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
                                         <circle cx="12" cy="12" r="1"></circle>
                                         <circle cx="19" cy="12" r="1"></circle>
                                         <circle cx="5" cy="12" r="1"></circle>
                                     </svg></button></td>
                         </tr>
                         <tr class="border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            <td class="p-4 align-middle">
                                 <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet h-4 w-4 text-success">
                                         <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                         <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -106,20 +106,20 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Restoran Balkan</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Зарплатная ведомость</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Октябрь 2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20">Требует правки</span></td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Марина Иванова</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">15.11.2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16l:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
+                            <td class="p-4 align-middle text-sm">Restoran Balkan</td>
+                            <td class="p-4 align-middle text-sm">Зарплатная ведомость</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">Октябрь 2024</td>
+                            <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-warning/10 text-warning border-warning/20">Требует правки</span></td>
+                            <td class="p-4 align-middle text-sm">Марина Иванова</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">15.11.2024</td>
+                            <td class="p-4 align-middle"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16l:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
                                         <circle cx="12" cy="12" r="1"></circle>
                                         <circle cx="19" cy="12" r="1"></circle>
                                         <circle cx="5" cy="12" r="1"></circle>
                                     </svg></button></td>
                         </tr>
                         <tr class="border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            <td class="p-4 align-middle">
                                 <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 text-destructive">
                                         <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                         <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -133,20 +133,20 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">MediCare Plus</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Договор</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Проверен</span></td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ирина Новикова</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">10.11.2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16n:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
+                            <td class="p-4 align-middle text-sm">MediCare Plus</td>
+                            <td class="p-4 align-middle text-sm">Договор</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">2024</td>
+                            <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Проверен</span></td>
+                            <td class="p-4 align-middle text-sm">Ирина Новикова</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">10.11.2024</td>
+                            <td class="p-4 align-middle"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16n:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
                                         <circle cx="12" cy="12" r="1"></circle>
                                         <circle cx="19" cy="12" r="1"></circle>
                                         <circle cx="5" cy="12" r="1"></circle>
                                     </svg></button></td>
                         </tr>
                         <tr class="border-b data-[state=selected]:bg-muted hover:bg-secondary/30 transition-colors cursor-pointer">
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            <td class="p-4 align-middle">
                                 <div class="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4 w-4 text-destructive">
                                         <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                                         <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -160,13 +160,13 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">BuildPro Construccije</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Налоговая декларация</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">Q3 2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Проверен</span></td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm">Ольга Сидорова</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-sm text-muted-foreground">28.10.2024</td>
-                            <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16p:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
+                            <td class="p-4 align-middle text-sm">BuildPro Construccije</td>
+                            <td class="p-4 align-middle text-sm">Налоговая декларация</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">Q3 2024</td>
+                            <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border bg-success/10 text-success border-success/20">Проверен</span></td>
+                            <td class="p-4 align-middle text-sm">Ольга Сидорова</td>
+                            <td class="p-4 align-middle text-sm text-muted-foreground">28.10.2024</td>
+                            <td class="p-4 align-middle"><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    hover:bg-accent hover:text-accent-foreground h-8 w-8" type="button" id="radix-:r16p:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis h-4 w-4">
                                         <circle cx="12" cy="12" r="1"></circle>
                                         <circle cx="19" cy="12" r="1"></circle>
                                         <circle cx="5" cy="12" r="1"></circle>

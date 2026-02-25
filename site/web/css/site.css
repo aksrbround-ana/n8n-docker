@@ -123,3 +123,17 @@ a.desc:after {
 table.accountant-page td {
     color:grey;
 }
+
+div.document-view {
+    cursor: pointer;
+}
+
+button.sorting {
+    color: gray;
+}
+
+button.sorting:hover {
+    color: #444;
+    text-decoration: underline;
+}
+
