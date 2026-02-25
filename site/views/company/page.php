@@ -10,10 +10,10 @@ use app\services\SvgService;
         <div id="page-header" class="flex items-center gap-4">
             <div>
                 <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('companies', $user->lang) ?></h1>
-                <p class="text-muted-foreground mt-1"><?= count($companies) ?> <?= strtolower(DictionaryService::getWord('companies', $user->lang)) ?></p>
+                <p class="text-muted-foreground mt-1"><?= strtolower(DictionaryService::getWord('companies', $user->lang)) ?>: <span id="entity-count"><?= count($companies) ?></span></p>
             </div>
         </div>
-        <div id="company-filter-box" class="all-filter-box space-y-4">
+        <div id="company-filter-box" data-entity="company" class="all-filter-box space-y-4">
             <div class="flex items-center gap-3">
                 <div class="relative flex-1 max-w-md">
                     <div class="suggest-container">
@@ -34,7 +34,7 @@ use app\services\SvgService;
             </div>
             <div class="filter-box flex items-center gap-3 p-4 bg-secondary/50 rounded-lg animate-fade-in">
                 <?= DictionaryService::getWord('status', $user->lang) ?>
-                <select id="status-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="status-filters-select" data-field="status" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterStatus as $row) {
@@ -47,7 +47,7 @@ use app\services\SvgService;
                     ?>
                 </select>
                 <?= DictionaryService::getWord('responsibleAccountant', $user->lang) ?>
-                <select id="responsible-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-48">
+                <select id="responsible-filters-select" data-field="accountant" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-48">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterAccountant as $id => $row) {
@@ -66,7 +66,7 @@ use app\services\SvgService;
                     'openTasks' => DictionaryService::getWord('byOpenTasks', $user->lang),
                 ];
                 ?>
-                <select id="sorting-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-48">
+                <select id="sorting-filters-select" data-field="sort" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-48">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($sortOptions as $value => $label) {
@@ -84,7 +84,7 @@ use app\services\SvgService;
                 </button>
             </div>
         </div>
-        <div id="company-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div id="entity-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             <?= CompanyListWidget::widget(['user' => $user, 'companies' => $companies]) ?>
         </div>
     </div>

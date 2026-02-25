@@ -11,10 +11,10 @@ use app\services\SvgService;
         <div id="page-header" class="flex items-center gap-4">
             <div>
                 <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('tasks', $user->lang) ?></h1>
-                <p class="text-muted-foreground mt-1"><?= strtolower(DictionaryService::getWord('tasks', $user->lang)) ?>: <span id="tasksCount"><?= $total ?></span></p>
+                <p class="text-muted-foreground mt-1"><?= strtolower(DictionaryService::getWord('tasks', $user->lang)) ?>: <span id="entity-count"><?= $total ?></span></p>
             </div>
         </div>
-        <div class="all-filter-box space-y-4">
+        <div class="all-filter-box space-y-4" data-entity="task">
             <input type="hidden" class="sorting" data-field="category" value="none" />
             <input type="hidden" class="sorting" data-field="due_date" value="none" />
             <div class="flex items-center gap-3">
@@ -37,7 +37,7 @@ use app\services\SvgService;
             </div>
             <div class="filter-box flex flex-wrap items-center gap-3 p-4 bg-secondary/50 rounded-lg animate-fade-in">
                 <?= DictionaryService::getWord('companyName', $user->lang) ?>
-                <select id="companyName-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="companyName-filters-select" data-field="company" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     $current = $company;
@@ -50,7 +50,7 @@ use app\services\SvgService;
                     ?>
                 </select>
                 <?= DictionaryService::getWord('status', $user->lang) ?>
-                <select id="status-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="status-filters-select" data-field="status" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('taskStatusTodo', $user->lang) ?></option>
                     <?php
                     $current = $status;
@@ -69,7 +69,7 @@ use app\services\SvgService;
                     ?>
                 </select>
                 <?= DictionaryService::getWord('priority', $user->lang) ?>
-                <select id="priority-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="priority-filters-select" data-field="priority" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     $current = $priority;
@@ -86,7 +86,7 @@ use app\services\SvgService;
                 if (AuthService::hasPermission($user, 'viewAccountants')) {
                 ?>
                     <?= DictionaryService::getWord('assignedTo', $user->lang) ?>
-                    <select id="assignedTo-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                    <select id="assignedTo-filters-select" data-field="assignedTo" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                         <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                         <?php
                         $current = $assignedTo;
@@ -109,7 +109,7 @@ use app\services\SvgService;
         </div>
         <div class="space-y-4">
             <div class="border rounded-lg overflow-hidden">
-                <div id="task-list" class="relative w-full overflow-auto">
+                <div id="entity-list" class="relative w-full overflow-auto">
                     <?= TaskListWidget::widget(
                         [
                             'user' => $user,

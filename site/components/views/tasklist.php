@@ -114,7 +114,7 @@ foreach ($sorting as $sort) {
     if ($pages > 1) {
         for ($i = 1; $i <= $pages; $i++) {
     ?>
-            <button data-page="<?= $i ?>" class="task-page inline-block w-8 h-8 text-center leading-8 border rounded-md mx-1 <?= ($i == $page ? 'active bg-primary text-primary-foreground' : 'hover:bg-secondary')  ?>"><?= $i ?></button>
+            <button data-page="<?= $i ?>" class="page-btn inline-block w-8 h-8 text-center leading-8 border rounded-md mx-1 <?= ($i == $page ? 'active bg-primary text-primary-foreground' : 'hover:bg-secondary')  ?>"><?= $i ?></button>
     <?php
         }
     }
