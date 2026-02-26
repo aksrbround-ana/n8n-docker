@@ -10,10 +10,10 @@ use app\services\SvgService;
         <div id="page-header" class="flex items-center gap-4">
             <div>
                 <h1 class="text-2xl font-heading font-bold"><?= DictionaryService::getWord('documents', $user->lang) ?></h1>
-                <p class="text-muted-foreground mt-1"><span id="docsCount"><?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?>: <?= $total ?></span></p>
+                <p class="text-muted-foreground mt-1"><span id="entity-count"><?= strtolower(DictionaryService::getWord('documents', $user->lang)) ?>: <?= $total ?></span></p>
             </div>
         </div>
-        <div class="all-filter-box">
+        <div class="all-filter-box" data-entity="document">
             <div class="flex flex-wrap items-center gap-3">
                 <div class="relative flex-1 max-w-md">
                     <div class="suggest-container">
@@ -30,7 +30,7 @@ use app\services\SvgService;
             </div>
             <div class="filter-box flex items-center gap-3 p-4 bg-secondary/50 rounded-lg animate-fade-in">
                 <?= DictionaryService::getWord('companyName', $user->lang) ?>
-                <select id="companyName-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="companyName-filters-select" data-field="company" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterCompany as $company) {
@@ -42,7 +42,7 @@ use app\services\SvgService;
                     ?>
                 </select>
                 <?= DictionaryService::getWord('documentType', $user->lang) ?>
-                <select id="documentType-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="documentType-filters-select" data-field="type" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterDocumentType as $type) {
@@ -54,7 +54,7 @@ use app\services\SvgService;
                     ?>
                 </select>
                 <?= DictionaryService::getWord('status', $user->lang) ?>
-                <select id="status-filters-select" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1 w-40">
+                <select id="status-filters-select" data-field="status" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
                     <?php
                     foreach ($filterStatus as $row) {
@@ -74,7 +74,7 @@ use app\services\SvgService;
         </div>
     </div>
     <div class="border rounded-lg overflow-hidden">
-        <div id="doc-list" class="list-block relative w-full overflow-auto">
+        <div id="entity-list" class="list-block relative w-full overflow-auto">
             <?= DocListWidget::widget(['user' => $user, 'company' => null, 'documents' => $documents, 'filters' => $filters, 'total' => $total, 'limit' => $limit]); ?>
         </div>
     </div>

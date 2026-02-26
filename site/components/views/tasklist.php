@@ -13,21 +13,23 @@ $sortType =  'none';
 $sortTypeSign = SvgService::SORT_ARROW_NONE;
 $sortDueDate = 'none';
 $sortDueDateSign = SvgService::SORT_ARROW_NONE;
-foreach ($sorting as $sort) {
-    if ($sort['field'] == 'category') {
-        $sortType = $sort['value'];
-        $sortTypeSign = match ($sort['value']) {
-            'asc' => SvgService::SORT_ARROW_ASC,
-            'desc' => SvgService::SORT_ARROW_DESC,
-            default => SvgService::SORT_ARROW_NONE,
-        };
-    } elseif ($sort['field'] == 'due_date') {
-        $sortDueDate = $sort['value'];
-        $sortDueDateSign = match ($sort['value']) {
-            'asc' => SvgService::SORT_ARROW_ASC,
-            'desc' => SvgService::SORT_ARROW_DESC,
-            default => SvgService::SORT_ARROW_NONE,
-        };
+if ($sorting !== null && is_array($sorting)) {
+    foreach ($sorting as $sort) {
+        if ($sort['field'] == 'category') {
+            $sortType = $sort['value'];
+            $sortTypeSign = match ($sort['value']) {
+                'asc' => SvgService::SORT_ARROW_ASC,
+                'desc' => SvgService::SORT_ARROW_DESC,
+                default => SvgService::SORT_ARROW_NONE,
+            };
+        } elseif ($sort['field'] == 'due_date') {
+            $sortDueDate = $sort['value'];
+            $sortDueDateSign = match ($sort['value']) {
+                'asc' => SvgService::SORT_ARROW_ASC,
+                'desc' => SvgService::SORT_ARROW_DESC,
+                default => SvgService::SORT_ARROW_NONE,
+            };
+        }
     }
 }
 
@@ -114,7 +116,7 @@ foreach ($sorting as $sort) {
     if ($pages > 1) {
         for ($i = 1; $i <= $pages; $i++) {
     ?>
-            <button data-page="<?= $i ?>" class="task-page inline-block w-8 h-8 text-center leading-8 border rounded-md mx-1 <?= ($i == $page ? 'active bg-primary text-primary-foreground' : 'hover:bg-secondary')  ?>"><?= $i ?></button>
+            <button data-page="<?= $i ?>" class="page-btn inline-block w-8 h-8 text-center leading-8 border rounded-md mx-1 <?= ($i == $page ? 'active bg-primary text-primary-foreground' : 'hover:bg-secondary')  ?>"><?= $i ?></button>
     <?php
         }
     }

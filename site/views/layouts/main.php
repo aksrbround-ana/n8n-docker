@@ -33,6 +33,7 @@ $centrifugoUrl = getenv('CENTRIFUGO_URL');
     <?php
     $this->registerJsFile('@web/js/jquery.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
     $this->registerJsFile('@web/js/index.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $this->registerJsFile('@web/js/search.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
     $this->registerJsFile('@web/js/reminder.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
     $this->registerJsFile('@web/js/dictionary.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
     $this->registerJsFile('@web/js/modal.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
