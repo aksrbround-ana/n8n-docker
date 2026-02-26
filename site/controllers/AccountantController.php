@@ -260,4 +260,46 @@ class AccountantController extends BaseController
             return $this->renderLogout();
         }
     }
+
+    public function actionDelete()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $viewer = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($viewer->isValid()) {
+            if (AuthService::hasPermission($viewer, AuthService::PERMISSION_VIEW_ACCOUNTANTS)) {
+                $id = $request->post('id');
+                $accountant = Accountant::findOne($id);
+                $response = \Yii::$app->response;
+                $response->format = Response::FORMAT_JSON;
+                $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+                if ($accountant) {
+                    $accountant->delete();
+                    $response->data = [
+                        'status' => 'success',
+                        'code' => 200,
+                    ];
+                } else {
+                    $response->data = [
+                        'status' => 'error',
+                        'code' => 404,
+                        'message' => 'Accountant not found',
+                    ];
+                }
+                return $response;
+            } else {
+                $response = \Yii::$app->response;
+                $response->format = Response::FORMAT_JSON;
+                $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+                $response->data = [
+                    'status' => 'error',
+                    'code' => 403,
+                    'message' => 'You have no permissions'
+                ];
+            }
+        } else {
+            return $this->renderLogout();
+        }
+    }
 }
