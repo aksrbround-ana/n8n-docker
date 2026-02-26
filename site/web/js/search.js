@@ -1,87 +1,87 @@
+function collectDataForSearch(withPage = false) {
+    const user = getUser();
+    const token = user ? user?.token : '';
+    let filterBox = $('div.all-filter-box');
+    const entity = $(filterBox).data('entity');
+    let data = {
+        entity: entity,
+        token: token,
+    };
+    data.name = $('#search').val();
+    $(filterBox).find('select').each(function () {
+        let key = $(this).data('field');
+        let value = $(this).val();
+        if (value != '') {
+            data[key] = value;
+        }
+    });
+
+    let sorting = [];
+    $(filterBox).find('input.sorting[value!=none]').each(function () {
+        let field = $(this).data('field');
+        let value = $(this).val();
+        let sortObj = {
+            field: field,
+            value: value
+        }
+        sorting.push(sortObj);
+    });
+    data.sorting = sorting;
+
+    if (withPage) {
+        if (withPage === true) {
+            withPage = $('div.pagination button.page-btn.active').data('page') || 1;
+        }
+        data.page = withPage;
+    }
+
+    return data;
+}
+
+function loadEntities(withPage = false) {
+    let data = collectDataForSearch(withPage);
+    let url = '/' + data.entity + '/filter';
+    delete data.entity;
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        success: function (response) {
+            if (response.status === 'success') {
+                $('#entity-list').html(response.data);
+                $('#entity-count').text(response.count);
+            } else if (response.status === 'logout') {
+                clearUser();
+                loadContent();
+            } else {
+                showError('Error', response.message ?? '');
+            }
+        },
+        error: function (e) {
+            showError('Error', e);
+        },
+        type: 'json'
+    });
+}
+
+function setSearchHistory() {
+    let data = collectDataForSearch(true);
+    let url = '/' + data.entity + '/filter';
+    let entity = data.entity
+    delete data.entity;
+    let itemHistory = {
+        url: '/' + entity + '/page',
+        data: data
+    }
+    clearPageHistory(1);
+    addPageHistory(itemHistory);
+}
+
+//=========================================================================
+//  Handlers
+//=========================================================================
+
 $(document).ready(function () {
-
-    function collectDataForSearch(withPage = false) {
-        const user = getUser();
-        const token = user ? user?.token : '';
-        let filterBox = $('div.all-filter-box');
-        const entity = $(filterBox).data('entity');
-        let data = {
-            entity: entity,
-            token: token,
-        };
-        data.name = $('#search').val();
-        $(filterBox).find('select').each(function () {
-            let key = $(this).data('field');
-            let value = $(this).val();
-            if (value != '') {
-                data[key] = value;
-            }
-        });
-
-        let sorting = [];
-        $(filterBox).find('input.sorting[value!=none]').each(function () {
-            let field = $(this).data('field');
-            let value = $(this).val();
-            let sortObj = {
-                field: field,
-                value: value
-            }
-            sorting.push(sortObj);
-        });
-        data.sorting = sorting;
-
-        if (withPage) {
-            if (withPage === true) {
-                withPage = $('div.pagination button.page-btn.active').data('page') || 1;
-            }
-            data.page = withPage;
-        }
-
-        return data;
-    }
-
-    function loadEntities(withPage = false) {
-        let data = collectDataForSearch(withPage);
-        let url = '/' + data.entity + '/filter';
-        delete data.entity;
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: data,
-            success: function (response) {
-                if (response.status === 'success') {
-                    $('#entity-list').html(response.data);
-                    $('#entity-count').text(response.count);
-                } else if (response.status === 'logout') {
-                    clearUser();
-                    loadContent();
-                } else {
-                    showError('Error', response.message ?? '');
-                }
-            },
-            error: function (e) {
-                showError('Error', e);
-            },
-            type: 'json'
-        });
-    }
-
-    function setSearchHistory() {
-        let data = collectDataForSearch(true);
-        let url = '/' + data.entity + '/filter';
-        let entity = data.entity
-        delete data.entity;
-        let itemHistory = {
-            url: '/' + entity + '/page',
-            data: data
-        }
-        clearPageHistory(1);
-        addPageHistory(itemHistory);
-    }
-
-    //=========================================================================
-    //  Handlers
-    //=========================================================================
 
     $(document).on('click', 'button.reset-filters-button', function (e) {
         $('#search').val('');

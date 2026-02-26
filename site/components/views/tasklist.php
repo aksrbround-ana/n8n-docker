@@ -13,21 +13,23 @@ $sortType =  'none';
 $sortTypeSign = SvgService::SORT_ARROW_NONE;
 $sortDueDate = 'none';
 $sortDueDateSign = SvgService::SORT_ARROW_NONE;
-foreach ($sorting as $sort) {
-    if ($sort['field'] == 'category') {
-        $sortType = $sort['value'];
-        $sortTypeSign = match ($sort['value']) {
-            'asc' => SvgService::SORT_ARROW_ASC,
-            'desc' => SvgService::SORT_ARROW_DESC,
-            default => SvgService::SORT_ARROW_NONE,
-        };
-    } elseif ($sort['field'] == 'due_date') {
-        $sortDueDate = $sort['value'];
-        $sortDueDateSign = match ($sort['value']) {
-            'asc' => SvgService::SORT_ARROW_ASC,
-            'desc' => SvgService::SORT_ARROW_DESC,
-            default => SvgService::SORT_ARROW_NONE,
-        };
+if ($sorting !== null && is_array($sorting)) {
+    foreach ($sorting as $sort) {
+        if ($sort['field'] == 'category') {
+            $sortType = $sort['value'];
+            $sortTypeSign = match ($sort['value']) {
+                'asc' => SvgService::SORT_ARROW_ASC,
+                'desc' => SvgService::SORT_ARROW_DESC,
+                default => SvgService::SORT_ARROW_NONE,
+            };
+        } elseif ($sort['field'] == 'due_date') {
+            $sortDueDate = $sort['value'];
+            $sortDueDateSign = match ($sort['value']) {
+                'asc' => SvgService::SORT_ARROW_ASC,
+                'desc' => SvgService::SORT_ARROW_DESC,
+                default => SvgService::SORT_ARROW_NONE,
+            };
+        }
     }
 }
 
