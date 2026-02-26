@@ -1345,6 +1345,10 @@ $(document).on('click', 'button.sorting', function (e) {
   getTaskList(page);
 });
 
+$(document).on('click', '#accountant-company-button', function (e) {
+  
+});
+
 
 // ----------------------------------------------------
 //                Resize Debounce

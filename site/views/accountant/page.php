@@ -28,8 +28,12 @@ use app\services\SvgService;
                 </tbody>
             </table>
             <button id="accountant-edit-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" data-id="<?= $accountant->id ?>">
-                <?= SvgService::svg('edit') ?>
+                <?= SvgService::svg('edit2') ?>
                 <?= DictionaryService::getWord('edit', $user->lang) ?>
+            </button>
+            <button id="accountant-company-button" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" data-id="<?= $accountant->id ?>">
+                <?= SvgService::svg('list') ?>
+                <?= DictionaryService::getWord('companies', $user->lang) ?>
             </button>
         </div>
     </div>
