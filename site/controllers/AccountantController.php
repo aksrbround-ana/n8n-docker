@@ -2,8 +2,11 @@
 
 namespace app\controllers;
 
+use yii\db\Query;
+use yii\db\Expression;
 use yii\web\Response;
 use app\models\Accountant;
+use app\models\CompanyAccountant;
 use app\models\Task;
 use app\services\AuthService;
 
@@ -298,6 +301,109 @@ class AccountantController extends BaseController
                     'message' => 'You have no permissions'
                 ];
             }
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionCompanyList()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $viewer = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($viewer->isValid()) {
+            $id = $request->post('id');
+
+            $companyQuery = (new Query())
+                ->select([
+                    'c.id',
+                    'c."name"',
+                    'count' => new Expression('count(ca.id)')
+                ])
+                ->from('company c')
+                ->leftJoin('company_accountant ca', 'ca.company_id = c.id AND ca.accountant_id = :aid', [':aid' => $id])
+                ->orderBy('c."name"')
+                ->groupBy(['c.id', 'c."name"']);
+
+            $companies = $companyQuery->all();
+            if (empty($companies)) {
+                $companies = [];
+            }
+
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            $response->data = [
+                'status' => 'success',
+                'code' => 200,
+                'data' => [
+                    'list' => $companies
+                ]
+            ];
+            return $response;
+        } else {
+            return $this->renderLogout();
+        }
+    }
+
+    public function actionUpdateCompany()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $viewer = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($viewer->isValid()) {
+            $id = $request->post('reminder_id');
+            $checkedCompanies = $request->post('checked_companies');
+            $uncheckedCompanies = $request->post('uncheked_companies');
+            $accountant = Accountant::findOne($id);
+            $response = \Yii::$app->response;
+            $response->format = Response::FORMAT_JSON;
+            $response->headers->set('Content-Type', 'application/json; charset=UTF-8');
+            if ($accountant) {
+                if (!empty($uncheckedCompanies)) {
+                    CompanyAccountant::deleteAll([
+                        'accountant_id' => $id,
+                        'company_id' => $uncheckedCompanies,
+                    ]);
+                }
+                $n = 0;
+                $errors = [];
+                if (!empty($checkedCompanies)) {
+                    for ($i = 0; $i < count($checkedCompanies); $i++) {
+                        $companyId = (int) $checkedCompanies[$i];
+                        $ps = CompanyAccountant::find()->where(['company_id' => $companyId, 'accountant_id' => $id])->count();
+                        if ($ps > 0) {
+                            $n++;
+                            continue;
+                        }
+                        $newLink = new CompanyAccountant();
+                        $newLink->company_id = $companyId;
+                        $newLink->accountant_id = $id;
+                        $r = $newLink->save();
+                        if (!$r) {
+                            $errors[] = $newLink->getErrors();
+                        } else {
+                            $n++;
+                        }
+                    }
+                }
+                $response->data = [
+                    'status' => 'success',
+                    'code' => 200,
+                    'message' => 'Reminders updated successfully.',
+                    'n' => $n,
+                    'errors' => $errors,
+                ];
+            } else {
+                $response->data = [
+                    'status' => 'error',
+                    'code' => 404,
+                    'message' => 'Accountant not found',
+                ];
+            }
+            return $response;
         } else {
             return $this->renderLogout();
         }

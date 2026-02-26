@@ -1035,6 +1035,16 @@ $(document).on('click', '#save-user', function (e) {
   return false;
 });
 
+$(document).on('click', '#accountant-company-button', function (e) {
+  let id = $(this).data('item-id');
+  const title = $(this).closest('tr').find('.calendar-text').text();
+  const type = $(this).data('type');
+  companyListModal = new Modal('modal-overlay', title);
+  companyListModal.setDoUrl('/accountant/update-company/');
+  loadCompanyListModal(id, '/accountant/company-list', makeCompanyListTr, type);
+  companyListModal.open(this);
+});
+
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------
