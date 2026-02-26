@@ -66,11 +66,25 @@ function loadEntities(withPage = false) {
 
 function setSearchHistory() {
     let data = collectDataForSearch(true);
-    let url = '/' + data.entity + '/filter';
-    let entity = data.entity
-    delete data.entity;
+    let entity = data.entity;
+    let url;
+    let pageHistory = localStorage.getItem('pageHistory');
+    pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
+    if (entity) {
+        if (pageHistory.length > 1) {
+            url = '/' + entity + '/filter';
+        } else {
+            url = pageHistory[pageHistory.length - 1].url;
+        }
+        delete data.entity;
+    } else {
+        if (pageHistory.length > 0) {
+            url = pageHistory[pageHistory.length - 1].url;
+            data = pageHistory[pageHistory.length - 1].data;
+        }
+    }
     let itemHistory = {
-        url: '/' + entity + '/page',
+        url: url,
         data: data
     }
     clearPageHistory(1);
