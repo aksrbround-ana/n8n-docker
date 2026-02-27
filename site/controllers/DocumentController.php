@@ -58,13 +58,6 @@ class DocumentController extends BaseController
     public function getDataForPage($accountant, $filters = [], $back = false)
     {
         $docsQuery = $this->getDocumentQuery($accountant, $filters);
-        if ($accountant->rule !== 'ceo') {
-            $docsQuery
-                ->leftJoin(['td' => TaskDocument::tableName()], 'documents.id = td.document_id')
-                ->leftJoin(['t' => Task::tableName()], 'td.task_id = t.id')
-                ->leftJoin(['a' => Accountant::tableName()], 't.accountant_id = a.id')
-                ->where('t.accountant_id = :accountant_id', ['accountant_id' => $accountant->id]);
-        }
         $total = $docsQuery->count();
         $page = $filters['page'] ?? 1;
         $offset = ($page - 1) * self::PAGE_LENGTH;
