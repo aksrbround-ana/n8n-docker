@@ -133,23 +133,35 @@ services:
       retries: 3
       start_period: 60s
 
-  centrifugo:
-    build:
-      context: ./centrifugo
-      dockerfile: Dockerfile
-    # image: centrifugo/centrifugo:latest
-    container_name: centrifugo
+  bge-reranker:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.2
+    container_name: bge-reranker
+    # labels:
+    #   - "traefik.enable=true"
+    #   # HTTP маршрут
+    #   - "traefik.http.routers.reranker.rule=Host(`reranker.${DOMAIN}`)"
+    #   - "traefik.http.routers.reranker.entrypoints=websecure"
+    #   - "traefik.http.routers.reranker.tls.certresolver=letsencrypt"
+    #   # Service для маршрутизации трафика
+    #   - "traefik.http.services.reranker.loadbalancer.server.port=80"
+    #   # Опционально: добавляем basic auth (замените на ваш)
+    #   # - "traefik.http.routers.reranker.middlewares=reranker-auth"
+    #   # - "traefik.http.middlewares.reranker-auth.basicauth.users=user:$$apr1$$r8NUwDBN$$HqJZimcKQFAMYayBlzkrm/"
+    environment:
+      MODEL_ID: BAAI/bge-reranker-v2-m3
+      # Раскомментируйте если есть GPU:
+      # CUDA_VISIBLE_DEVICES: "0"
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/info"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
     networks:
-      - web # общая сеть с traefik
-    ports:
-      - "8000:8000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.centrifugo.rule=Host(`${CENTRIFUGO_SUBDOMAIN}.${DOMAIN_NAME}`)"
-      - "traefik.http.routers.centrifugo.entrypoints=websecure"
-      - "traefik.http.routers.centrifugo.tls.certresolver=myresolver"
-      - "traefik.http.services.centrifugo.loadbalancer.server.port=8000"
-
+      - web 
   php-site:
     build:
       context: .
@@ -215,3 +227,4 @@ volumes:
     external: true
     name: n8n_n8n_data
   pgadmin_data:
+  huggingface_cache:
