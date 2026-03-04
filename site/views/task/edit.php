@@ -16,12 +16,12 @@ use app\services\SvgService;
             <tbody class="">
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('taskCategory', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle"><input type="text" name="category" value="<?= $task->category ?>" class"rounded-md border border-input bg-background" class="w-full rounded-md border border-input bg-background" style="width:100%;" /></td>
+                    <td class="p-4 text-left align-middle"><input type="text" name="category" value="<?= $task->category ?>" class="edit full" style="width:100%;" /></td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('taskDetails', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle">
-                        <textarea name="request" class="w-full rounded-md border border-input bg-background" style="border: solid 1px gray;"><?= $task->request ?></textarea>
+                        <textarea name="request" class="edit full"><?= $task->request ?></textarea>
                     </td>
                 </tr>
                 <tr class="border-b">
@@ -67,7 +67,7 @@ use app\services\SvgService;
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('dueDate', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle">
-                        <input type="date" name="due_date" value="<?= $task->due_date ? explode(' ', $task->due_date)[0] : '' ?>" class="rounded-md border border-input bg-background" />
+                        <input type="date" name="due_date" value="<?= $task->due_date ? explode(' ', $task->due_date)[0] : '' ?>" class="edit" />
                         <input type="hidden" name="due_date_time" value="<?= $task->due_date ?>" />
                     </td>
                 </tr>
