@@ -1,6 +1,6 @@
 <?php
 
-use app\components\SettingsCalendarWidget;
+use app\widgets\SettingsCalendarWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
 

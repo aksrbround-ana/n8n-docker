@@ -1,6 +1,6 @@
 <?php
 
-use app\components\SelectWidget;
+use app\widgets\SelectWidget;
 use app\models\Task;
 use app\services\DictionaryService;
 use app\services\SvgService;

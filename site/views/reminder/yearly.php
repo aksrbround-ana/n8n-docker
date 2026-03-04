@@ -1,6 +1,6 @@
 <?php
 
-use app\components\RemindersYearlyTableWidget;
+use app\widgets\RemindersYearlyTableWidget;
 use app\services\DictionaryService;
 
 ?>

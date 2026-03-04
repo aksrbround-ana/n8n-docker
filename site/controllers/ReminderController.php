@@ -3,12 +3,12 @@
 namespace app\controllers;
 
 use yii\db\Query;
-use app\components\ReminderCreateUpdateContentWidget;
-use app\components\ReminderOneTimeTableRowWidget;
-use app\components\ReminderRegTableRowWidget;
-use app\components\ReminderYearlyTableRowWidget;
-use app\components\SettingsCalendarBodyWidget;
-use app\components\SettingsCalendarWidget;
+use app\widgets\ReminderCreateUpdateContentWidget;
+use app\widgets\ReminderOneTimeTableRowWidget;
+use app\widgets\ReminderRegTableRowWidget;
+use app\widgets\ReminderYearlyTableRowWidget;
+use app\widgets\SettingsCalendarBodyWidget;
+use app\widgets\SettingsCalendarWidget;
 use app\models\Accountant;
 use app\models\Company;
 use app\models\ReminderOneTime;

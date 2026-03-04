@@ -1,6 +1,6 @@
 <?php
 
-use app\components\DocListWidget;
+use app\widgets\DocListWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
 

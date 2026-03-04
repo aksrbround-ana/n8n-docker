@@ -1,6 +1,6 @@
 <?php
 
-use app\components\RemindersRegTableWidget;
+use app\widgets\RemindersRegTableWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
 

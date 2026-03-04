@@ -4,8 +4,8 @@ namespace app\controllers;
 
 use yii\web\Response;
 use yii\db\Query;
-use app\components\DocViewActivityWidget;
-use app\components\DocListWidget;
+use app\widgets\DocViewActivityWidget;
+use app\widgets\DocListWidget;
 use app\models\Accountant;
 use app\models\Company;
 use app\models\Document;

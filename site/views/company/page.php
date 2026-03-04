@@ -1,6 +1,6 @@
 <?php
 
-use app\components\CompanyListWidget;
+use app\widgets\CompanyListWidget;
 use app\services\DictionaryService;
 use app\services\SvgService;
 

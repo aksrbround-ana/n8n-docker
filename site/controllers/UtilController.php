@@ -2,7 +2,7 @@
 
 namespace app\controllers;
 
-use app\components\ButtonBackWidget;
+use app\widgets\ButtonBackWidget;
 use app\models\Accountant;
 use Yii;
 use yii\web\NotFoundHttpException;

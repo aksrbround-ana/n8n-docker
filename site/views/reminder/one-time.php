@@ -1,7 +1,7 @@
 <?php
 
-use app\components\RemindersOneTimeTableWidget;
-use app\components\RemindersYearlyTableWidget;
+use app\widgets\RemindersOneTimeTableWidget;
+use app\widgets\RemindersYearlyTableWidget;
 use app\services\DictionaryService;
 
 ?>

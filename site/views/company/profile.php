@@ -1,12 +1,12 @@
 <?php
 
 use app\services\DictionaryService;
-use app\components\TaskListWidget;
-use app\components\DocListWidget;
-use app\components\CompanyNotesWidget;
-use app\components\CompanyChatWidget;
-use app\components\CompanyRemindersListWidget;
-use app\components\CompanyTopWidget;
+use app\widgets\TaskListWidget;
+use app\widgets\DocListWidget;
+use app\widgets\CompanyNotesWidget;
+use app\widgets\CompanyChatWidget;
+use app\widgets\CompanyRemindersListWidget;
+use app\widgets\CompanyTopWidget;
 use app\services\SvgService;
 
 /**

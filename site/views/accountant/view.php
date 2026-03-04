@@ -1,6 +1,6 @@
 <?php
 
-use app\components\TaskListWidget;
+use app\widgets\TaskListWidget;
 use app\services\DictionaryService;
 
 ?>

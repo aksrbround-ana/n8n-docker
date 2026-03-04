@@ -1,6 +1,6 @@
 <?php
 
-use app\components\TaskListWidget;
+use app\widgets\TaskListWidget;
 use app\services\AuthService;
 use app\services\DictionaryService;
 use app\services\SvgService;

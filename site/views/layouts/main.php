@@ -4,9 +4,9 @@
 /** @var string $content */
 
 use app\assets\AppAsset;
-use app\components\ModalCreateRegReminderWidget;
-use app\components\ModalEditCalendarWidget;
-use app\components\ModalWindowWidget;
+use app\widgets\ModalCreateRegReminderWidget;
+use app\widgets\ModalEditCalendarWidget;
+use app\widgets\ModalWindowWidget;
 
 AppAsset::register($this);
 $this->registerCsrfMetaTags();
