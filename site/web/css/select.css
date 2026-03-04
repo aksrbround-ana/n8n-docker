@@ -48,6 +48,8 @@
 /* Когда селект открыт — показываем список */
 .select-widget.open .select-widget-options {
     display: block;
+    max-height: 20em;
+    overflow-y: auto;
 }
 
 .select-widget-option {
