@@ -60,7 +60,7 @@ class CompanyRemindersListWidget extends Widget
         $on2Schedule = [
             ReminderSchedule::tableName() . '.template_id = ' . ReminderYearly::tableName() . '.id',
             ReminderSchedule::tableName() . '.company_id = ' . $this->company->id,
-            ReminderSchedule::tableName() . '.type = \'' . ReminderSchedule::TYPE_REGULAR . '\'',
+            ReminderSchedule::tableName() . '.type = \'' . ReminderSchedule::TYPE_YEARLY . '\'',
             ReminderSchedule::tableName() . '.target_month = \'' . date('Y-m') . '-01\'',
         ];
         $yearlyRemindersQuery = (new Query())
@@ -92,9 +92,11 @@ class CompanyRemindersListWidget extends Widget
         $on2Schedule = [
             ReminderSchedule::tableName() . '.template_id = ' . ReminderOneTime::tableName() . '.id',
             ReminderSchedule::tableName() . '.company_id = ' . $this->company->id,
-            ReminderSchedule::tableName() . '.type = \'' . ReminderSchedule::TYPE_REGULAR . '\'',
+            ReminderSchedule::tableName() . '.type = \'' . ReminderSchedule::TYPE_ONE_TIME . '\'',
             ReminderSchedule::tableName() . '.target_month = \'' . date('Y-m') . '-01\'',
         ];
+        $start = date('Y-m-01');
+        $end   = date('Y-m-t');
         $onetimeRemindersQuery = (new Query())
             ->select([
                 'reminder_id' => ReminderOneTime::tableName() . '.id',
@@ -114,6 +116,7 @@ class CompanyRemindersListWidget extends Widget
             ->from(ReminderOneTime::tableName())
             ->leftJoin(ReminderOnetimeCompany::tableName(), implode(' AND ', $on2Company))
             ->leftJoin(ReminderSchedule::tableName(), implode(' AND ', $on2Schedule))
+            ->where(['between', 'deadline', $start, $end])
             ->orderBy([ReminderOneTime::tableName() . '.deadline' => SORT_ASC]);
 
         $taxCalendarRemindersQuery = (new Query())
