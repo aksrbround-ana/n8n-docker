@@ -4,7 +4,7 @@ $(document).ready(function () {
         var $input = $(this);
         var query = $input.val().trim();
         var $suggestions = $('#suggestions');
-        var $hiddenId = $('#selected_id');
+        // var $hiddenId = $('#selected_id');
         let typeQuery = $(this).data('type');
         let token = getUser().token;
 
@@ -64,7 +64,7 @@ $(document).ready(function () {
     });
 
     // ================== Навигация с клавиатуры ==================
-    $(document).on('keydown', '#search', function(e) {
+    $(document).on('keydown', '#search', function (e) {
         var $input = $(this);
         var $suggestions = $('#suggestions');
 

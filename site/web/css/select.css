@@ -62,3 +62,8 @@
     background: #3498db;
     color: #fff;
 }
+
+.select-widget-option.selected {
+    background: #3498db;
+    color: #fff;
+}

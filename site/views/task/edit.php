@@ -16,17 +16,17 @@ use app\services\SvgService;
             <tbody class="">
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('taskCategory', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle "><input type="text" name="category" value="<?= $task->category ?>" class"rounded-md border border-input bg-background" class="w-full rounded-md border border-input bg-background" style="width:100%;" /></td>
+                    <td class="p-4 text-left align-middle"><input type="text" name="category" value="<?= $task->category ?>" class"rounded-md border border-input bg-background" class="w-full rounded-md border border-input bg-background" style="width:100%;" /></td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('taskDetails', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle ">
+                    <td class="p-4 text-left align-middle">
                         <textarea name="request" class="w-full rounded-md border border-input bg-background" style="border: solid 1px gray;"><?= $task->request ?></textarea>
                     </td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('status', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle ">
+                    <td class="p-4 text-left align-middle">
                         <?php
                         $options = [];
                         foreach ($statuses as $status) {
@@ -46,7 +46,7 @@ use app\services\SvgService;
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('priority', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle ">
+                    <td class="p-4 text-left align-middle">
                         <?php
                         $options = [];
                         foreach ($priorities as $priority) {
@@ -66,14 +66,14 @@ use app\services\SvgService;
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('dueDate', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle ">
+                    <td class="p-4 text-left align-middle">
                         <input type="date" name="due_date" value="<?= $task->due_date ? explode(' ', $task->due_date)[0] : '' ?>" class="rounded-md border border-input bg-background" />
                         <input type="hidden" name="due_date_time" value="<?= $task->due_date ?>" />
                     </td>
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('company', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle ">
+                    <td class="p-4 text-left align-middle">
                         <?php
                         $options = [];
                         foreach ($companies as $company) {
@@ -93,7 +93,7 @@ use app\services\SvgService;
                 </tr>
                 <tr class="border-b">
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('accountant', $user->lang) ?></th>
-                    <td class="p-4 text-left align-middle ">
+                    <td class="p-4 text-left align-middle">
                         <?php
                         $options = [];
                         foreach ($accountants as $accountant) {

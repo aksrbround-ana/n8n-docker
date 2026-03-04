@@ -19,7 +19,8 @@ foreach ($options as $option) {
 ?>
 <div id="<?= $id ?>" class="select-widget-wrapper">
     <input type="hidden" class="select-widget-value" value="<?= $selected ?>" />
-    <div class="select-widget">
+    <input type="hidden" class="select-widget-input" value="" />
+    <div class="select-widget" tabindex="0">
         <div class="select-widget-trigger"><?= $selectedStr ?></div>
         <div class="select-widget-options">
             <?php foreach ($options as $option): ?>
