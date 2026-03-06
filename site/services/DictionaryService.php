@@ -206,6 +206,12 @@ class DictionaryService
             'taskTypeReconciliation' =>  'Сверка',
             'taskTypeOther' =>  'Другое',
 
+            // Task errors
+            'categoryIsRequired'=> 'Категория обязательна',
+            'dueDateIsRequired'=>'Срок обязателен',
+            'companyIsRequired'=>'Компания обязательна',
+            'accountantIsRequired'=>'Ответственный обязателен',
+
             // Priorities
             'priorityLow' =>  'Низкий',
             'priorityNormal' =>  'Обычный',
@@ -526,6 +532,12 @@ class DictionaryService
             'taskTypeReconciliation' =>  'Usaglašavanje',
             'taskTypeOther' =>  'Ostalo',
 
+            // Task errors
+            'categoryIsRequired'=> 'Kategorija je obavezna',
+            'dueDateIsRequired'=>'Rok je obavezan',
+            'companyIsRequired'=>'Kompanija je obavezna',
+            'accountantIsRequired'=>'Potreban je odgovoran računovođa',
+
             // Priorities
             'priorityLow' =>  'Nizak',
             'priorityNormal' =>  'Normalan',
@@ -844,6 +856,12 @@ class DictionaryService
             'taskTypeAnnualReport' =>  'Annual Report',
             'taskTypeReconciliation' =>  'Reconciliation',
             'taskTypeOther' =>  'Other',
+
+            // Task errors
+            'categoryIsRequired'=> 'Category is required',
+            'dueDateIsRequired'=>'Due date is required',
+            'companyIsRequired'=>'Company is required',
+            'accountantIsRequired'=>'Accountants is required',
 
             // Priorities
             'priorityLow' =>  'Low',

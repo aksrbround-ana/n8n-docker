@@ -140,7 +140,7 @@ button.sorting:hover {
 
 textarea.edit,
 input.edit {
-    border-color: gray;
+    border-color: gray !important;
     border-style: solid;
     border-width: 1px;
     border-radius: 8px;
@@ -151,9 +151,16 @@ input.edit {
 textarea.edit:focus,
 input.edit:focus {
     border-width: 2px;
-    border-color: red;
+    border-color: #e14337 !important;
 }
 
 .full {
-    width: 100%;
+    width: 90%;
+}
+
+.error-input::before {
+    display: block;
+    content: "→";
+    color: #e14337;
+    font-weight: bold;
 }

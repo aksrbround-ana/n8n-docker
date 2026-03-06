@@ -19,14 +19,14 @@
 }
 
 .select-widget.open {
-    border-color: red;
+    border-color: #e14337;
     border-style: solid;
     border-width: 2px;
     padding: 2px;
 }
 
 .select-widget:focus {
-    border-color: red;
+    border-color: #e14337;
     border-style: solid;
     border-width: 2px;
     padding: 2px;
@@ -66,8 +66,8 @@
 }
 
 .select-widget-option:hover {
-    background: #3498db;
-    color: #fff;
+    background: #f0f0f0;
+    /* color: #fff; */
 }
 
 .select-widget-option.selected {
