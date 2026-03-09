@@ -635,7 +635,7 @@ class DictionaryService
             'thisMonthReminders' => 'Podsećanja za ovaj mesec',
             'loadTaxCalendarPage' => 'Učitaj stranicu poreskog kalendara',
             'editReminder' => 'Izmeni podsećanje',
-            'createRegReminder' => 'Kreiraj stalno podsećanje',
+            'createRegReminder' => 'Kreiraj redovno podsećanje',
             'createYearlyReminder' => 'Kreiraj godišnje podsećanje',
             'createOneTimeReminder' => 'Kreiraj jednokratno podsećanje',
             'topic' => 'Tema',
