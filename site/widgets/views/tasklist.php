@@ -1,6 +1,7 @@
 <?php
 
 use app\controllers\BaseController;
+use app\models\Company;
 use app\services\DictionaryService;
 use app\services\SvgService;
 
@@ -62,7 +63,7 @@ if ($sorting !== null && is_array($sorting)) {
 
         <?php
         foreach ($tasks as $task) {
-            $company = $task->getCompany();
+            $company = $task->getCompany() ?? (new Company());
         ?>
             <tr class="task-row border-b data-[state=selected]:bg-muted cursor-pointer hover:bg-secondary/50 transition-colors<?php if ($task->status == 'done') echo ' bg-destructive/5'; ?>" data-task-id="<?= $task->id ?>">
                 <td class="p-4 align-middle font-mono text-xs"><?= $task->id ?></td>

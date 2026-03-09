@@ -4,7 +4,7 @@ use app\services\DictionaryService;
 
 ?>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-card cursor-pointer" data-link="/company/page/back" data-count="<?= $data['clents'] ?>">
+    <div class="go-to-link rounded-xl border p-5 transition-shadow hover:shadow-md bg-card cursor-pointer" data-link="/company/page" data-count="<?= $data['clents'] ?>">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-sm text-muted-foreground font-medium"><?= DictionaryService::getWord('totalClients', $user->lang) ?></p>
