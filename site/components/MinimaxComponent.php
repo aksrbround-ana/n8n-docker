@@ -5,26 +5,27 @@ namespace app\components;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
-// use app\components\resources\MinimaxAccount;
-// use app\components\resources\MinimaxAnalytic;
-// use app\components\resources\MinimaxBankAccount;
-// use app\components\resources\MinimaxContact;
+use app\components\resources\MinimaxAccount;
+use app\components\resources\MinimaxAnalytic;
+use app\components\resources\MinimaxBankAccount;
+use app\components\resources\MinimaxContact;
 use app\components\resources\MinimaxCustomer;
-// use app\components\resources\MinimaxDocument;
+use app\components\resources\MinimaxDocument;
 use app\components\resources\MinimaxEFaktura;
-// use app\components\resources\MinimaxEmployee;
-// use app\components\resources\MinimaxInbox;
+use app\components\resources\MinimaxEmployee;
+use app\components\resources\MinimaxExchangeRate;
+use app\components\resources\MinimaxInbox;
 use app\components\resources\MinimaxIssuedInvoice;
-// use app\components\resources\MinimaxIssuedInvoicePosting;
-// use app\components\resources\MinimaxItem;
-// use app\components\resources\MinimaxJournal;
-// use app\components\resources\MinimaxOrder;
+use app\components\resources\MinimaxIssuedInvoicePosting;
+use app\components\resources\MinimaxItem;
+use app\components\resources\MinimaxJournal;
+use app\components\resources\MinimaxOrder;
 use app\components\resources\MinimaxOrganisation;
-// use app\components\resources\MinimaxOutbox;
-// use app\components\resources\MinimaxReceivedInvoice;
-// use app\components\resources\MinimaxStock;
-// use app\components\resources\MinimaxStockEntry;
-// use app\components\resources\MinimaxWarehouse;
+use app\components\resources\MinimaxOutbox;
+use app\components\resources\MinimaxReceivedInvoice;
+use app\components\resources\MinimaxStock;
+use app\components\resources\MinimaxStockEntry;
+use app\components\resources\MinimaxWarehouse;
 
 /**
  * MinimaxComponent — точка входа для работы с Minimax API.
@@ -120,100 +121,125 @@ class MinimaxComponent extends Component
         return $this->resource(MinimaxOrganisation::class);
     }
 
-    // public function account(int|string $orgId): MinimaxAccount
-    // {
-    //     return $this->resource(MinimaxAccount::class, $orgId);
-    // }
+    public function account(int|string $orgId): MinimaxAccount
+    {
+        return $this->resource(MinimaxAccount::class, $orgId);
+    }
 
-    // public function analytic(int|string $orgId): MinimaxAnalytic
-    // {
-    //     return $this->resource(MinimaxAnalytic::class, $orgId);
-    // }
+    public function analytic(int|string $orgId): MinimaxAnalytic
+    {
+        return $this->resource(MinimaxAnalytic::class, $orgId);
+    }
 
-    // public function bankAccount(int|string $orgId): MinimaxBankAccount
-    // {
-    //     return $this->resource(MinimaxBankAccount::class, $orgId);
-    // }
+    public function bankAccount(int|string $orgId, int|string $customerId): MinimaxBankAccount
+    {
+        $cacheKey = MinimaxBankAccount::class . ':' . $orgId . ':' . $customerId;
 
-    // public function contact(int|string $orgId): MinimaxContact
-    // {
-    //     return $this->resource(MinimaxContact::class, $orgId);
-    // }
+        if (!isset($this->_resources[$cacheKey])) {
+            $this->_resources[$cacheKey] = new MinimaxBankAccount(
+                $this->getClient(),
+                $orgId,
+                $customerId,
+            );
+        }
+
+        return $this->_resources[$cacheKey];
+    }
+
+    public function contact(int|string $orgId, int|string|null $customerId = null): MinimaxContact
+    {
+        $cacheKey = MinimaxContact::class . ':' . $orgId . ':' . $customerId;
+
+        if (!isset($this->_resources[$cacheKey])) {
+            $this->_resources[$cacheKey] = new MinimaxContact(
+                $this->getClient(),
+                $orgId,
+                $customerId,
+            );
+        }
+
+        return $this->_resources[$cacheKey];
+    }
 
     public function customer(int|string $orgId): MinimaxCustomer
     {
         return $this->resource(MinimaxCustomer::class, $orgId);
     }
 
-    // public function document(int|string $orgId): MinimaxDocument
-    // {
-    //     return $this->resource(MinimaxDocument::class, $orgId);
-    // }
+    public function document(int|string $orgId): MinimaxDocument
+    {
+        return $this->resource(MinimaxDocument::class, $orgId);
+    }
 
     public function eFaktura(int|string $orgId): MinimaxEFaktura
     {
         return $this->resource(MinimaxEFaktura::class, $orgId);
     }
 
-    // public function employee(int|string $orgId): MinimaxEmployee
-    // {
-    //     return $this->resource(MinimaxEmployee::class, $orgId);
-    // }
+    public function employee(int|string $orgId): MinimaxEmployee
+    {
+        return $this->resource(MinimaxEmployee::class, $orgId);
+    }
 
-    // public function inbox(int|string $orgId): MinimaxInbox
-    // {
-    //     return $this->resource(MinimaxInbox::class, $orgId);
-    // }
+    public function exchangeRate(int|string $orgId): MinimaxExchangeRate
+    {
+        return $this->resource(MinimaxExchangeRate::class, $orgId);
+    }
+
+    public function inbox(int|string $orgId): MinimaxInbox
+    {
+        return $this->resource(MinimaxInbox::class, $orgId);
+    }
 
     public function issuedInvoice(int|string $orgId): MinimaxIssuedInvoice
     {
         return $this->resource(MinimaxIssuedInvoice::class, $orgId);
     }
 
-    // public function issuedInvoicePosting(int|string $orgId): MinimaxIssuedInvoicePosting
-    // {
-    //     return $this->resource(MinimaxIssuedInvoicePosting::class, $orgId);
-    // }
+    public function issuedInvoicePosting(int|string $orgId): MinimaxIssuedInvoicePosting
+    {
+        return $this->resource(MinimaxIssuedInvoicePosting::class, $orgId);
+    }
 
-    // public function item(int|string $orgId): MinimaxItem
-    // {
-    //     return $this->resource(MinimaxItem::class, $orgId);
-    // }
+    public function item(int|string $orgId): MinimaxItem
+    {
+        return $this->resource(MinimaxItem::class, $orgId);
+    }
 
-    // public function journal(int|string $orgId): MinimaxJournal
-    // {
-    //     return $this->resource(MinimaxJournal::class, $orgId);
-    // }
+    public function journal(int|string $orgId): MinimaxJournal
+    {
+        return $this->resource(MinimaxJournal::class, $orgId);
+    }
 
-    // public function order(int|string $orgId): MinimaxOrder
-    // {
-    //     return $this->resource(MinimaxOrder::class, $orgId);
-    // }
+    public function order(int|string $orgId): MinimaxOrder
+    {
+        return $this->resource(MinimaxOrder::class, $orgId);
+    }
 
-    // public function outbox(int|string $orgId): MinimaxOutbox
-    // {
-    //     return $this->resource(MinimaxOutbox::class, $orgId);
-    // }
+    public function outbox(int|string $orgId): MinimaxOutbox
+    {
+        return $this->resource(MinimaxOutbox::class, $orgId);
+    }
 
-    // public function receivedInvoice(int|string $orgId): MinimaxReceivedInvoice
-    // {
-    //     return $this->resource(MinimaxReceivedInvoice::class, $orgId);
-    // }
+    public function receivedInvoice(int|string $orgId): MinimaxReceivedInvoice
+    {
+        return $this->resource(MinimaxReceivedInvoice::class, $orgId);
+    }
 
-    // public function stock(int|string $orgId): MinimaxStock
-    // {
-    //     return $this->resource(MinimaxStock::class, $orgId);
-    // }
+    public function stock(int|string $orgId): MinimaxStock
+    {
+        return $this->resource(MinimaxStock::class, $orgId);
+    }
 
-    // public function stockEntry(int|string $orgId): MinimaxStockEntry
-    // {
-    //     return $this->resource(MinimaxStockEntry::class, $orgId);
-    // }
+    public function stockEntry(int|string $orgId): MinimaxStockEntry
+    {
+        return $this->resource(MinimaxStockEntry::class, $orgId);
+    }
 
-    // public function warehouse(int|string $orgId): MinimaxWarehouse
-    // {
-    //     return $this->resource(MinimaxWarehouse::class, $orgId);
-    // }
+    public function warehouse(int|string $orgId): MinimaxWarehouse
+    {
+        return $this->resource(MinimaxWarehouse::class, $orgId);
+    }
 
     // -----------------------------------------------------------------
     // Прямой доступ к HTTP-клиенту (для нестандартных сценариев)
@@ -223,11 +249,11 @@ class MinimaxComponent extends Component
     {
         if ($this->_client === null) {
             $this->_client = new MinimaxHttpClient(
-                baseUrl:          $this->baseUrl,
-                clientId:         $this->clientId,
-                clientSecret:     $this->clientSecret,
-                username:         $this->username,
-                password:         $this->password,
+                baseUrl: $this->baseUrl,
+                clientId: $this->clientId,
+                clientSecret: $this->clientSecret,
+                username: $this->username,
+                password: $this->password,
                 tokenRefreshBuffer: $this->tokenRefreshBuffer,
             );
         }
@@ -274,7 +300,7 @@ class MinimaxComponent extends Component
             if (empty($this->$property)) {
                 throw new InvalidConfigException(
                     static::class . ": параметр «{$property}» обязателен. " .
-                    "Проверьте .env и config/main.php."
+                        "Проверьте .env и config/main.php."
                 );
             }
         }
