@@ -207,10 +207,10 @@ class DictionaryService
             'taskTypeOther' =>  'Другое',
 
             // Task errors
-            'categoryIsRequired'=> 'Категория обязательна',
-            'dueDateIsRequired'=>'Срок обязателен',
-            'companyIsRequired'=>'Компания обязательна',
-            'accountantIsRequired'=>'Ответственный обязателен',
+            'categoryIsRequired' => 'Категория обязательна',
+            'dueDateIsRequired' => 'Срок обязателен',
+            'companyIsRequired' => 'Компания обязательна',
+            'accountantIsRequired' => 'Ответственный обязателен',
 
             // Priorities
             'priorityLow' =>  'Низкий',
@@ -345,6 +345,7 @@ class DictionaryService
             'ru' => 'Русский',
             'no' => 'Нет',
             'dragDropCaption' => 'Для загрузки документа кликните здесь или перетащите файл',
+            'marked' => 'Отмечено',
 
             // Telegram chat
             'telegramChat' => 'Чат поддержки Telegram',
@@ -533,10 +534,10 @@ class DictionaryService
             'taskTypeOther' =>  'Ostalo',
 
             // Task errors
-            'categoryIsRequired'=> 'Kategorija je obavezna',
-            'dueDateIsRequired'=>'Rok je obavezan',
-            'companyIsRequired'=>'Kompanija je obavezna',
-            'accountantIsRequired'=>'Potreban je odgovoran računovođa',
+            'categoryIsRequired' => 'Kategorija je obavezna',
+            'dueDateIsRequired' => 'Rok je obavezan',
+            'companyIsRequired' => 'Kompanija je obavezna',
+            'accountantIsRequired' => 'Potreban je odgovoran računovođa',
 
             // Priorities
             'priorityLow' =>  'Nizak',
@@ -671,6 +672,7 @@ class DictionaryService
             'ru' => 'Ruski',
             'no' => 'Nema',
             'dragDropCaption' => 'Да бисте отпремили документ, кликните овде или превуците и испустите датотеку.',
+            'marked' => 'Označeno',
 
             // Telegram chat
             'telegramChat' => 'Telegram podrška ćaskanje',
@@ -858,10 +860,10 @@ class DictionaryService
             'taskTypeOther' =>  'Other',
 
             // Task errors
-            'categoryIsRequired'=> 'Category is required',
-            'dueDateIsRequired'=>'Due date is required',
-            'companyIsRequired'=>'Company is required',
-            'accountantIsRequired'=>'Accountants is required',
+            'categoryIsRequired' => 'Category is required',
+            'dueDateIsRequired' => 'Due date is required',
+            'companyIsRequired' => 'Company is required',
+            'accountantIsRequired' => 'Accountants is required',
 
             // Priorities
             'priorityLow' =>  'Low',
@@ -881,7 +883,7 @@ class DictionaryService
             'selectPeriod' =>  'Select Period',
             'selectDocType' =>  'Select Document Type',
             'selectOption' =>  'Select an option',
-            'documentSearch'=> 'Documents search…',
+            'documentSearch' => 'Documents search…',
 
             // Document types
             'docTypeUnknown' =>  'Unknown',
@@ -995,6 +997,7 @@ class DictionaryService
             'ru' => 'Russian',
             'no' => 'No',
             'dragDropCaption' => 'To upload a document, click here or drag and drop the file.',
+            'marked' => 'Marked',
 
             // Telegram chat
             'telegramChat' => 'Telegram Support Chat',
