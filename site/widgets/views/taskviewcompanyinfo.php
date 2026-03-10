@@ -1,9 +1,10 @@
 <?php
 
+use app\models\Company;
 use app\widgets\MakeTelegramLinkWidget;
 use app\services\DictionaryService;
 
-$company = $task->getCompany();
+$company = $task->getCompany() ?? (new Company());
 ?>
 <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
     <div class="flex flex-col space-y-1.5 p-6">

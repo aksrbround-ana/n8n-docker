@@ -17,11 +17,12 @@ use app\services\DictionaryService;
             $stepName = $activity->getStep()->getName($user->lang);
             $task = $activity->getTask();
             $timeAgo = Yii::$app->formatter->asRelativeTime($activity->created_at);
+            $companyName = $task->getCompany() ? $task->getCompany()->name : '';
         ?>
             <div class="flex items-center justify-between py-2 border-b last:border-0">
                 <div>
                     <p class="text-sm font-medium"><?= $stepName ?></p>
-                    <p class="text-xs text-muted-foreground"><?= $task->category ?> — <?= $task->getCompany()->name ?></p>
+                    <p class="text-xs text-muted-foreground"><?= $task->category ?> — <?= $companyName ?></p>
                 </div>
                 <span class="text-xs text-muted-foreground"><?= $timeAgo ?></span>
             </div>

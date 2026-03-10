@@ -10,7 +10,7 @@ class Modal {
 
         $(this.modal).find('.modal-header h3').text(headerText);
         if (type === 'calendar') {
-            $(this.modal).find('.modal-body').empty().append('<table><thead><tr><th>' + dictionaryLookup('company', user.lang) + '</th><th>' + dictionaryLookup('reminder', user.lang) + '</th></tr></thead><tbody></tbody></table>');
+            $(this.modal).find('.modal-body').empty().append('<table><thead><tr><th>' + dictionaryLookup('company', user.lang) + '</th><th>' + dictionaryLookup('marked', user.lang) + '</th></tr></thead><tbody></tbody></table>');
         }
 
         this.close = this.close.bind(this);
