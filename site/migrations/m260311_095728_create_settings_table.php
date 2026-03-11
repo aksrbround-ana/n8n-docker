@@ -15,7 +15,7 @@ class m260311_095728_create_settings_table extends Migration
     {
         $this->createTable(Settings::tableName(), [
             'id' => $this->primaryKey(),
-            'name' => $this->string(20)->notNull(),
+            'name' => $this->string(100)->notNull(),
             'value' => $this->string(100),
         ]);
     }
