@@ -72,7 +72,7 @@ function setSearchHistory() {
     pageHistory = pageHistory ? JSON.parse(pageHistory) : [];
     if (entity) {
         if (pageHistory.length > 1) {
-            url = '/' + entity + '/filter';
+            url = '/' + entity + '/page';
         } else {
             url = pageHistory[pageHistory.length - 1].url;
         }
