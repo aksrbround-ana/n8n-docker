@@ -22,6 +22,7 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     networks:
       - web
+
   postgres:
     image: pgvector/pgvector:pg15
     # build:
@@ -161,7 +162,8 @@ services:
       start_period: 40s
     restart: unless-stopped
     networks:
-      - web 
+      - web
+
   php-site:
     build:
       context: .
@@ -178,6 +180,10 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD:-changeme}
       - N8N_WEBHOOK_BASE_URL=${N8N_WEBHOOK_BASE_URL}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - MINIMAX_CLIENT_ID=${MINIMAX_CLIENT_ID}
+      - MINIMAX_CLIENT_SECRET=${MINIMAX_CLIENT_SECRET}
+      - MINIMAX_USERNAME=${MINIMAX_USERNAME}
+      - MINIMAX_PASSWORD=${MINIMAX_PASSWORD}
     volumes:
       - ./site:/var/www/html
     networks:

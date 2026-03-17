@@ -13,6 +13,7 @@ namespace app\models;
  * @property int|null $activity_id
  * @property int|null $pib
  * @property string|null $status
+ * @property int $minimax_id
  * @property string $created_at
  * @property string $updated_at
  *
@@ -76,10 +77,10 @@ class Company extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'name_tg', 'type_id', 'activity_id', 'pib',], 'default', 'value' => null],
-            [['is_pdv'], 'default', 'value' => 0],
+            [['is_pdv', 'minimax_id'], 'default', 'value' => 0],
             [['status'], 'default', 'value' => 'onboarding'],
             [['type_id', 'activity_id', 'pib'], 'default', 'value' => null],
-            [['type_id', 'activity_id', 'pib'], 'integer'],
+            [['type_id', 'activity_id', 'pib', 'minimax_id'], 'integer'],
             [['is_pdv'], 'boolean'],
             [['created_at', 'updated_at'], 'safe'],
             [['name', 'name_tg'], 'string', 'max' => 512],
@@ -104,6 +105,7 @@ class Company extends \yii\db\ActiveRecord
             'activity_id' => 'Activity ID',
             'pib' => 'Pib',
             'status' => 'Status',
+            'minimax_id' => 'Minimax ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];

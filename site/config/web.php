@@ -21,7 +21,13 @@ $config = [
             'class' => 'app\components\TelegramComponent',
             'botToken' => getenv('TELEGRAM_BOT_TOKEN'),
         ],
-
+        'minimax' => [
+            'class' => \app\components\MinimaxComponent::class,
+            'clientId'     => getenv('MINIMAX_CLIENT_ID'),
+            'clientSecret' => getenv('MINIMAX_CLIENT_SECRET'),
+            'username'     => getenv('MINIMAX_USERNAME'),
+            'password'     => getenv('MINIMAX_PASSWORD'),
+        ],
         'request' => [
             'cookieValidationKey' => '567893-946589-985497-927359',
             'enableCsrfValidation' => false,
