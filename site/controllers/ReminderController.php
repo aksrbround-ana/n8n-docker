@@ -21,6 +21,7 @@ use app\models\ReminderYearlyCompany;
 use app\models\TaxCalendar;
 use app\services\CalendarService;
 use app\services\DictionaryService;
+use yii\db\QueryBuilder;
 
 class ReminderController extends BaseController
 {
@@ -730,6 +731,84 @@ class ReminderController extends BaseController
                     ];
                 }
             }
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
+    }
+
+    public function actionDoneCount()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $today = date('Y-m-d');
+            $remindersQuery = ReminderSchedule::find()
+                ->where(['status' => 'pending'])
+                ->andWhere(['done_by_user' => 1])
+                ->andWhere(
+                    [
+                        'OR',
+                        'reminder_1_date=:today',
+                        'reminder_2_date=:today',
+                    ],
+                    ['today' => $today]
+                );
+            $response->data = [
+                'status' => 'success',
+                'count' => $remindersQuery->count(),
+            ];
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
+    }
+
+    public function actionDone()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $today = date('Y-m-d');
+            $remindersQuery = (new Query())
+                ->select([
+                    // 'rs.*',
+                    'rs.id',
+                    'rs.deadline_date',
+                    'rs.type',
+                    'rs.message',
+                    'c.name',
+                    ])
+                ->from(['rs' => ReminderSchedule::tableName()])
+                ->where(['rs.status' => 'pending'])
+                ->andWhere(['rs.done_by_user' => 1])
+                ->andWhere(
+                    [
+                        'OR',
+                        'rs.reminder_1_date=:today',
+                        'rs.reminder_2_date=:today',
+                    ],
+                    ['today' => $today]
+                )
+                ->innerJoin(['c'=>Company::tableName()], 'c.id=rs.company_id');
+            $response->data = [
+                'status' => 'success',
+                'list' => $remindersQuery->all(),
+            ];
         } else {
             $response->data = [
                 'status' => 'logout',
