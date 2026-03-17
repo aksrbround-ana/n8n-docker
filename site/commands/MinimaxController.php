@@ -17,7 +17,7 @@ class MinimaxController extends Controller
         $created = 0;
         $updated = 0;
         $minimax = Yii::$app->minimax;
-        $orgs = $minimax->organisation()->list();
+        $orgs = $minimax->organisation()->list(['CurrentPage' => 1, 'PageSize' => 500]);
         foreach ($orgs['Rows'] as $row) {
             echo $row['Organisation']['Name'] . ' - ';
             $companyMinimax = $minimax->organisation()->get($row['Organisation']['ID']);
