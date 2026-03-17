@@ -52,13 +52,13 @@ abstract class MinimaxResource extends BaseObject
     // -----------------------------------------------------------------
 
     private MinimaxHttpClient $client;
-    private int|string        $organisationId;
+    private int|string|null   $organisationId;
 
     // -----------------------------------------------------------------
     // Конструктор
     // -----------------------------------------------------------------
 
-    public function __construct(MinimaxHttpClient $client, int|string $organisationId)
+    public function __construct(MinimaxHttpClient $client, int|string|null $organisationId)
     {
         $this->client         = $client;
         $this->organisationId = $organisationId;

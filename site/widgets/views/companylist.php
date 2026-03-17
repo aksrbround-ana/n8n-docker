@@ -55,7 +55,7 @@ foreach ($companies as $company) {
         <div class="px-4 pb-4 flex gap-2">
             <button data-id="<?= $company['company_id'] ?>" class="company_open_profile inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50    bg-primary text-primary-foreground hover:bg-primary/90 h-9 rounded-md px-3 flex-1">
                 <?= SvgService::svg('edit') ?>
-                Открыть профиль
+                <?= DictionaryService::getWord('openProfile', $user->lang) ?>
             </button>
         </div>
     </div>

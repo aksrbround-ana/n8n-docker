@@ -35,6 +35,13 @@ $config = [
             'assignmentTable' => 'auth_assignment', // Имя таблицы для назначений
             'ruleTable' => 'auth_rule', // Имя таблицы для правил
         ],
+        'minimax' => [
+            'class' => \app\components\MinimaxComponent::class,
+            'clientId'     => getenv('MINIMAX_CLIENT_ID'),
+            'clientSecret' => getenv('MINIMAX_CLIENT_SECRET'),
+            'username'     => getenv('MINIMAX_USERNAME'),
+            'password'     => getenv('MINIMAX_PASSWORD'),
+        ],
     ],
     'params' => $params,
     /*

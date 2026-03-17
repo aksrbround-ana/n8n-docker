@@ -36,7 +36,7 @@ class MinimaxHttpClient extends BaseObject
 
     // Реальный базовый путь API — содержит удвоенное /api/api/
     // Документация: https://moj.minimax.rs/RS/api/api/currentuser/orgs
-    private const API_PREFIX = 'api/';
+    private const API_PREFIX = '/api/';
 
     // -----------------------------------------------------------------
     // Конфигурация (задаётся из MinimaxComponent)
@@ -178,7 +178,8 @@ class MinimaxHttpClient extends BaseObject
         bool   $isRetry = false,
     ): array {
         $token  = $this->getAccessToken();
-        $client = new Client(['baseUrl' => $this->baseUrl . '/API/' . self::API_PREFIX]);
+        $baseUrl = $this->baseUrl . self::API_PREFIX;
+        $client = new Client(['baseUrl' => $baseUrl]);
 
         $request = $client->createRequest()
             ->setMethod($method)
