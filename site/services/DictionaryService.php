@@ -314,6 +314,8 @@ class DictionaryService
             'createOneTimeReminder' => 'Создать разовое напоминание',
             'topic' => 'Тема',
             'text' => 'Текст',
+            'doneReminders' => 'Выполненные напоминания',
+            'deleteReminderConfirm' => 'Вы подтверждаете выполнение?',
 
             // OCR
             'ocrSummary' => 'Резюме',
@@ -641,6 +643,8 @@ class DictionaryService
             'createOneTimeReminder' => 'Kreiraj jednokratno podsećanje',
             'topic' => 'Tema',
             'text' => 'Tekst',
+            'doneReminders' => 'Obavljeni podsetnici',
+            'deleteReminderConfirm' => 'Da li potvrđujete izvršenje?',
 
             // OCR
             'ocrSummary' => 'Резюме',
@@ -966,6 +970,8 @@ class DictionaryService
             'createOneTimeReminder' => 'Create One-time Reminder',
             'topic' => 'Topic',
             'text' => 'Text',
+            'doneReminders' => 'Completed reminders',
+            'deleteReminderConfirm' => 'Do you confirm the execution?',
 
             // OCR
             'ocrSummary' => 'Summary',

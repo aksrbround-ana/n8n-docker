@@ -1,13 +1,27 @@
 <?php
 
 use app\services\DictionaryService;
+use app\services\ReminderService;
 
 $initials = strtoupper($user->firstname[0] . $user->lastname[0]);
+$doneCount = ReminderService::doneCount();
 ?>
 <header class="fixed top-0 right-0 left-64 z-30 h-16 bg-card border-b border-border flex items-center justify-between px-6">
-    <div class="flex-1 max-w-xl">
-        <div id="reminder-done" class="">
-            Отмечено напоминаний: <span class="count">2</span>
+    <div id="reminder-container" class="flex-1">
+        <div id="reminder-done" class="<?= $doneCount > 0 ? '' : 'hidden' ?>">
+            <?= DictionaryService::getWord('doneReminders', $user->lang) ?>: <span class="count"><?= $doneCount ?></span>
+        </div>
+        <div id="reminder-list" class="hidden text-center py-2">
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class=""><?= DictionaryService::getWord('company', $user->lang) ?></th>
+                        <th class=""><?= DictionaryService::getWord('text', $user->lang) ?></th>
+                        <th class=""><?= DictionaryService::getWord('reminderDate', $user->lang) ?></th>
+                    </tr>
+                </thead>
+                <tbody id="reminder-tbody"></tbody>
+            </table>
         </div>
     </div>
     <div class="flex items-center gap-4">

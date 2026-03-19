@@ -164,3 +164,50 @@ input.edit:focus {
     color: #e14337;
     font-weight: bold;
 }
+
+#reminder-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+#reminder-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+    max-height: 15em;
+    overflow-y: auto;
+    font-size: smaller;
+    /* display: none; */
+    line-height: normal;
+    z-index: 1000;
+}
+
+/* #reminder-tbody {
+} */
+
+#reminder-tbody tr {
+    cursor: pointer;
+}
+
+#reminder-list th {
+    border-bottom: #212529 dashed 2px;
+}
+
+#reminder-tbody td {
+    border-bottom: #444 solid 1px;
+    text-align: left;
+    padding: 1em;
+}
+
+#reminder-tbody tr:hover {
+    color: #999;
+}
+
+#reminder-done {
+    cursor: pointer;
+}
