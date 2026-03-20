@@ -199,15 +199,22 @@ input.edit:focus {
 }
 
 #reminder-tbody td {
-    border-bottom: #444 solid 1px;
+    border-bottom: rgba(239, 67, 67, 0.3) solid 1px;
+    color: rgb(239, 67, 67);
+    font-weight: bold;
     text-align: left;
     padding: 1em;
 }
 
-#reminder-tbody tr:hover {
+/* #reminder-tbody td:hover {
     color: #999;
-}
+} */
 
 #reminder-done {
+    color: rgb(239, 67, 67);
+    font-weight: bold;
     cursor: pointer;
+}
+#reminder-done:hover {
+    text-decoration: underline;
 }

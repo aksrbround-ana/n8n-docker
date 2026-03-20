@@ -567,8 +567,8 @@ function readRemindersList() {
     },
     success: function (response) {
       if (response.status === 'logout') {
-        clearUser();
-        loadContent();
+        // clearUser();
+        // loadContent();
       } else {
         reminderList = response.list;
         $('#reminder-done span.count').text(reminderList.length);
@@ -580,7 +580,7 @@ function readRemindersList() {
         }
         $('#reminder-tbody').empty();
         for (let i = 0; i < reminderList.length; i++) {
-          let row = '<tr data-id="' + reminderList[i].id + '">' +
+          let row = '<tr data-id="' + reminderList[i].id + '" class="border-destructive/30 bg-destructive/5">' +
             '<td>' + reminderList[i].name + '</td>' +
             '<td>' + reminderList[i].message + '</td>' +
             '<td>' + reminderList[i].deadline_date + '</td>' +
