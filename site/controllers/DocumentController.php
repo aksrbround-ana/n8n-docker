@@ -265,6 +265,7 @@ class DocumentController extends BaseController
                     'task_id' => $id,
                     'post' => $_POST,
                     'files' => $_FILES,
+                    'message' => 'No file received',
                 ];
             }
             return $response;

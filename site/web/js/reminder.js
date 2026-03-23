@@ -636,5 +636,5 @@ $(document).on('click', '#reminder-tbody tr', function (e) {
 
 $(document).ready(function () {
   readRemindersList();
-  setInterval(readRemindersList, 1000);
+  setInterval(readRemindersList, 10000);
 });

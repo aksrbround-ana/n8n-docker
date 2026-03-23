@@ -969,7 +969,7 @@ async function uploadFile(file, taskId) {
 
     const result = await response.json();
 
-    if (result.status == 'success') {
+    if (result.status === 'success') {
       formData = new FormData();
       formData.append('token', user.token);
       formData.append('id', taskId);
@@ -981,12 +981,14 @@ async function uploadFile(file, taskId) {
     } else if (result.status === 'logout') {
       clearUser();
       loadContent();
+      return { status: 'logout' };
     } else {
-      showError(dictionaryLookup('error', user.lang), response.message);
+      showError(dictionaryLookup('error', user.lang), result.message);
+      return { status: 'error', message: result.message };
     }
   } catch (error) {
     console.error('Сетевая ошибка:', error);
-    return { success: false, error: error.message };
+    return { status: 'error', error: error.message };
   }
 }
 
@@ -999,6 +1001,7 @@ $(document).on('change', '#document-to-upload', async (e) => {
     if (result.status === 'success') {
       $('#task-documents-list').html(result.data);
     } else {
+      const user = getUser();
       showError(dictionaryLookup('error', user.lang), result.message);
     }
   }
