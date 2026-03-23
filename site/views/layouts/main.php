@@ -31,16 +31,26 @@ $centrifugoUrl = getenv('CENTRIFUGO_URL');
     <?php $this->registerCsrfMetaTags() ?>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;📊&lt;/text&gt;&lt;/svg&gt;">
     <?php
-    $this->registerJsFile('@web/js/jquery.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/index.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/search.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/reminder.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/dictionary.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/modal.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/tiff.min.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/select.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/chat.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
-    $this->registerJsFile('@web/js/suggestions.js', ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END,]);
+    $js = [
+     'jquery.js',
+     'index.js',
+     'accountant.js',
+     'company.js',
+     'document.js',
+     'task.js',
+     'search.js',
+     'reminder.js',
+     'dictionary.js',
+     'modal.js',
+     'tiff.min.js',
+     'select.js',
+     'chat.js',
+     'suggestions.js',
+
+    ];
+    foreach($js as $script) {
+        $this->registerJsFile("@web/js/{$script}", ['depends' => [\yii\web\JqueryAsset::class], 'position' => \yii\web\View::POS_END, ]);
+    }
     ?>
     <link rel="stylesheet" href="/css/site.css">
     <link rel="stylesheet" href="/css/index.css">
