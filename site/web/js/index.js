@@ -413,46 +413,6 @@ $(document).on('click', 'button.back', function (e) {
   goBack();
 });
 
-$(document).on('click', '#save-user', function (e) {
-  const form = $(this).closest('form');
-  const formData = form.serializeArray();
-  let data = {};
-  formData.forEach(item => {
-    data[item.name] = item.value;
-  });
-  let user = getUser();
-  data.token = user.token;
-  $.ajax({
-    url: form.attr('action'),
-    type: 'POST',
-    data: data,
-    success: function (response) {
-      if (response.status === 'success') {
-        loadPage('/accountant/profile', {}, false);
-      } else if (response.status === 'logout') {
-        clearUser();
-        loadContent();
-      } else {
-        showError(dictionaryLookup('error', user.lang), response.message);
-      }
-    },
-    error: function () {
-      alert('Произошла ошибка при сохранении данных пользователя.');
-    }
-  });
-  return false;
-});
-
-$(document).on('click', '#accountant-company-button', function (e) {
-  let id = $(this).data('item-id');
-  const title = $(this).closest('tr').find('.calendar-text').text();
-  const type = $(this).data('type');
-  companyListModal = new Modal('modal-overlay', title);
-  companyListModal.setDoUrl('/accountant/update-company/');
-  loadCompanyListModal(id, '/accountant/company-list', makeCompanyListTr, type);
-  companyListModal.open(this);
-});
-
 // ----------------------------------------------------
 //                Resize Debounce
 //----------------------------------------------------
