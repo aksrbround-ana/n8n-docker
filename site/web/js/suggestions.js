@@ -47,7 +47,7 @@ $(document).ready(function () {
     $(document).on('click', '#suggestions div', function () {
         var $div = $(this);
         var id = $div.data('id');
-        var name = $div.text();
+        var name = $div.data('name');
         var $input = $('#search');
         var $hiddenId = $('#selected_id');
         var $suggestions = $('#suggestions');
@@ -142,8 +142,9 @@ $(document).ready(function () {
         $suggestions.empty();
         items.forEach(function (item) {
             $('<div>')
-                .text(item.name)
+                .text(item.name_s)
                 .data('id', item.id)
+                .data('name', item.name)
                 .appendTo($suggestions);
         });
         $suggestions.show();

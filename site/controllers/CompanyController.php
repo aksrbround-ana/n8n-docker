@@ -62,7 +62,7 @@ class CompanyController extends BaseController
             ->leftJoin(['to' => Task::tableName()], '"to".company_id = c.id AND "to".status = \'overdue\'');
 
         if ($filters['name'] ?? null) {
-            $companiesQuery->andWhere(['LIKE', 'c.name', $filters['name']]);
+            $companiesQuery->andWhere(['ILIKE', 'c.name', $filters['name']]);
         }
         if ($filters['status'] ?? null) {
             $companiesQuery->andWhere(['c.status' => $filters['status']]);
@@ -794,7 +794,8 @@ class CompanyController extends BaseController
             $data = array_map(function ($item) {
                 return [
                     'id' => $item['id'],
-                    'name' => mb_strlen($item['name'], 'utf-8') > 40 ? mb_substr($item['name'], 0, 40, 'utf-8') . '…' : $item['name'],
+                    'name' => $item['name'],
+                    'name_s' => mb_strlen($item['name'], 'utf-8') > 40 ? mb_substr($item['name'], 0, 40, 'utf-8') . '…' : $item['name'],
                 ];
             }, $data);
             $response = \Yii::$app->response;
