@@ -212,6 +212,8 @@ class TaskController extends BaseController
             }
             if ($company) {
                 $taskQuery->andWhere(['company_id' => $company]);
+            } elseif ($company == '0') {
+                $taskQuery->andWhere(['company_id' => 0]);
             }
             if ($assignedTo) {
                 $taskQuery->andWhere(['accountant_id' => $assignedTo]);

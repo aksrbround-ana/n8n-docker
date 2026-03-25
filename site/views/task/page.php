@@ -39,6 +39,9 @@ use app\services\SvgService;
                 <?= DictionaryService::getWord('companyName', $user->lang) ?>
                 <select id="companyName-filters-select" data-field="company" class="flex h-10 items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50  w-40">
                     <option value=""><?= DictionaryService::getWord('all', $user->lang) ?></option>
+                    <option value="" disabled="">——————</option>
+                    <option value="0"><?= DictionaryService::getWord('commonTask', $user->lang) ?></option>
+                    <option value="" disabled="">——————</option>
                     <?php
                     $current = $company;
                     foreach ($filterCompany as $company) {

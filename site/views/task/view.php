@@ -35,10 +35,12 @@ use app\widgets\TaskViewTopWidget;
             </div>
             <div class="space-y-6">
                 <?php
-                echo TaskViewCompanyInfoWidget::widget([
-                    'user' => $user,
-                    'task' => $task,
-                ]);
+                if ($task->company) {
+                    echo TaskViewCompanyInfoWidget::widget([
+                        'user' => $user,
+                        'task' => $task,
+                    ]);
+                }
                 echo TaskViewActivityWidget::widget([
                     'user' => $user,
                     'task' => $task,

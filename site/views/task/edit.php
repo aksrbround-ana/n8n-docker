@@ -75,13 +75,24 @@ use app\services\SvgService;
                     <th class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"><?= DictionaryService::getWord('company', $user->lang) ?></th>
                     <td class="p-4 text-left align-middle">
                         <?php
-                        $options = [];
+                        $options = [
+                            [
+                                'id' => '0',
+                                'name' => DictionaryService::getWord('commonTask', $user->lang)
+                            ],
+                            [
+                                'id' => '',
+                                'name' => '——————————————————',
+                                'disabled' => true
+                            ],
+                        ];
                         foreach ($companies as $company) {
                             $options[] = [
                                 'id' => $company->id,
                                 'name' => $company->name,
                             ];
                         }
+                        // print_r($options);
                         echo SelectWidget::widget([
                             'user' => $user,
                             'id' => 'company',
