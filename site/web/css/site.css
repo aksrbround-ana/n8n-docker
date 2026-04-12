@@ -164,3 +164,57 @@ input.edit:focus {
     color: #e14337;
     font-weight: bold;
 }
+
+#reminder-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+#reminder-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+    max-height: 15em;
+    overflow-y: auto;
+    font-size: smaller;
+    /* display: none; */
+    line-height: normal;
+    z-index: 1000;
+}
+
+/* #reminder-tbody {
+} */
+
+#reminder-tbody tr {
+    cursor: pointer;
+}
+
+#reminder-list th {
+    border-bottom: #212529 dashed 2px;
+}
+
+#reminder-tbody td {
+    border-bottom: rgba(239, 67, 67, 0.3) solid 1px;
+    color: rgb(239, 67, 67);
+    font-weight: bold;
+    text-align: left;
+    padding: 1em;
+}
+
+/* #reminder-tbody td:hover {
+    color: #999;
+} */
+
+#reminder-done {
+    color: rgb(239, 67, 67);
+    font-weight: bold;
+    cursor: pointer;
+}
+#reminder-done:hover {
+    text-decoration: underline;
+}

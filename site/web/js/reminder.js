@@ -1,3 +1,5 @@
+let reminderList = [];
+
 function removeReminder(id) {
   let user = getUser();
   let token = user ? user?.token : '';
@@ -552,4 +554,87 @@ $(document).on('click', 'input.tax-activity', function (e) {
     },
     type: 'json'
   });
+});
+
+function readRemindersList() {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  $.ajax({
+    url: '/reminder/done-list',
+    type: 'POST',
+    data: {
+      token: token
+    },
+    success: function (response) {
+      if (response.status === 'logout') {
+        // clearUser();
+        // loadContent();
+      } else {
+        reminderList = response.list;
+        $('#reminder-done span.count').text(reminderList.length);
+        if (reminderList.length > 0) {
+          $('#reminder-done').removeClass('hidden');
+        } else {
+          $('#reminder-done').addClass('hidden');
+          $('#reminder-list').addClass('hidden');
+        }
+        $('#reminder-tbody').empty();
+        for (let i = 0; i < reminderList.length; i++) {
+          let row = '<tr data-id="' + reminderList[i].id + '" class="border-destructive/30 bg-destructive/5">' +
+            '<td>' + reminderList[i].name + '</td>' +
+            '<td>' + reminderList[i].message + '</td>' +
+            '<td>' + reminderList[i].deadline_date + '</td>' +
+            '</tr>';
+          $('#reminder-tbody').append(row);
+        }
+      }
+    },
+    error: function (e) {
+      showError('Load error', e);
+    },
+    type: 'json'
+  })
+}
+
+$(document).on('click', '#reminder-done', function (e) {
+  $('#reminder-list').toggleClass('hidden');
+});
+
+$(document).on('click', function (e) {
+  if (!$(e.target).closest('#reminder-container').length) {
+    $('#reminder-list').addClass('hidden');
+  }
+});
+
+$(document).on('click', '#reminder-tbody tr', function (e) {
+  let id = $(this).data('id');
+  let user = getUser();
+  let token = user ? user?.token : '';
+  if (confirm(dictionaryLookup('deleteReminderConfirm', user.lang))) {
+    $.ajax({
+      url: '/reminder/done',
+      type: 'POST',
+      data: {
+        token: token,
+        id: id,
+      },
+      success: function (response) {
+        if (response.status === 'logout') {
+          clearUser();
+          loadContent();
+        } else {
+          readRemindersList();
+        }
+      },
+      error: function (e) {
+        showError('Load error', e);
+      },
+      type: 'json'
+    })
+  }
+});
+
+$(document).ready(function () {
+  readRemindersList();
+  setInterval(readRemindersList, 10000);
 });

@@ -21,6 +21,8 @@ use app\models\ReminderYearlyCompany;
 use app\models\TaxCalendar;
 use app\services\CalendarService;
 use app\services\DictionaryService;
+use app\services\ReminderService;
+use yii\db\QueryBuilder;
 
 class ReminderController extends BaseController
 {
@@ -729,6 +731,79 @@ class ReminderController extends BaseController
                         'message' => 'Reminder not found',
                     ];
                 }
+            }
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
+    }
+
+    public function actionDoneCount()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $response->data = [
+                'status' => 'success',
+                'count' => ReminderService::doneCount(),
+            ];
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
+    }
+
+    public function actionDoneList()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $response->data = [
+                'status' => 'success',
+                'list' => ReminderService::doneList(),
+            ];
+        } else {
+            $response->data = [
+                'status' => 'logout',
+                'message' => 'Invalid token',
+            ];
+        }
+        return $response;
+    }
+
+    public function actionDone()
+    {
+        $this->layout = false;
+        $request = \Yii::$app->request;
+        $token = $request->post('token');
+        $response = \Yii::$app->response;
+        $response->format = \yii\web\Response::FORMAT_JSON;
+        $accountant = Accountant::findIdentityByAccessToken(['token' => $token]);
+        if ($accountant->isValid()) {
+            $id = $request->post('id');
+            if (ReminderService::done($id)) {
+                $response->data = [
+                    'status' => 'success',
+                ];
+            } else {
+                $response->data = [
+                    'status' => 'error',
+                    'message' => 'Saving error',
+                ];
             }
         } else {
             $response->data = [

@@ -72,3 +72,39 @@ class Modal {
         }
     }
 }
+
+let companyListModal;
+let editReminderModal;
+
+function loadCompanyListModal(id, url, trFunction, type) {
+  let user = getUser();
+  let token = user ? user?.token : '';
+  $.ajax({
+    url: url,
+    type: 'POST',
+    data: {
+      token: token,
+      id: id,
+      type: type
+    },
+    success: function (response) {
+      if (response.status === 'success') {
+        $(companyListModal.modal).find('.modal-body ul').empty();
+        let ul = $(companyListModal.modal).find('.modal-body tbody');
+        for (let i = 0; i < response.data.list.length; i++) {
+          let tr = trFunction(response.data.list[i]);
+          ul.append(tr);
+        }
+      } else if (response.status === 'logout') {
+        clearUser();
+        loadContent();
+      } else {
+        showError('Load error', response.message);
+      }
+    },
+    error: function (e) {
+      showError('Load error', e);
+    },
+    type: 'json'
+  })
+}

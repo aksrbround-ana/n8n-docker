@@ -21,10 +21,10 @@ foreach ($companies as $company) {
         </div>
         <div class="p-4 space-y-3">
             <div class="space-y-2 text-sm">
-                <div class="flex items-center gap-2 text-muted-foreground">
+                <!-- <div class="flex items-center gap-2 text-muted-foreground">
                     <?= SvgService::svg('location') ?>
                     <span class="truncate">Нови Сад</span>
-                </div>
+                </div> -->
                 <div class="flex items-center gap-2 text-muted-foreground">
                     <?= SvgService::svg('activity') ?>
                     <span class="truncate"><?= $company['company_activity'] ?></span>

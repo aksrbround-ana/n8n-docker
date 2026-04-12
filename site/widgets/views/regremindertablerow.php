@@ -5,7 +5,7 @@ use app\services\SvgService;
 $topic = $user->lang == DictionaryService::LANG_RUSSIAN ? 'type_ru' : 'type_rs';
 $text = $user->lang == DictionaryService::LANG_RUSSIAN ? 'text_ru' : 'text_rs';
 ?>
-<tr id="reg-reminder-row-<?= $reminder['id'] ?>" class="<?= implode(' ', $class) ?>" data-item-id="<?= $reminder['id'] ?>">
+<tr id="regular-reminder-row-<?= $reminder['id'] ?>" class="<?= implode(' ', $class) ?>" data-item-id="<?= $reminder['id'] ?>">
     <td class="p-6 pt-0"><?= $reminder['id'] ?></td>
     <td class="p-6 pt-0"><?= $reminder['deadline_day'] ?></td>
     <td class="p-6 pt-0"><?= $reminder[$topic] ?></td>

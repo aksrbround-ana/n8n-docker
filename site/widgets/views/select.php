@@ -24,9 +24,18 @@ foreach ($options as $option) {
     <div class="select-widget" tabindex="0">
         <div class="select-widget-trigger"><?= $selectedStr ?></div>
         <div class="select-widget-options">
-            <?php foreach ($options as $option): ?>
-                <span class="select-widget-option" data-value="<?= $option['id'] ?>"><?= $option['name'] ?></span>
-            <?php endforeach; ?>
+            <?php foreach ($options as $option) {
+                if (isset($option['disabled'])) {
+            ?>
+                    <span class="select-widget-option-disabled" disabled="disabled" data-value="<?= $option['id'] ?>"><?= $option['name'] ?></span>
+            <?php
+                } else {
+            ?>
+                    <span class="select-widget-option" data-value="<?= $option['id'] ?>"><?= $option['name'] ?></span>
+            <?php
+                }
+            }
+            ?>
         </div>
     </div>
 </div>
