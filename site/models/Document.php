@@ -198,9 +198,9 @@ class Document extends \yii\db\ActiveRecord
     {
         $type = $this->getType();
         if ($type) {
-            return DictionaryService::getWord('docType' . ucfirst($type->name), $lang);
+            return DictionaryService::getWord('docType' . ucfirst($type), $lang);
         } else {
-            return null;
+            return DictionaryService::getWord('docTypeUnknown', $lang);
         }
     }
 
