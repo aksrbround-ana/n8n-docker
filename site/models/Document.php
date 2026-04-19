@@ -182,8 +182,17 @@ class Document extends \yii\db\ActiveRecord
 
     public function getType()
     {
-        return DocumentType::find()->where(['id' => $this->type_id])->one();
-    }
+        $category = $this->category;
+        if (!$category) {
+            $type =  DocumentType::find()->where(['id' => $this->type_id])->one();
+            if ($type) {
+                $category = $type->name;
+            }
+        }
+        if (!$category) {
+            $category = self::DOCUMENT_TYPE_UNKNOW;
+        }
+        return $category;}
 
     public function getTypeName($lang = DictionaryService::LANG_RUSSIAN)
     {
