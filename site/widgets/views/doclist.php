@@ -41,7 +41,7 @@ $limit = $limit ?? $filters['limit'] ?? BaseController::PAGE_LENGTH;
                     </div>
                 </td>
                 <td class="p-4 align-middle text-sm"><?= $doc->getCompany() ? $doc->getCompany()->name : DictionaryService::getWord('unknown', $user->lang) ?></td>
-                <td class="p-4 align-middle text-sm"><?= $document->getTypeName($user->lang) ?></td>
+                <td class="p-4 align-middle text-sm"><?= $doc->getTypeName($user->lang) ?></td>
                 <td class="p-4 align-middle"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $doc->getStatusStyle() ?>"><?= DictionaryService::getWord($doc->getStatusName(), $user->lang) ?></span></td>
             </tr>
         <?php
