@@ -202,6 +202,34 @@ class MinimaxDocument extends MinimaxResource
     // -----------------------------------------------------------------
 
     /**
+     * Прикрепить файл в строке base64 к документу.
+     *
+     * @param  int|string $documentId
+     * @param  string     $documentContent Содержимое документа в base64
+     * @param  string     $fileName        Имя файла (например, ugovor.pdf)
+     * @param  string     $mimeType        MIME-тип документа (например, application/pdf)
+     * @param  string     $description Описание вложения
+     * @return array      Созданное вложение
+     * @throws \RuntimeException если файл не найден или не читается
+     * @throws MinimaxApiException
+     */
+    public function attachDocument(
+        int|string $documentId,
+        string     $documentContent,
+        string     $fileName,
+        string     $mimeType,
+        string     $description = '',
+    ): array {
+
+        return $this->addAttachment($documentId, [
+            'Description'    => $description ?: $fileName,
+            'AttachmentData' => $documentContent,
+            'FileName'       => $fileName,
+            'MimeType'       => $mimeType,
+        ]);
+    }
+
+    /**
      * Прикрепить файл с диска к документу.
      * Автоматически кодирует файл в base64 и определяет MIME-тип.
      *

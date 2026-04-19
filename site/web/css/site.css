@@ -215,6 +215,18 @@ input.edit:focus {
     font-weight: bold;
     cursor: pointer;
 }
+
 #reminder-done:hover {
     text-decoration: underline;
+}
+
+.table-row {
+    display: table;
+    width: 100%;
+}
+
+.table-cell {
+    vertical-align: middle;
+    text-align: center;
+    display: table-cell;
 }

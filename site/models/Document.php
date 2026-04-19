@@ -17,6 +17,7 @@ use app\services\DictionaryService;
  * @property int|null $tg_id
  * @property int|null $company_id
  * @property int $type_id
+ * @property int|null $minimax_id
  * @property string|null $content
  * @property string|null $metadata
  * @property string|null $embedding
@@ -97,8 +98,8 @@ class Document extends \yii\db\ActiveRecord
             [['content', 'embedding'], 'string'],
             [['metadata', 'created_at', 'updated_at'], 'safe'],
             [['ocr_text', 'summary', 'category'], 'safe'],
-            [['tg_id', 'company_id'], 'default', 'value' => null],
-            [['tg_id', 'company_id', 'type_id'], 'integer'],
+            [['tg_id', 'company_id', 'minimax_id'], 'default', 'value' => null],
+            [['tg_id', 'company_id', 'minimax_id', 'type_id'], 'integer'],
             [['filename'], 'string', 'max' => 512],
             [['mimetype'], 'string', 'max' => 64],
             [['status'], 'string', 'max' => 16],
@@ -117,6 +118,7 @@ class Document extends \yii\db\ActiveRecord
             'embedding' => 'Embedding',
             'tg_id' => 'Tg ID',
             'company_id' => 'Company ID',
+            'minimax_id' => 'Minimax ID',
             'type_id' => 'Type ID',
             'filename' => 'Filename',
             'mimetype' => 'Mimetype',

@@ -349,6 +349,7 @@ class DictionaryService
             'no' => 'Нет',
             'dragDropCaption' => 'Для загрузки документа кликните здесь или перетащите файл',
             'marked' => 'Отмечено',
+            'sendToMinimax' => 'Отправить в Minimax',
 
             // Telegram chat
             'telegramChat' => 'Чат поддержки Telegram',
@@ -679,6 +680,7 @@ class DictionaryService
             'no' => 'Nema',
             'dragDropCaption' => 'Да бисте отпремили документ, кликните овде или превуците и испустите датотеку.',
             'marked' => 'Označeno',
+            'sendToMinimax' => 'Pošalji Minimaksu',
 
             // Telegram chat
             'telegramChat' => 'Telegram podrška ćaskanje',
@@ -1007,6 +1009,7 @@ class DictionaryService
             'no' => 'No',
             'dragDropCaption' => 'To upload a document, click here or drag and drop the file.',
             'marked' => 'Marked',
+            'sendToMinimax' => 'Send to Minimax',
 
             // Telegram chat
             'telegramChat' => 'Telegram Support Chat',

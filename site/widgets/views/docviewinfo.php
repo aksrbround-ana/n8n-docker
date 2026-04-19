@@ -18,6 +18,7 @@ if ($document->mimetype == 'application/pdf') {
 } else {
     $type = 'file';
 }
+$company = $document->getCompany();
 
 ?>
 <div class="rounded-lg border bg-card text-card-foreground shadow-sm lg:col-span-2">
@@ -25,19 +26,32 @@ if ($document->mimetype == 'application/pdf') {
         <h3 class="font-semibold tracking-tight text-lg"><?= DictionaryService::getWord('documentInformation', $user->lang) ?></h3>
     </div>
     <div class="p-6 pt-0 space-y-6">
-        <div class="grid gap-4 grid-cols-3">
-            <div class="space-y-1">
+        <div class="table-row">
+            <div class="table-cell">
                 <p class="text-sm text-muted-foreground"><?= DictionaryService::getWord('documentType', $user->lang) ?></p>
                 <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"><?= $document->getTypeName($user->lang) ?></div>
             </div>
-            <div class="space-y-1">
+            <div class="table-cell">
                 <p class="text-sm text-muted-foreground"><?= DictionaryService::getWord('documentStatus', $user->lang) ?></p>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border <?= $document->getStatusStyle() ?>"><?= $document->getStatusName($user->lang) ?></span>
             </div>
-            <div class="space-y-1">
+            <div class="table-cell">
                 <p class="text-sm text-muted-foreground"><?= DictionaryService::getWord('fileSize', $user->lang) ?></p>
                 <p class="text-sm font-medium"><?= Document::getStaticLength($document->id, $user->lang) ?></p>
             </div>
+            <?php
+            if ($company->minimax_id) {
+                $disabled = $document->minimax_id !== null ? 'disabled' : '';
+            ?>
+                <div class="table-cell">
+                    <button id="send-to-minimax" data-doc-id="<?= $document->id ?>" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 <?= $disabled ?> border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                        <?= SvgService::svg('minimax') ?>
+                        <?= DictionaryService::getWord('sendToMinimax', $user->lang) ?>
+                    </button>
+                </div>
+            <?php
+            }
+            ?>
         </div>
         <div data-orientation="horizontal" role="none" class="shrink-0 bg-border h-[1px] w-full"></div>
         <div class="flex items-center justify-center h-64 bg-muted rounded-lg border border-dashed border-border" style="height: 500px">
@@ -76,11 +90,13 @@ if ($document->mimetype == 'application/pdf') {
         <!-- <div class="grid gap-4 grid-cols-2">
             <div class="space-y-1">
                 <h3 class="font-semibold tracking-tight text-lg"><?= DictionaryService::getWord('ocrSummary', $user->lang) ?></h3>
-                <p><?php //= $document->summary ?? DictionaryService::getWord('notRecognized', $user->lang) ?></p>
+                <p><?php //= $document->summary ?? DictionaryService::getWord('notRecognized', $user->lang) 
+                    ?></p>
             </div>
             <div class="space-y-1">
                 <h3 class="font-semibold tracking-tight text-lg"><?= DictionaryService::getWord('ocrCategory', $user->lang) ?></h3>
-                <p><?php //= $document->category ?? DictionaryService::getWord('notRecognized', $user->lang) ?></p>
+                <p><?php //= $document->category ?? DictionaryService::getWord('notRecognized', $user->lang) 
+                    ?></p>
             </div>
         </div> -->
         <div class="grid gap-4 grid-cols-1">

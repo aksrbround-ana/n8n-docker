@@ -40,6 +40,7 @@ $centrifugoUrl = getenv('CENTRIFUGO_URL');
      'task.js',
      'search.js',
      'reminder.js',
+     'minimax.js',
      'dictionary.js',
      'modal.js',
      'tiff.min.js',
