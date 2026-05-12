@@ -1,43 +1,43 @@
-# Инструкции по запуску:
-## Для продакшена с Traefik:
-### 1. Создайте .env файл и укажите свои пароли
+# Launch Instructions:
+## For production with Traefik:
+### 1. Create a .env file and set your passwords
 cp .env.example .env
 
-### 2. Установите зависимости для Yii
+### 2. Install dependencies for Yii
 ```bash
 cd site
 composer install
 ```
 
-### 3. Замените domain.com на ваш реальный домен в docker-compose.yml
+### 3. Replace domain.com with your actual domain in docker-compose.yml
 
-### 4. Убедитесь, что DNS записи указывают на ваш сервер:
-#### n8n.domain.com → IP_сервера
-#### site.domain.com → IP_сервера
-#### pgadmin.domain.com → IP_сервера
+### 4. Make sure DNS records point to your server:
+#### n8n.domain.com → server_IP
+#### site.domain.com → server_IP
+#### pgadmin.domain.com → server_IP
 
-### 5. Запустите
+### 5. Start
 ```bash
 docker compose up -d
 ```
-## Для локальной разработки (Linux Mint):
-### 1. Создайте .env файл
+## For local development (Linux Mint):
+### 1. Create a .env file
 ```bash
 cp .env.example .env
 ```
 
-### 2. Установите зависимости для Yii
+### 2. Install dependencies for Yii
 ```bash
 cd site
 composer install
 ```
 
-### 3. Запустите
+### 3. Start
 ```bash
 docker compose -f docker-compose-local.yml up -d
 ```
 
-### 4. Доступ:
+### 4. Access:
 #### n8n: http://localhost:5678
-#### Сайт: http://localhost:8081
+#### Site: http://localhost:8081
 #### pgAdmin: http://localhost:5050
