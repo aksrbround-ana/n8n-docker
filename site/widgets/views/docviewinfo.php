@@ -4,6 +4,9 @@ use app\services\DictionaryService;
 use app\models\Document;
 use app\services\SvgService;
 
+/** @var $document \app\models\Document */
+/** @var $user \app\models\Accountant  */
+
 $type = 'image';
 if ($document->mimetype == 'application/pdf') {
     $type = 'pdf';
@@ -50,9 +53,18 @@ $company = $document->getCompany();
                     </button>
                 </div>
             <?php
+            } else {
+                $disabled = false;
             }
             ?>
         </div>
+        <?php
+        if ($company->minimax_id && !$disabled) {
+        ?>
+        <div id="minimax-data"></div>
+        <?php
+        }
+        ?>
         <div data-orientation="horizontal" role="none" class="shrink-0 bg-border h-[1px] w-full"></div>
         <div class="flex items-center justify-center h-64 bg-muted rounded-lg border border-dashed border-border" style="height: 500px">
             <?php
